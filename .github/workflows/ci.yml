@@ -1,4 +1,4 @@
-name: Build, Test & Deploy ASP.NET Backend
+name: Build, Test & Deploy WeddingServer
 
 on:
   push:
@@ -13,34 +13,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 🧩 Bước 1: Lấy source code
+      # 🧩 1️⃣ Lấy source code
       - name: Checkout source
         uses: actions/checkout@v4
 
-      # 🧰 Bước 2: Cài đặt .NET SDK (chỉnh version nếu cần)
+      # 🧰 2️⃣ Cài đặt .NET SDK 8.0
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      # 🧱 Bước 3: Restore dependencies
+      # 🧱 3️⃣ Restore dependencies
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore WeddingServer/WeddingServer.csproj
 
-      # 🧪 Bước 4: Build project
+      # 🧪 4️⃣ Build project
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build WeddingServer/WeddingServer.csproj --configuration Release --no-restore
 
-      # ✅ Bước 5: Run tests (nếu có project test)
+      # ✅ 5️⃣ Run tests (nếu có)
       - name: Test
         run: dotnet test --no-build --verbosity normal
-        continue-on-error: true  # nếu không có test, CI vẫn tiếp tục
+        continue-on-error: true
 
-      # 🐳 Bước 6: Build Docker image
+      # 🐳 6️⃣ Build Docker image (giữ nguyên vị trí Dockerfile)
       - name: Build Docker image
-        run: docker build -t weddingserver:latest -f src/WeddingCardManager/Dockerfile src/WeddingCardManager
+        run: docker build -t weddingserver:latest -f WeddingServer/Dockerfile .
 
-      # 📦 Bước 7: Save Docker image thành file .tar để upload sang server
+      # 📦 7️⃣ Save Docker image để upload lên VPS
       - name: Save Docker image
         run: docker save weddingserver:latest -o weddingserver.tar
 
@@ -48,8 +48,8 @@ jobs:
       - name: Fix file permissions
         run: chmod 644 weddingserver.tar
 
-      # 🚀 Bước 8: Copy image và deploy script sang server qua SSH
-      - name: Upload and deploy to VPS
+      # 🚀 8️⃣ Upload Docker image lên server
+      - name: Upload Docker image
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -59,7 +59,7 @@ jobs:
           source: "weddingserver.tar"
           target: "/root/"
 
-      # ⚙️ Bước 9: SSH vào server để load & chạy container
+      # ⚙️ 9️⃣ Deploy container trên VPS
       - name: Deploy container on VPS
         uses: appleboy/ssh-action@v1.1.0
         with:
@@ -68,7 +68,7 @@ jobs:
           password: ${{ secrets.SERVER_PASS }}
           port: 24700
           script: |
-            echo "🚀 Deploying container..."
+            echo "🚀 Deploying WeddingServer container..."
             docker load -i /root/weddingserver.tar
             docker stop weddingserver || true
             docker rm weddingserver || true
