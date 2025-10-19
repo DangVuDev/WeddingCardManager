@@ -13,38 +13,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 🧩 1. Lấy source code
+      # 🧩 1️⃣ Lấy source code
       - name: Checkout source
         uses: actions/checkout@v4
 
-      # 🧰 2. Cài đặt .NET SDK 8.0
+      # 🧰 2️⃣ Cài đặt .NET SDK 8.0
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      # 🧱 3. Restore dependencies
+      # 🧱 3️⃣ Restore dependencies
       - name: Restore dependencies
         run: dotnet restore WeddingServer/WeddingServer.csproj
 
-      # 🧪 4. Build project
+      # 🧪 4️⃣ Build project
       - name: Build
         run: dotnet build WeddingServer/WeddingServer.csproj --configuration Release --no-restore
 
-      # ✅ 5. Run tests (nếu có)
+      # ✅ 5️⃣ Run tests (nếu có)
       - name: Test
         run: dotnet test --no-build --verbosity normal
         continue-on-error: true
 
-      # 🐳 6. Build Docker image (sửa đường dẫn đúng vị trí Dockerfile)
+      # 🐳 6️⃣ Build Docker image (giữ nguyên vị trí Dockerfile)
       - name: Build Docker image
-        run: docker build -t weddingserver:latest -f WeddingServer/Dockerfile WeddingServer
+        run: docker build -t weddingserver:latest -f WeddingServer/Dockerfile .
 
-      # 📦 7. Save Docker image để upload
+      # 📦 7️⃣ Save Docker image để upload lên VPS
       - name: Save Docker image
         run: docker save weddingserver:latest -o weddingserver.tar
 
-      # 🚀 8. Upload Docker image lên server
+      # 🚀 8️⃣ Upload Docker image lên server
       - name: Upload Docker image
         uses: appleboy/scp-action@v0.1.7
         with:
