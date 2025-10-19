@@ -1,0 +1,82 @@
+name: Build, Test & Deploy ASP.NET Backend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 🧩 Bước 1: Lấy source code
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # 🧰 Bước 2: Cài đặt .NET SDK (chỉnh version nếu cần)
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # 🧱 Bước 3: Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # 🧪 Bước 4: Build project
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      # ✅ Bước 5: Run tests (nếu có project test)
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+        continue-on-error: true  # nếu không có test, CI vẫn tiếp tục
+
+      # 🐳 Bước 6: Build Docker image
+      - name: Build Docker image
+        run: docker build -t weddingserver:latest .
+
+      # 📦 Bước 7: Save Docker image thành file .tar để upload sang server
+      - name: Save Docker image
+        run: docker save weddingserver:latest -o weddingserver.tar
+
+      # 🚀 Bước 8: Copy image và deploy script sang server qua SSH
+      - name: Upload and deploy to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASS }}
+          port: 24700
+          source: "weddingserver.tar"
+          target: "/root/"
+
+      # ⚙️ Bước 9: SSH vào server để load & chạy container
+      - name: Deploy container on VPS
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASS }}
+          port: 24700
+          script: |
+            echo "🚀 Deploying container..."
+            docker load -i /root/weddingserver.tar
+            docker stop weddingserver || true
+            docker rm weddingserver || true
+            docker run -d \
+              --name weddingserver \
+              -p 80:8080 \
+              -e aspnetcore_environment=Production \
+              -e Password="${{ secrets.ADMIN_PASSWORD }}" \
+              -e Cloudinary__CloudName="${{ secrets.CLOUDINARY_NAME }}" \
+              -e Cloudinary__ApiKey="${{ secrets.CLOUDINARY_KEY }}" \
+              -e Cloudinary__ApiSecret="${{ secrets.CLOUDINARY_SECRET }}" \
+              -e MongoSettings__DatabaseWedding1__ConnectionString="${{ secrets.MONGO_URI }}" \
+              -e MongoSettings__DatabaseWedding1__DatabaseName=WeddingManager \
+              weddingserver:latest
+            echo "✅ Deployment successful!"

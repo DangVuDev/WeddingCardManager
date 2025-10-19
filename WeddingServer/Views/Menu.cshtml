@@ -1,0 +1,619 @@
+﻿@{
+    ViewData["Title"] = "Bảng quản trị thiệp cưới";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pink: #ec4899;
+            --pink-dark: #db2777;
+            --pink-light: #fbcfe8;
+            --purple: #8b5cf6;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe5f1 25%, #fff0f8 50%, #fce4ec 75%, #fff5f7 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        @@keyframes gradientShift {
+            0%, 100%
+
+        {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        @@keyframes float {
+            0%
+
+        {
+            opacity: 0;
+            transform: translateY(0) rotate(0deg);
+        }
+
+        10% {
+            opacity: 0.7;
+        }
+
+        90% {
+            opacity: 0.2;
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateY(-100vh) rotate(360deg);
+        }
+
+        }
+
+        /* Menu container */
+        .menu-container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 3rem 2.5rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(236, 72, 153, 0.2);
+            max-width: 500px;
+            width: 100%;
+            animation: fadeInScale 0.6s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        @@keyframes fadeInScale {
+            from
+
+        {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        }
+
+        /* Header */
+        .menu-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .menu-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        @@keyframes heartbeat {
+            0%, 100%
+
+        {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--pink);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(236, 72, 153, 0.2);
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .divider {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--pink), transparent);
+            margin: 1.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        /* Menu buttons */
+        .menu-nav {
+            margin-bottom: 2rem;
+        }
+
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin: 1rem 0;
+            padding: 1.25rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 18px;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .menu-btn::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.2);
+                transform: translate(-50%, -50%);
+                transition: width 0.6s, height 0.6s;
+            }
+
+            .menu-btn:hover::before {
+                width: 400px;
+                height: 400px;
+            }
+
+            .menu-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            .menu-btn:active {
+                transform: translateY(-1px);
+            }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-icon {
+            font-size: 1.5rem;
+        }
+
+        .btn-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-btn:hover .btn-arrow {
+            transform: translateX(5px);
+        }
+
+        .btn-guests {
+            background: linear-gradient(135deg, #f9a8d4, var(--pink));
+        }
+
+        .btn-wishes {
+            background: linear-gradient(135deg, #c4b5fd, var(--purple));
+        }
+
+        .btn-config {
+            background: linear-gradient(135deg, #86efac, var(--green));
+        }
+
+        /* Config status */
+        .config-status {
+            text-align: center;
+            padding: 1.25rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            animation: fadeIn 0.6s ease-out 0.3s both;
+            transition: all 0.3s ease;
+        }
+
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .status-loading {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #a7f3d0;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 2px solid #fde68a;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fecaca;
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.6s ease-out 0.4s both;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        .stat-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--pink);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
+        /* Footer */
+        .menu-footer {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f3f4f6;
+            animation: fadeIn 0.6s ease-out 0.5s both;
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+        }
+
+        .logout-btn {
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .logout-btn:hover {
+                background: #e5e7eb;
+                transform: translateY(-2px);
+            }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top-color: var(--pink);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @@keyframes spin {
+            to
+
+        {
+            transform: rotate(360deg);
+        }
+
+        }
+
+        /* Responsive */
+        @@media (max-width: 640px) {
+            .menu-container
+
+        {
+            padding: 2rem 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+        }
+
+        .menu-icon {
+            font-size: 3rem;
+        }
+
+        .menu-btn {
+            padding: 1.1rem 1.25rem;
+            font-size: 1rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .stat-card {
+            padding: 0.75rem 0.5rem;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 1.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+
+    <div class="menu-container">
+        <!-- Header -->
+        <div class="menu-header">
+            <div class="menu-icon">💒</div>
+            <h1>Bảng Quản Trị</h1>
+            <p class="subtitle">Quản lý thiệp cưới của bạn</p>
+            <div class="divider"></div>
+        </div>
+
+        <!-- Stats 
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number" id="totalGuests">-</div>
+                <div class="stat-label">Khách mời</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💌</div>
+                <div class="stat-number" id="totalWishes">-</div>
+                <div class="stat-label">Lời chúc</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number" id="totalAccepted">-</div>
+                <div class="stat-label">Tham gia</div>
+            </div>
+        </div>
+
+        -->
+
+        <!-- Config status -->
+        <div class="config-status status-loading" id="configStatus">
+            <span class="status-icon"><div class="spinner"></div></span>
+            <div>Đang kiểm tra cấu hình...</div>
+        </div>
+
+        <!-- Menu navigation -->
+        <nav class="menu-nav">
+            <a class="menu-btn btn-guests" href="/api/wedding/admin/guests">
+                <div class="btn-content">
+                    <span class="btn-icon">💌</span>
+                    <span>Quản lý khách mời</span>
+                </div>
+                <span class="btn-arrow">→</span>
+            </a>
+
+            <a class="menu-btn btn-wishes" href="/api/wedding/admin/wishes/view">
+                <div class="btn-content">
+                    <span class="btn-icon">✨</span>
+                    <span>Xem lời chúc</span>
+                </div>
+                <span class="btn-arrow">→</span>
+            </a>
+
+            <a class="menu-btn btn-config" href="/api/wedding/admin/config/view">
+                <div class="btn-content">
+                    <span class="btn-icon">⚙️</span>
+                    <span>Cấu hình thiệp cưới</span>
+                </div>
+                <span class="btn-arrow">→</span>
+            </a>
+        </nav>
+
+        <!-- Footer -->
+        <div class="menu-footer">
+            <p class="footer-text">Made with 💖 for your special day</p>
+            <button class="logout-btn" onclick="logout()">
+                🚪 Đăng xuất
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticle() {
+            const particles = document.getElementById('particles');
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.textContent = ['💕', '💖', '💗', '💝', '🌸', '🌺'][Math.floor(Math.random() * 6)];
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.animationDuration = (Math.random() * 3 + 7) + 's';
+            particles.appendChild(particle);
+
+            setTimeout(() => particle.remove(), 10000);
+        }
+
+        setInterval(createParticle, 1500);
+
+        // Check config status
+        async function checkConfig() {
+            const statusDiv = document.getElementById('configStatus');
+
+            try {
+                const response = await fetch('/api/wedding/admin/config');
+
+                if (!response.ok) throw new Error('Không thể tải cấu hình');
+
+                const data = await response.json();
+
+                if (data && Object.keys(data).length > 0 && data.groomName && data.brideName) {
+                    statusDiv.className = 'config-status status-success';
+                    statusDiv.innerHTML = `
+                        <span class="status-icon">✅</span>
+                        <div>Cấu hình đã sẵn sàng</div>
+                    `;
+                } else {
+                    statusDiv.className = 'config-status status-warning';
+                    statusDiv.innerHTML = `
+                        <span class="status-icon">⚠️</span>
+                        <div>Chưa có cấu hình thiệp cưới</div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Config check error:', error);
+                statusDiv.className = 'config-status status-error';
+                statusDiv.innerHTML = `
+                    <span class="status-icon">❌</span>
+                    <div>Lỗi khi tải cấu hình</div>
+                `;
+            }
+        }
+
+        // Load stats
+        // async function loadStats() {
+        //     try {
+        //         Load guests count
+        //         const guestsResponse = await fetch('/api/wedding/admin/guests');
+        //         if (guestsResponse.ok) {
+        //             const guests = await guestsResponse.json();
+        //             document.getElementById('totalGuests').textContent = guests.length || 0;
+        //             const accepted = guests.filter(g => g.status === 'accepted').length;
+        //             document.getElementById('totalAccepted').textContent = accepted;
+        //         }
+
+        //         Load wishes count
+        //         const wishesResponse = await fetch('/api/wedding/admin/wishes');
+        //         if (wishesResponse.ok) {
+        //             const wishes = await wishesResponse.json();
+        //             document.getElementById('totalWishes').textContent = wishes.length || 0;
+        //         }
+        //     } catch (error) {
+        //         console.error('Stats load error:', error);
+        //         document.getElementById('totalGuests').textContent = '0';
+        //         document.getElementById('totalWishes').textContent = '0';
+        //         document.getElementById('totalAccepted').textContent = '0';
+        //     }
+        // }
+
+        // Logout function
+        function logout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                // Clear session and redirect to login
+                window.location.href = '/api/wedding';
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            checkConfig();
+            //loadStats();
+        });
+
+        console.log('💒 Wedding Manager Dashboard loaded successfully!');
+    </script>
+</body>
+</html>

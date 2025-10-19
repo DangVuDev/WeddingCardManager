@@ -1,0 +1,1054 @@
+﻿@{
+    ViewData["Title"] = "Cấu hình thiệp cưới";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>@@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pink: #ec4899;
+            --pink-dark: #db2777;
+            --pink-light: #fbcfe8;
+            --pink-lighter: #fce7f3;
+            --gray: #6b7280;
+            --gray-dark: #374151;
+            --shadow-sm: 0 2px 8px rgba(236, 72, 153, 0.08);
+            --shadow-md: 0 4px 20px rgba(236, 72, 153, 0.12);
+            --shadow-lg: 0 8px 30px rgba(236, 72, 153, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe5f1 25%, #fff0f8 50%, #fce4ec 75%, #fff5f7 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            color: var(--gray-dark);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        @@keyframes gradientShift {
+            0%, 100%
+
+        {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            padding: 3rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @@keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--pink-lighter);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--pink);
+            margin-bottom: 0.5rem;
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            text-shadow: 0 2px 10px rgba(236, 72, 153, 0.2);
+        }
+
+        .header-subtitle {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gray-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--pink-lighter);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+            input:focus, textarea:focus {
+                outline: none;
+                border-color: var(--pink);
+                box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
+            }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.6;
+        }
+
+        .list-container {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: var(--pink-lighter);
+            border-radius: 16px;
+        }
+
+        .item {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+            .item:hover {
+                border-color: var(--pink-light);
+                box-shadow: var(--shadow-md);
+            }
+
+            .item:last-child {
+                margin-bottom: 0;
+            }
+
+            .item input,
+            .item textarea {
+                margin-bottom: 0.75rem;
+            }
+
+                .item input:last-of-type,
+                .item textarea:last-of-type {
+                    margin-bottom: 1rem;
+                }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            padding: 0.85rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .btn-primary:active {
+                transform: translateY(0);
+            }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: var(--gray-dark);
+        }
+
+            .btn-secondary:hover {
+                background: #e5e7eb;
+                transform: translateY(-1px);
+            }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+            .btn-success:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            }
+
+        .btn-small {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+            .btn-danger:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            }
+
+        .file-upload {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+            .file-upload input[type="text"] {
+                flex: 1;
+            }
+
+            .file-upload input[type="file"] {
+                width: auto;
+                padding: 0.75rem 1rem;
+                cursor: pointer;
+                border: 2px dashed var(--pink-light);
+                background: var(--pink-lighter);
+                color: var(--gray);
+                font-size: 0.875rem;
+            }
+
+                .file-upload input[type="file"]:hover {
+                    border-color: var(--pink);
+                    background: var(--pink-light);
+                }
+
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--pink-lighter);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--pink-lighter);
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+            .loading-overlay.active {
+                display: flex;
+            }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--pink-lighter);
+            border-top-color: var(--pink);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @@keyframes spin {
+            to
+
+        {
+            transform: rotate(360deg);
+        }
+
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 1.25rem 1.75rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 10000;
+            animation: slideInRight 0.4s ease-out;
+            max-width: 400px;
+        }
+
+        @@keyframes slideInRight {
+            from
+
+        {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            body
+
+        {
+            padding: 1rem 0.5rem;
+        }
+
+        .container {
+            padding: 1.5rem;
+            border-radius: 16px;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+        }
+
+        .file-upload {
+            flex-direction: column;
+        }
+
+            .file-upload input[type="file"] {
+                width: 100%;
+            }
+
+        .action-bar {
+            flex-direction: column;
+        }
+
+            .action-bar button {
+                width: 100%;
+                justify-content: center;
+            }
+
+        .toast {
+            right: 15px;
+            left: 15px;
+            bottom: 15px;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-icon" id="toastIcon"></div>
+        <div class="toast-content">
+            <div class="toast-title" id="toastTitle"></div>
+            <div class="toast-message" id="toastMessage"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>💍 Cấu hình thiệp cưới</h1>
+            <p class="header-subtitle">Tùy chỉnh và quản lý nội dung thiệp cưới của bạn</p>
+        </div>
+
+        <form id="config-form">
+            <!-- Basic Info -->
+            <div class="form-section">
+                <h2 class="section-title">👰 Thông tin cơ bản</h2>
+
+                <div class="form-group">
+                    <label>Tên chú rể</label>
+                    <input type="text" id="groomName" placeholder="Nguyễn Văn A" onchange="config.groomName=this.value; console.log('Updated groomName:', this.value); console.log('Current config:', config)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Tên cô dâu</label>
+                    <input type="text" id="brideName" placeholder="Trần Thị B" onchange="config.brideName=this.value; console.log('Updated brideName:', this.value); console.log('Current config:', config)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Tên khách mời</label>
+                    <input type="text" id="guestName" placeholder="Ông/Bà..." onchange="config.guestName=this.value; console.log('Updated guestName:', this.value); console.log('Current config:', config)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Ngày giờ cưới (để đếm ngược)</label>
+                    <input type="datetime-local" id="weddingDate" onchange="config.weddingDate=this.value; console.log('Updated weddingDate:', this.value); console.log('Current config:', config)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Ngày hiển thị (văn bản)</label>
+                    <input type="text" id="weddingDateDisplay" placeholder="Thứ Bảy, 15 tháng 11 năm 2025" onchange="config.weddingDateDisplay=this.value; console.log('Updated weddingDateDisplay:', this.value); console.log('Current config:', config)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Khung giờ</label>
+                    <input type="text" id="weddingTime" placeholder="18:00 - 21:00" onchange="config.weddingTime=this.value; console.log('Updated weddingTime:', this.value); console.log('Current config:', config)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Địa điểm tổ chức</label>
+                    <input type="text" id="venue" placeholder="Nhà hàng tiệc cưới ABC" onchange="config.venue=this.value; console.log('Updated venue:', this.value); console.log('Current config:', config)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Địa chỉ chi tiết</label>
+                    <input type="text" id="address" placeholder="123 Đường XYZ, Quận 1, TP.HCM" onchange="config.address=this.value; console.log('Updated address:', this.value); console.log('Current config:', config)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Link Google Maps</label>
+                    <input type="url" id="mapUrl" placeholder="https://maps.google.com/..." onchange="config.mapUrl=this.value; console.log('Updated mapUrl:', this.value); console.log('Current config:', config)" />
+                </div>
+            </div>
+
+            <!-- Media -->
+            <div class="form-section">
+                <h2 class="section-title">🎨 Media & Assets</h2>
+
+                <div class="form-group">
+                    <label>Ảnh nền (Hero Image)</label>
+                    <div class="file-upload">
+                        <input type="text" id="heroImage" placeholder="URL ảnh nền" onchange="config.heroImage=this.value; console.log('Updated heroImage:', this.value); console.log('Current config:', config)" />
+                        <input type="file" accept="image/*" onchange="uploadAndSetUrl(this,'heroImage')" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Nhạc nền (MP3/Audio URL)</label>
+                    <input type="text" id="musicUrl" placeholder="URL file nhạc" onchange="config.musicUrl=this.value; console.log('Updated musicUrl:', this.value); console.log('Current config:', config)" />
+                </div>
+            </div>
+
+            <!-- Dress Code -->
+            <div class="form-section">
+                <h2 class="section-title">👗 Dress Code</h2>
+                <div id="dressCode-list" class="list-container"></div>
+                <button type="button" class="btn-secondary btn-small" onclick="addDressCode()">+ Thêm dress code</button>
+            </div>
+
+            <!-- Timeline -->
+            <div class="form-section">
+                <h2 class="section-title">🕒 Timeline sự kiện</h2>
+                <div id="timeline-list" class="list-container"></div>
+                <button type="button" class="btn-secondary btn-small" onclick="addTimeline()">+ Thêm timeline</button>
+            </div>
+
+            <!-- Stories -->
+            <div class="form-section">
+                <h2 class="section-title">💖 Câu chuyện tình yêu</h2>
+                <div id="stories-list" class="list-container"></div>
+                <button type="button" class="btn-secondary btn-small" onclick="addStory()">+ Thêm câu chuyện</button>
+            </div>
+
+            <!-- Gallery -->
+            <div class="form-section">
+                <h2 class="section-title">🖼️ Thư viện ảnh</h2>
+                <div id="gallery-list" class="list-container"></div>
+                <button type="button" class="btn-secondary btn-small" onclick="addGallery()">+ Thêm ảnh</button>
+            </div>
+
+            <!-- Contacts -->
+            <div class="form-section">
+                <h2 class="section-title">📞 Thông tin liên hệ</h2>
+                <div id="contacts-list" class="list-container"></div>
+                <button type="button" class="btn-secondary btn-small" onclick="addContact()">+ Thêm liên hệ</button>
+            </div>
+
+            <!-- Actions -->
+            <div class="action-bar">
+                <button type="button" class="btn-primary" onclick="saveConfig()">
+                    💾 Lưu cấu hình
+                </button>
+                <button type="button" class="btn-success" onclick="previewConfig()">
+                    👀 Xem trước
+                </button>
+                <button type="button" class="btn-secondary" onclick="resetForm()">
+                    🔄 Tải lại
+                </button>
+            </div>
+        </form>
+
+        <p class="footer">Made with 💖 by Wedding Manager</p>
+    </div>
+
+    <script>
+        let config = {};
+
+        // Load config on page load
+        async function loadConfig() {
+            showLoading();
+            try {
+                const res = await fetch('/api/wedding/admin/config');
+                if (res.ok) {
+                    config = await res.json();
+                    if (!config || Object.keys(config).length === 0) {
+                        config = getEmptyConfig();
+                    }
+                    console.log('Loaded config from server:', config);
+                } else {
+                    config = getEmptyConfig();
+                    console.log('Using empty config:', config);
+                }
+            } catch (error) {
+                console.error('Error loading config:', error);
+                config = getEmptyConfig();
+                console.log('Using empty config due to error:', config);
+                showToast('Lỗi', 'Không thể tải cấu hình. Sử dụng mẫu mặc định.', 'error');
+            } finally {
+                hideLoading();
+                fillForm(config);
+            }
+        }
+
+        function getEmptyConfig() {
+            return {
+                groomName: "",
+                brideName: "",
+                guestName: "",
+                weddingDate: "",
+                weddingDateDisplay: "",
+                weddingTime: "",
+                venue: "",
+                address: "",
+                mapUrl: "",
+                heroImage: "",
+                musicUrl: "",
+                dressCode: [],
+                timeline: [],
+                stories: [],
+                gallery: [],
+                contacts: []
+            };
+        }
+
+        function fillForm(data) {
+            // Fill basic fields
+            for (let key in data) {
+                const el = document.getElementById(key);
+                if (el && typeof data[key] === 'string') {
+                    el.value = data[key];
+                }
+            }
+
+            // Render lists
+            renderDressCode(data.dressCode || []);
+            renderTimeline(data.timeline || []);
+            renderStories(data.stories || []);
+            renderGallery(data.gallery || []);
+            renderContacts(data.contacts || []);
+            console.log('Form filled with config:', config);
+        }
+
+        function renderDressCode(items) {
+            const container = document.getElementById('dressCode-list');
+            if (items.length === 0) {
+                container.innerHTML = '<div class="empty-state">Chưa có dress code nào. Nhấn nút bên dưới để thêm.</div>';
+                return;
+            }
+            container.innerHTML = items.map((val, i) => `
+                <div class='item'>
+                    <input type='text' value='${val}' placeholder='VD: Áo dài truyền thống'
+                           oninput='config.dressCode[${i}]=this.value; console.log("Updated dressCode[${i}]:", this.value); console.log("Current config:", config)'>
+                    <button type='button' class='btn-danger btn-small' onclick='removeItem("dressCode",${i})'>
+                        🗑️ Xóa
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderTimeline(items) {
+            const container = document.getElementById('timeline-list');
+            if (items.length === 0) {
+                container.innerHTML = '<div class="empty-state">Chưa có timeline nào. Nhấn nút bên dưới để thêm.</div>';
+                return;
+            }
+            container.innerHTML = items.map((item, i) => `
+                <div class='item'>
+                    <input placeholder='Thời gian (VD: 17:00)' value='${item.time || ''}'
+                           oninput='config.timeline[${i}].time=this.value; console.log("Updated timeline[${i}].time:", this.value); console.log("Current config:", config)'>
+                    <input placeholder='Icon (VD: 🎉)' value='${item.icon || ''}'
+                           oninput='config.timeline[${i}].icon=this.value; console.log("Updated timeline[${i}].icon:", this.value); console.log("Current config:", config)'>
+                    <input placeholder='Tiêu đề' value='${item.title || ''}'
+                           oninput='config.timeline[${i}].title=this.value; console.log("Updated timeline[${i}].title:", this.value); console.log("Current config:", config)'>
+                    <textarea placeholder='Mô tả chi tiết'
+                              oninput='config.timeline[${i}].desc=this.value; console.log("Updated timeline[${i}].desc:", this.value); console.log("Current config:", config)'>${item.desc || ''}</textarea>
+                    <button type='button' class='btn-danger btn-small' onclick='removeItem("timeline",${i})'>
+                        🗑️ Xóa
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderStories(items) {
+            const container = document.getElementById('stories-list');
+            if (items.length === 0) {
+                container.innerHTML = '<div class="empty-state">Chưa có câu chuyện nào. Nhấn nút bên dưới để thêm.</div>';
+                return;
+            }
+            container.innerHTML = items.map((item, i) => `
+                <div class='item'>
+                    <input placeholder='Icon (VD: 💕)' value='${item.icon || ''}'
+                           oninput='config.stories[${i}].icon=this.value; console.log("Updated stories[${i}].icon:", this.value); console.log("Current config:", config)'>
+                    <input placeholder='Tiêu đề' value='${item.title || ''}'
+                           oninput='config.stories[${i}].title=this.value; console.log("Updated stories[${i}].title:", this.value); console.log("Current config:", config)'>
+                    <textarea placeholder='Nội dung câu chuyện'
+                              oninput='config.stories[${i}].desc=this.value; console.log("Updated stories[${i}].desc:", this.value); console.log("Current config:", config)'>${item.desc || ''}</textarea>
+                    <div class='file-upload'>
+                        <input placeholder='URL ảnh' value='${item.image || ''}'
+                               oninput='config.stories[${i}].image=this.value; console.log("Updated stories[${i}].image:", this.value); console.log("Current config:", config)'>
+                        <input type='file' accept='image/*'
+                               onchange='uploadAndSetUrl(this,"storyImage",${i})'>
+                    </div>
+                    <button type='button' class='btn-danger btn-small' onclick='removeItem("stories",${i})'>
+                        🗑️ Xóa
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderGallery(items) {
+            const container = document.getElementById('gallery-list');
+            if (items.length === 0) {
+                container.innerHTML = '<div class="empty-state">Chưa có ảnh nào trong thư viện. Nhấn nút bên dưới để thêm.</div>';
+                return;
+            }
+            container.innerHTML = items.map((val, i) => `
+                <div class='item'>
+                    <div class='file-upload'>
+                        <input type='text' value='${val}' placeholder='URL ảnh'
+                               oninput='config.gallery[${i}]=this.value; console.log("Updated gallery[${i}]:", this.value); console.log("Current config:", config)'>
+                        <input type='file' accept='image/*'
+                               onchange='uploadAndSetUrl(this,"gallery",${i})'>
+                    </div>
+                    ${val ? `<img src='${val}' style='max-width:200px;margin-top:10px;border-radius:8px;'>` : ''}
+                    <button type='button' class='btn-danger btn-small' onclick='removeItem("gallery",${i})'>
+                        🗑️ Xóa
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderContacts(items) {
+            const container = document.getElementById('contacts-list');
+            if (items.length === 0) {
+                container.innerHTML = '<div class="empty-state">Chưa có liên hệ nào. Nhấn nút bên dưới để thêm.</div>';
+                return;
+            }
+            container.innerHTML = items.map((item, i) => `
+                <div class='item'>
+                    <input placeholder='Icon (VD: 👰)' value='${item.icon || ''}'
+                           oninput='config.contacts[${i}].icon=this.value; console.log("Updated contacts[${i}].icon:", this.value); console.log("Current config:", config)'>
+                    <input placeholder='Tên (có thể dùng {{BRIDE_NAME}} hoặc {{GROOM_NAME}})'
+                           value='${item.name || ''}'
+                           oninput='config.contacts[${i}].name=this.value; console.log("Updated contacts[${i}].name:", this.value); console.log("Current config:", config)'>
+                    <input placeholder='Số điện thoại' value='${item.phone || ''}'
+                           oninput='config.contacts[${i}].phone=this.value; console.log("Updated contacts[${i}].phone:", this.value); console.log("Current config:", config)'>
+                    <input placeholder='Email' value='${item.email || ''}'
+                           oninput='config.contacts[${i}].email=this.value; console.log("Updated contacts[${i}].email:", this.value); console.log("Current config:", config)'>
+                    <button type='button' class='btn-danger btn-small' onclick='removeItem("contacts",${i})'>
+                        🗑️ Xóa
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Add functions
+        function addDressCode() {
+            config.dressCode.push("");
+            renderDressCode(config.dressCode);
+            console.log('Added new dressCode item. Current config:', config);
+        }
+
+        function addTimeline() {
+            config.timeline.push({ time: "", icon: "", title: "", desc: "" });
+            renderTimeline(config.timeline);
+            console.log('Added new timeline item. Current config:', config);
+        }
+
+        function addStory() {
+            config.stories.push({ icon: "", title: "", desc: "", image: "" });
+            renderStories(config.stories);
+            console.log('Added new story item. Current config:', config);
+        }
+
+        function addGallery() {
+            config.gallery.push("");
+            renderGallery(config.gallery);
+            console.log('Added new gallery item. Current config:', config);
+        }
+
+        function addContact() {
+            config.contacts.push({ icon: "", name: "", phone: "", email: "" });
+            renderContacts(config.contacts);
+            console.log('Added new contact item. Current config:', config);
+        }
+
+        function removeItem(key, index) {
+            if (confirm('Bạn có chắc chắn muốn xóa mục này?')) {
+                config[key].splice(index, 1);
+                fillForm(config);
+                console.log(`Removed item from ${key} at index ${index}. Current config:`, config);
+            }
+        }
+
+        // Upload image
+        async function uploadAndSetUrl(fileInput, target, index) {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Lỗi', 'Kích thước file không được vượt quá 5MB', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("File", file);
+            formData.append("Folder", "wedding");
+
+            showLoading();
+            try {
+                const res = await fetch("/api/image/upload", {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.message || "Upload thất bại");
+
+                // Set URL to config
+                if (target === "gallery") {
+                    config.gallery[index] = data.url;
+                } else if (target === "storyImage") {
+                    config.stories[index].image = data.url;
+                } else {
+                    document.getElementById(target).value = data.url;
+                    config[target] = data.url;
+                }
+
+                showToast('Thành công!', 'Ảnh đã được upload', 'success');
+                fillForm(config);
+                console.log(`Uploaded image for ${target}${index !== undefined ? `[${index}]` : ''}. Current config:`, config);
+            } catch (err) {
+                console.error('Upload error:', err);
+                showToast('Lỗi upload', err.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Save config
+        async function saveConfig() {
+            // Collect form values (as fallback, since onchange handles most updates)
+            const formData = new FormData(document.getElementById('config-form'));
+            for (const [k, v] of formData.entries()) {
+                if (config[k] !== undefined && typeof config[k] === 'string') {
+                    config[k] = v;
+                }
+            }
+            console.log('Saving config:', config);
+
+            showLoading();
+            try {
+                const res = await fetch('/api/wedding/admin/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+
+                if (res.ok) {
+                    showToast('Thành công!', 'Cấu hình đã được lưu', 'success');
+                    console.log('Config saved successfully:', config);
+                } else {
+                    const error = await res.json();
+                    throw new Error(error.message || 'Lưu thất bại');
+                }
+            } catch (err) {
+                console.error('Save error:', err);
+                showToast('Lỗi', err.message || 'Không thể lưu cấu hình', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Preview config
+        async function previewConfig() {
+            // Collect current form values (as fallback)
+            const formData = new FormData(document.getElementById('config-form'));
+            for (const [k, v] of formData.entries()) {
+                if (config[k] !== undefined && typeof config[k] === 'string') {
+                    config[k] = v;
+                }
+            }
+            console.log('Previewing config:', config);
+
+            showLoading();
+            try {
+                const res = await fetch('/api/wedding/review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+
+                if (res.ok) {
+                    const html = await res.text();
+                    const newTab = window.open('', '_blank');
+                    newTab.document.write(html);
+                    newTab.document.close();
+                    showToast('Thành công!', 'Đã mở preview trong tab mới', 'success');
+                    console.log('Preview generated successfully');
+                } else {
+                    throw new Error('Không thể tạo preview');
+                }
+            } catch (err) {
+                console.error('Preview error:', err);
+                showToast('Lỗi', 'Không thể xem trước thiệp cưới', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            if (confirm('Bạn có chắc chắn muốn tải lại cấu hình? Các thay đổi chưa lưu sẽ bị mất.')) {
+                loadConfig();
+                console.log('Form reset. Reloading config...');
+            }
+        }
+
+        // UI Helper functions
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const titleEl = document.getElementById('toastTitle');
+            const messageEl = document.getElementById('toastMessage');
+
+            // Set content
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+
+            // Set icon based on type
+            icon.textContent = type === 'success' ? '✅' : '❌';
+
+            // Set class
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+
+            // Auto hide after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + S to save
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveConfig();
+            }
+            // Ctrl/Cmd + P to preview
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                previewConfig();
+            }
+        });
+
+        // Auto-save draft to localStorage every 30 seconds
+        setInterval(() => {
+            const formData = new FormData(document.getElementById('config-form'));
+            for (const [k, v] of formData.entries()) {
+                if (config[k] !== undefined && typeof config[k] === 'string') {
+                    config[k] = v;
+                }
+            }
+            try {
+                localStorage.setItem('wedding_config_draft', JSON.stringify(config));
+                console.log('Draft auto-saved. Current config:', config);
+            } catch (err) {
+                console.error('Auto-save error:', err);
+            }
+        }, 30000);
+
+        // Load draft on page load if exists
+        function loadDraft() {
+            try {
+                const draft = localStorage.getItem('wedding_config_draft');
+                if (draft) {
+                    const draftConfig = JSON.parse(draft);
+                    // Only use draft if it's newer than server config
+                    if (confirm('Có phiên bản nháp chưa lưu. Bạn có muốn khôi phục không?')) {
+                        config = draftConfig;
+                        fillForm(config);
+                        showToast('Đã khôi phục', 'Đã tải phiên bản nháp', 'success');
+                        console.log('Draft restored:', config);
+                    }
+                }
+            } catch (err) {
+                console.error('Load draft error:', err);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", async () => {
+            await loadConfig();
+
+            // Check for draft after loading server config
+            setTimeout(loadDraft, 500);
+
+            // Show helpful tips
+            console.log('%c💡 Keyboard Shortcuts:', 'font-size: 14px; font-weight: bold; color: #ec4899;');
+            console.log('Ctrl/Cmd + S: Lưu cấu hình');
+            console.log('Ctrl/Cmd + P: Xem trước');
+        });
+
+        // Warn before leaving if there are unsaved changes
+        let hasUnsavedChanges = false;
+
+        document.getElementById('config-form').addEventListener('input', () => {
+            hasUnsavedChanges = true;
+        });
+
+        window.addEventListener('beforeunload', (e) => {
+            if (hasUnsavedChanges) {
+                e.preventDefault();
+                e.returnValue = 'Bạn có thay đổi chưa lưu. Bạn có chắc chắn muốn rời khỏi trang?';
+                return e.returnValue;
+            }
+        });
+
+        // Reset unsaved changes flag after save
+        const originalSaveConfig = saveConfig;
+        saveConfig = async function() {
+            await originalSaveConfig();
+            hasUnsavedChanges = false;
+        };
+    </script>
+</body>
+</html>

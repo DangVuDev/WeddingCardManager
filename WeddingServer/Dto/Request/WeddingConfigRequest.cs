@@ -1,0 +1,27 @@
+﻿using Core.Model.Base;
+using WeddingServer.Dto.Model;
+
+namespace WeddingServer.Dto.Request
+{
+    public class WeddingConfigRequest
+    {
+        public string GroomName { get; set; } = "";
+        public string BrideName { get; set; } = "";
+        public string GuestName { get; set; } = "";
+        public DateTime WeddingDate { get; set; }
+        public string WeddingDateDisplay { get; set; } = "";
+        public string WeddingTime { get; set; } = "";
+        public string Venue { get; set; } = "";
+        public string Address { get; set; } = "";
+        public string MapUrl { get; set; } = "";
+        public string HeroImage { get; set; } = "";
+        public string MusicUrl { get; set; } = "";
+
+        public List<TimelineEvent> Timeline { get; set; } = new();
+        public List<string> DressCode { get; set; } = new();
+        public List<LoveStory> Stories { get; set; } = new();
+        public List<string> Gallery { get; set; } = new();
+        public List<ContactInfo> Contacts { get; set; } = new();
+    }
+    
+}
