@@ -725,6 +725,8 @@
                 }
 
                 try {
+
+                    console.log('Submitting new guest:', { id, name, url: partialUrl });
                     const response = await fetch('/api/wedding/add-guest', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -810,10 +812,13 @@
             });
 
             // Handle copy and mark sent
-            guestList.addEventListener('click', async (e) => {
+                        guestList.addEventListener('click', (e) => {
                 const btn = e.target.closest('.copy-btn, .mark-sent-btn');
                 if (!btn) return;
 
+                // -------------------------------
+                // Copy URL
+                // -------------------------------
                 if (btn.classList.contains('copy-btn')) {
                     const fullUrl = btn.getAttribute('data-url');
                     if (!fullUrl) {
@@ -821,49 +826,88 @@
                         return;
                     }
 
-                    try {
-                        await navigator.clipboard.writeText(fullUrl);
-                        btn.innerHTML = '✅ Đã copy!';
-                        setTimeout(() => {
-                            btn.innerHTML = '📋 Copy';
-                        }, 2000);
-                        showToast('Đã copy URL vào clipboard!', 'success');
-                    } catch (err) {
-                        console.error('Copy error:', err);
-                        showToast('Không thể copy. Vui lòng copy thủ công.', 'error');
-                    }
+                    // Thực hiện copy, có fallback cho mobile
+                    const copyText = (text) => {
+                        try {
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                navigator.clipboard.writeText(text)
+                                    .then(() => {
+                                        btn.innerHTML = '✅ Đã copy!';
+                                        setTimeout(() => btn.innerHTML = '📋 Copy', 2000);
+                                        showToast('Đã copy URL vào clipboard!', 'success');
+                                    })
+                                    .catch((err) => {
+                                        fallbackCopy(text);
+                                    });
+                            } else {
+                                fallbackCopy(text);
+                            }
+                        } catch (err) {
+                            fallbackCopy(text);
+                        }
+
+                        // Fallback bằng textarea
+                        function fallbackCopy(text) {
+                            try {
+                                const textarea = document.createElement('textarea');
+                                textarea.value = text;
+                                textarea.style.position = 'fixed';
+                                textarea.style.opacity = '0';
+                                document.body.appendChild(textarea);
+                                textarea.select();
+                                document.execCommand('copy');
+                                document.body.removeChild(textarea);
+
+                                btn.innerHTML = '✅ Đã copy!';
+                                setTimeout(() => btn.innerHTML = '📋 Copy', 2000);
+                                showToast('Đã copy URL (fallback)', 'success');
+                            } catch (err) {
+                                console.error('Copy fallback error:', err);
+                                showToast('Không thể copy. Vui lòng copy thủ công.', 'error');
+                            }
+                        }
+                    };
+
+                    copyText(fullUrl);
+                    return; // tránh thực thi phần mark-sent
                 }
 
+                // -------------------------------
+                // Mark as Sent
+                // -------------------------------
                 if (btn.classList.contains('mark-sent-btn')) {
                     const guestId = btn.dataset.id;
                     const card = btn.closest('.guest-card');
                     const flag = card.querySelector('.status-flag');
 
-                    try {
-                        const response = await fetch('/api/wedding/mark-sent', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ guestId })
-                        });
+                    (async () => {
+                        try {
+                            const response = await fetch('/api/wedding/mark-sent', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ guestId })
+                            });
 
-                        if (!response.ok) {
-                            const error = await response.json();
-                            throw new Error(error.message || 'Không thể đánh dấu đã gửi');
+                            if (!response.ok) {
+                                const error = await response.json();
+                                throw new Error(error.message || 'Không thể đánh dấu đã gửi');
+                            }
+
+                            flag.className = 'status-badge badge-sent status-flag';
+                            flag.textContent = '🟢 Đã gửi thiệp';
+                            card.dataset.sent = 'true';
+                            btn.remove();
+
+                            updateStats(0, 0, 0, -1);
+                            showToast('Đã đánh dấu đã gửi!', 'success');
+                        } catch (err) {
+                            console.error('Mark sent error:', err);
+                            showToast('Lỗi: ' + err.message, 'error');
                         }
-
-                        flag.className = 'status-badge badge-sent status-flag';
-                        flag.textContent = '🟢 Đã gửi thiệp';
-                        card.dataset.sent = 'true';
-                        btn.remove();
-
-                        updateStats(0, 0, 0, -1);
-                        showToast('Đã đánh dấu đã gửi!', 'success');
-                    } catch (err) {
-                        console.error('Mark sent error:', err);
-                        showToast('Lỗi: ' + err.message, 'error');
-                    }
+                    })();
                 }
             });
+
 
             // Update stats
             function updateStats(total = 0, accepted = 0, declined = 0, notSent = 0) {
@@ -906,4 +950,7 @@
         </script>
     </div>
 </body>
+
+
+
 </html>
