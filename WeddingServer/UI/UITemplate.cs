@@ -6,1477 +6,2079 @@
         {
             return WeddingCard.Replace("{{GUEST_NAME}}", System.Net.WebUtility.HtmlEncode(guestName));
         }
-        public const string WeddingCard = $@"<!DOCTYPE html>
+        public const string WeddingCard = @"@using System.Text.Json
+@using System.Text.Encodings.Web
+@using WeddingServer.Dto.Model
+@model WeddingConfigModel
+@{
+    ViewData[""Title""] = ""Thiệp Cưới"";
+
+    var options = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        WriteIndented = false
+    };
+
+    var configJson = JsonSerializer.Serialize(new
+    {
+        groomName = Model.GroomName,
+        brideName = Model.BrideName,
+        guestName = Model.GuestName,
+        weddingDate = Model.WeddingDate,
+        weddingDateDisplay = Model.WeddingDateDisplay,
+        weddingTime = Model.WeddingTime,
+        venue = Model.Venue,
+        address = Model.Address,
+        mapUrl = Model.MapUrl,
+        heroImage = Model.HeroImage,
+        musicUrl = Model.MusicUrl,
+        timeline = Model.Timeline,
+        dressCode = Model.DressCode,
+        stories = Model.Stories,
+        gallery = Model.Gallery,
+        contacts = Model.Contacts
+    }, options);
+}
+
+<!DOCTYPE html>
 <html lang=""vi"">
 <head>
-  <meta charset=""UTF-8"" />
-  <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"" />
-  <title>Thiệp Cưới - Hoàng Sơn & Kim Phượng</title>
-  <script src=""https://cdn.tailwindcss.com""></script>
-  <link href=""https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600;700&family=Dancing+Script:wght@400;600;700&display=swap"" rel=""stylesheet"">
-  <style>
-    * {{
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }}
-
-    body {{
-      font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(135deg, #fff5f7 0%, #ffe5f1 25%, #fff0f8 50%, #fce4ec 75%, #fff5f7 100%);
-      background-size: 400% 400%;
-      animation: gradientShift 20s ease infinite;
-      overflow-x: hidden;
-    }}
-
-    @keyframes gradientShift {{
-      0%, 100% {{ background-position: 0% 50%; }}
-      50% {{ background-position: 100% 50%; }}
-    }}
-
-    h1, h2, h3 {{ font-family: 'Playfair Display', serif; }}
-
-    /* ===== FALLING PETALS ===== */
-    .petal {{
-      position: fixed;
-      width: 12px;
-      height: 12px;
-      background: radial-gradient(circle, #ffb3d9, #ff80bf);
-      border-radius: 50% 0 50% 0;
-      pointer-events: none;
-      animation: fall linear infinite;
-      opacity: 0;
-      z-index: 9999;
-      filter: blur(0.5px);
-    }}
-
-    @keyframes fall {{
-      0% {{ opacity: 0; transform: translateY(-10px) rotate(0deg); }}
-      10% {{ opacity: 0.9; }}
-      90% {{ opacity: 0.4; }}
-      100% {{ opacity: 0; transform: translateY(100vh) rotate(720deg); }}
-    }}
-
-    /* ===== HERO SECTION ===== */
-    .hero {{
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(
-          rgba(255, 182, 193, 0.4),
-          rgba(255, 192, 203, 0.5)
-        ),
-        url(""https://images.unsplash.com/photo-1519741497674-611481863552?w=800"") center/cover no-repeat;
-    }}
-
-    .hero::before {{
-      content: """";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent 70%);
-      animation: rotate 40s linear infinite;
-    }}
-
-    @keyframes rotate {{
-      100% {{ transform: rotate(360deg); }}
-    }}
-
-    .hero-content {{
-      position: relative;
-      z-index: 10;
-      animation: fadeInUp 1.8s ease-out;
-    }}
-
-    .hero h1 {{
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      color: #fff;
-      text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5);
-      letter-spacing: 2px;
-      animation: fadeIn 2.5s ease-in-out;
-      font-weight: 800;
-    }}
-
-    .hero p {{
-      color: #fff;
-      font-weight: 400;
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
-      font-size: clamp(1.2rem, 3vw, 1.5rem);
-    }}
-
-    .hero-icon {{
-      animation: heartbeat 1.5s ease-in-out infinite;
-    }}
-
-    @keyframes heartbeat {{
-      0%, 100% {{ transform: scale(1); }}
-      50% {{ transform: scale(1.1); }}
-    }}
-
-    @keyframes fadeInUp {{
-      from {{ opacity: 0; transform: translateY(50px); }}
-      to {{ opacity: 1; transform: translateY(0); }}
-    }}
-
-    @keyframes fadeIn {{
-      from {{ opacity: 0; }}
-      to {{ opacity: 1; }}
-    }}
-
-    /* ===== SCROLL INDICATOR ===== */
-    .scroll-indicator {{
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      animation: bounce 2s infinite;
-      cursor: pointer;
-      z-index: 20;
-    }}
-
-    @keyframes bounce {{
-      0%, 100% {{ transform: translateX(-50%) translateY(0); }}
-      50% {{ transform: translateX(-50%) translateY(-15px); }}
-    }}
-
-    /* ===== INVITATION SECTION ===== */
-    .invitation-section {{
-      background: linear-gradient(180deg, #fff8fb 0%, #ffe2ee 50%, #fff8fb 100%);
-      padding: 6rem 1.5rem;
-      position: relative;
-      overflow: hidden;
-    }}
-
-    .invitation-section::before {{
-      content: """";
-      position: absolute;
-      top: -50px;
-      left: 0;
-      width: 100%;
-      height: 100px;
-      background: radial-gradient(ellipse at top, rgba(255, 182, 193, 0.3), transparent);
-    }}
-
-    .invitation-section::after {{
-      content: ""💕"";
-      position: absolute;
-      font-size: 15rem;
-      opacity: 0.05;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 0;
-    }}
-
-    .invitation-content {{
-      position: relative;
-      z-index: 1;
-    }}
-
-    .invitation-title {{
-      opacity: 0;
-      animation: fadeInDown 1s ease-out 0.2s forwards;
-    }}
-
-    .invitation-greeting {{
-      opacity: 0;
-      animation: fadeInUp 1s ease-out 0.4s forwards;
-    }}
-
-    .invitation-message {{
-      opacity: 0;
-      animation: fadeInUp 1s ease-out 0.6s forwards;
-    }}
-
-    .event-details {{
-      opacity: 0;
-      animation: zoomIn 1s ease-out 0.8s forwards;
-    }}
-
-    .location-details {{
-      opacity: 0;
-      animation: fadeInUp 1s ease-out 1s forwards;
-    }}
-
-    @keyframes fadeInDown {{
-      from {{
-        opacity: 0;
-        transform: translateY(-30px);
-      }}
-      to {{
-        opacity: 1;
-        transform: translateY(0);
-      }}
-    }}
-
-    @keyframes zoomIn {{
-      from {{
-        opacity: 0;
-        transform: scale(0.8);
-      }}
-      to {{
-        opacity: 1;
-        transform: scale(1);
-      }}
-    }}
-
-    .date-badge {{
-      display: inline-block;
-      background: linear-gradient(135deg, #ff69b4, #ff1493);
-      color: white;
-      padding: 1rem 2.5rem;
-      border-radius: 50px;
-      font-weight: 700;
-      box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
-      transition: all 0.3s ease;
-      animation: float 3s ease-in-out infinite;
-    }}
-
-    .date-badge:hover {{
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.5);
-    }}
-
-    @keyframes float {{
-      0%, 100% {{
-        transform: translateY(0);
-      }}
-      50% {{
-        transform: translateY(-10px);
-      }}
-    }}
-
-    .time-badge {{
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: white;
-      padding: 0.75rem 2rem;
-      border-radius: 50px;
-      box-shadow: 0 5px 20px rgba(255, 105, 180, 0.15);
-      transition: all 0.3s ease;
-    }}
-
-    .time-badge:hover {{
-      transform: scale(1.05);
-      box-shadow: 0 8px 25px rgba(255, 105, 180, 0.25);
-    }}
-
-    .location-card {{
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(10px);
-      padding: 2rem;
-      border-radius: 25px;
-      border: 2px solid rgba(255, 192, 203, 0.3);
-      transition: all 0.4s ease;
-      box-shadow: 0 10px 30px rgba(255, 105, 180, 0.1);
-    }}
-
-    .location-card:hover {{
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.2);
-      border-color: rgba(255, 192, 203, 0.5);
-    }}
-
-    .divider-ornament {{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin: 2rem 0;
-    }}
-
-    .divider-ornament::before,
-    .divider-ornament::after {{
-      content: '';
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.3), transparent);
-    }}
-
-    .ornament-icon {{
-      font-size: 2rem;
-      animation: rotate 10s linear infinite;
-    }}
-
-    @keyframes rotate {{
-      from {{ transform: rotate(0deg); }}
-      to {{ transform: rotate(360deg); }}
-    }}
-
-    /* ===== COUNTDOWN ===== */
-    .countdown-item {{
-      background: linear-gradient(135deg, #fff 0%, #ffe5f1 100%);
-      border-radius: 20px;
-      padding: 1.5rem;
-      min-width: 90px;
-      box-shadow: 0 10px 30px rgba(255, 105, 180, 0.2);
-      transition: all 0.3s ease;
-      animation: pulse 3s ease-in-out infinite;
-    }}
-
-    .countdown-item:hover {{
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.35);
-    }}
-
-    @keyframes pulse {{
-      0%, 100% {{ transform: scale(1); }}
-      50% {{ transform: scale(1.03); }}
-    }}
-
-    /* ===== TIMELINE ===== */
-    .timeline-item {{
-      opacity: 0;
-      transform: translateX(-80px);
-      animation: slideInLeft 1s ease-out forwards;
-    }}
-
-    .timeline-item:nth-child(even) {{
-      transform: translateX(80px);
-      animation: slideInRight 1s ease-out forwards;
-    }}
-
-    @keyframes slideInLeft {{
-      to {{ opacity: 1; transform: translateX(0); }}
-    }}
-
-    @keyframes slideInRight {{
-      to {{ opacity: 1; transform: translateX(0); }}
-    }}
-
-    /* ===== GALLERY ===== */
-/* 🌸 Wedding Gallery – Soft & Elegant Style */
-.gallery-section {{
-  background: linear-gradient(180deg, #fffafc, #fff0f6);
-  padding: 4rem 2rem;
-  position: relative;
-  overflow: hidden;
-}}
-
-.gallery-section::before {{
-  content: """";
-  position: absolute;
-  inset: 0;
-  background: url('https://cdn.pixabay.com/photo/2016/11/29/09/32/rose-1869621_960_720.jpg') center/cover no-repeat;
-  opacity: 0.05;
-  z-index: 0;
-}}
-
-/* 🌿 Layout: Masonry with variable sizes */
-.gallery-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
-  position: relative;
-  z-index: 1;
-}}
-
-.gallery-item {{
-  position: relative;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(255, 150, 180, 0.25);
-  transform: translateY(0);
-  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.4s ease;
-  cursor: pointer;
-}}
-
-.gallery-item img {{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.8s ease;
-}}
-
-.gallery-item:hover {{
-  transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 15px 35px rgba(255, 160, 190, 0.4);
-}}
-
-.gallery-item:hover img {{
-  transform: scale(1.1);
-}}
-
-.gallery-overlay {{
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(255, 160, 190, 0.65), transparent);
-  color: white;
-  font-weight: 600;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 1rem;
-  font-size: 1.1rem;
-  letter-spacing: 0.5px;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}}
-
-.gallery-item:hover .gallery-overlay {{
-  opacity: 1;
-}}
-
-/* 🌷 Floating animation subtle for romance */
-@keyframes floatSoft {{
-  0% {{ transform: translateY(0px); }}
-  50% {{ transform: translateY(-8px); }}
-  100% {{ transform: translateY(0px); }}
-}}
-
-.gallery-item:nth-child(odd) {{
-  animation: floatSoft 6s ease-in-out infinite;
-}}
-.gallery-item:nth-child(even) {{
-  animation: floatSoft 7s ease-in-out infinite reverse;
-}}
-
-/* 💫 Album Modal */
-.album-modal {{
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  visibility: hidden;
-  opacity: 0;
-  z-index: 999;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}}
-
-.album-modal.active {{
-  visibility: visible;
-  opacity: 1;
-}}
-
-.album-content {{
-  position: relative;
-  max-width: 85%;
-  max-height: 85%;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 0 40px rgba(255, 150, 180, 0.5);
-}}
-
-.album-slide {{
-  width: 100%;
-  height: auto;
-  border-radius: inherit;
-  animation: fadeIn 0.5s ease;
-}}
-
-@keyframes fadeIn {{
-  from {{ opacity: 0; transform: scale(0.96); }}
-  to {{ opacity: 1; transform: scale(1); }}
-}}
-
-/* 🎀 Navigation Buttons */
-.album-nav {{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.25);
-  color: #fff;
-  border: none;
-  font-size: 2.2rem;
-  cursor: pointer;
-  border-radius: 50%;
-  padding: 0.5rem 0.9rem;
-  transition: background 0.3s, transform 0.3s;
-  backdrop-filter: blur(6px);
-}}
-
-.album-nav:hover {{
-  background: rgba(255, 255, 255, 0.5);
-  transform: scale(1.15);
-}}
-
-.album-nav.prev {{ left: -3rem; }}
-.album-nav.next {{ right: -3rem; }}
-
-.album-close {{
-  position: absolute;
-  top: -2rem;
-  right: -2rem;
-  background: rgba(255, 255, 255, 0.3);
-  color: #fff;
-  border: none;
-  font-size: 2rem;
-  border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
-  cursor: pointer;
-  line-height: 1;
-  transition: background 0.3s, transform 0.3s;
-}}
-
-.album-close:hover {{
-  background: rgba(255, 255, 255, 0.6);
-  transform: rotate(90deg);
-}}
-
-.album-counter {{
-  position: absolute;
-  bottom: -2.5rem;
-  width: 100%;
-  text-align: center;
-  color: #fff;
-  font-weight: 500;
-  font-size: 1rem;
-  letter-spacing: 0.3px;
-}}
-
-
-
-    /* ===== BUTTONS ===== */
-    .rsvp-btn {{
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s ease;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }}
-
-    .rsvp-btn::before {{
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.4);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }}
-
-    .rsvp-btn:hover::before {{
-      width: 400px;
-      height: 400px;
-    }}
-
-    .rsvp-btn:hover {{
-      transform: translateY(-5px);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
-    }}
-
-    .rsvp-btn:active {{
-      transform: translateY(-2px) scale(0.98);
-    }}
-
-    /* ===== HEART ANIMATION ===== */
-    .heart-float {{
-      position: fixed;
-      color: #ff69b4;
-      font-size: 28px;
-      pointer-events: none;
-      animation: floatHeart 3.5s ease-out forwards;
-      z-index: 9999;
-    }}
-
-    @keyframes floatHeart {{
-      0% {{ opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }}
-      100% {{ opacity: 0; transform: translateY(-250px) scale(1.8) rotate(180deg); }}
-    }}
-
-    /* ===== FORM INPUTS ===== */
-    input, textarea {{
-      transition: all 0.4s ease;
-      border: 2px solid transparent;
-    }}
-
-    input:focus, textarea:focus {{
-      outline: none;
-      border-color: #ff69b4;
-      box-shadow: 0 0 0 5px rgba(255, 105, 180, 0.12);
-      transform: translateY(-3px);
-      background: white;
-    }}
-
-    /* ===== MUSIC CONTROL ===== */
-    .music-control {{
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 65px;
-      height: 65px;
-      background: linear-gradient(135deg, #ff69b4, #ff1493);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 12px 35px rgba(255, 105, 180, 0.5);
-      transition: all 0.4s ease;
-      z-index: 10000;
-      animation: musicPulse 2.5s ease-in-out infinite;
-    }}
-
-    @keyframes musicPulse {{
-      0%, 100% {{ box-shadow: 0 12px 35px rgba(255, 105, 180, 0.5); }}
-      50% {{ box-shadow: 0 12px 50px rgba(255, 105, 180, 0.7), 0 0 0 15px rgba(255, 105, 180, 0.1); }}
-    }}
-
-    .music-control:hover {{
-      transform: scale(1.15);
-    }}
-
-    .music-control.paused {{
-      animation: none;
-      background: linear-gradient(135deg, #999, #666);
-    }}
-
-    /* ===== ALBUM MODAL ===== */
-    .album-modal {{
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  visibility: hidden;
-  opacity: 0;
-  z-index: 100;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
-  backdrop-filter: blur(10px);
-}}
-
-.album-modal.active {{
-  visibility: visible;
-  opacity: 1;
-}}
-
-.album-content {{
-  position: relative;
-  width: 90%;
-  max-width: 900px;
-  aspect-ratio: 4 / 3; /* khung cố định */
-  background: #111;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}}
-
-.album-slide {{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-  border-radius: 16px;
-  animation: fadeIn 0.5s ease;
-}}
-
-@keyframes fadeIn {{
-  from {{ opacity: 0; transform: scale(0.97); }}
-  to {{ opacity: 1; transform: scale(1); }}
-}}
-
-.album-nav {{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.25);
-  border: none;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 55px;
-  height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s, transform 0.3s;
-  z-index: 10;
-}}
-
-.album-nav:hover {{
-  background: rgba(255, 255, 255, 0.45);
-  transform: scale(1.1);
-}}
-
-.album-nav.prev {{ left: 20px; }}
-.album-nav.next {{ right: 20px; }}
-
-.album-close {{
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.25);
-  border: none;
-  color: white;
-  font-size: 1.8rem;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s, transform 0.3s;
-  z-index: 10;
-}}
-
-.album-close:hover {{
-  background: rgba(255, 255, 255, 0.5);
-  transform: rotate(90deg);
-}}
-
-.album-counter {{
-  position: absolute;
-  bottom: 20px;
-  right: 30px;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
-  background: rgba(0,0,0,0.4);
-  padding: 6px 14px;
-  border-radius: 12px;
-  letter-spacing: 1px;
-  user-select: none;
-  transition: all 0.3s ease;
-}}
-
-    /* ===== SECTION HEADERS ===== */
-    .section-header {{
-      position: relative;
-      display: inline-block;
-      padding-bottom: 15px;
-    }}
-
-    .section-header::after {{
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(90deg, transparent, #ff69b4, transparent);
-      border-radius: 2px;
-    }}
-
-    /* ===== DECORATIVE ELEMENTS ===== */
-    .decoration-line {{
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.3), transparent);
-      margin: 2rem 0;
-    }}
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {{
-      .countdown-item {{
-        min-width: 70px;
-        padding: 1.2rem 0.8rem;
-      }}
-      
-      .invitation-card {{
-        padding: 2rem 1.5rem !important;
-      }}
-
-      .album-content {{
-    width: 94%;
-    max-width: 100%;
-    aspect-ratio: 1 / 1; /* vuông trên mobile */
-  }}
-
-  .album-nav {{
-    width: 45px;
-    height: 45px;
-    font-size: 1.6rem;
-  }}
-
-  .album-nav.prev {{ left: 10px; }}
-  .album-nav.next {{ right: 10px; }}
-
-  .album-close {{
-    width: 42px;
-    height: 42px;
-    top: 10px;
-    right: 10px;
-  }}
-
-  .album-counter {{
-    bottom: 10px;
-    right: 50%;
-    transform: translateX(50%);
-    background: rgba(0,0,0,0.6);
-    padding: 4px 10px;
-    font-size: 0.9rem;
-  }}
-      
-      .music-control {{
-        width: 55px;
-        height: 55px;
-        bottom: 20px;
-        right: 20px;
-      }}
-
-      .gallery-item {{
-        height: 200px !important;
-      }}
-
-      .timeline-item {{
-        animation-delay: 0.2s !important;
-      }}
-    }}
-
-    @media (max-width: 480px) {{
-      .countdown-item {{
-        min-width: 60px;
-        padding: 1rem 0.6rem;
-      }}
-
-      .rsvp-btn {{
-        padding: 1rem 1.5rem !important;
-        font-size: 0.95rem !important;
-      }}
-    }}
-
-    /* ===== LOADING ANIMATION ===== */
-    .loading-overlay {{
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #ffb3d9, #ff80bf);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
-    }}
-
-    .loading-overlay.hidden {{
-      opacity: 0;
-      visibility: hidden;
-    }}
-
-    .loading-heart {{
-      font-size: 4rem;
-      animation: loadingPulse 1s ease-in-out infinite;
-    }}
-
-    @keyframes loadingPulse {{
-      0%, 100% {{ transform: scale(1); opacity: 1; }}
-      50% {{ transform: scale(1.3); opacity: 0.7; }}
-    }}
-  </style>
+    <meta charset=""UTF-8"" />
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"" />
+    <title>Thiệp Cưới @Model.GroomName & @Model.BrideName</title>
+
+    <!-- Open Graph Tags -->
+    <meta property=""og:title"" content=""Thiệp Cưới @Model.GroomName & @Model.BrideName - Mời @Model.GuestName"" />
+    <meta property=""og:description"" content=""Trân trọng mời @Model.GuestName đến dự lễ cưới của @Model.GroomName và @Model.BrideName vào @Model.WeddingDateDisplay tại @Model.Venue."" />
+    <meta property=""og:image"" content=""@Model.HeroImage"" />
+    <meta property=""og:url"" content=""@Model.HeroImage"" />
+    <meta property=""og:type"" content=""website"" />
+    <meta property=""og:site_name"" content=""Thiệp Cưới @Model.GroomName & @Model.BrideName"" />
+
+    <link href=""https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600;700&family=Dancing+Script:wght@400;600;700&display=swap"" rel=""stylesheet"">
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --primary-color: #ff69b4;
+            --primary-dark: #ff1493;
+            --secondary-color: #ffe5f1;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #fff;
+            --shadow-sm: 0 5px 15px rgba(255, 105, 180, 0.1);
+            --shadow-md: 0 10px 30px rgba(255, 105, 180, 0.2);
+            --shadow-lg: 0 15px 45px rgba(255, 105, 180, 0.3);
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe5f1 25%, #fff0f8 50%, #fce4ec 75%, #fff5f7 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            overflow-x: hidden;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        @@keyframes gradientShift {
+            0%, 100%
+
+        {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        /* ===== UTILITIES ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* ===== FALLING PETALS ===== */
+        .petal {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, #ffb3d9, #ff80bf);
+            border-radius: 50% 0 50% 0;
+            pointer-events: none;
+            animation: fall linear infinite;
+            opacity: 0;
+            z-index: 9999;
+            filter: blur(0.5px);
+        }
+
+        @@keyframes fall {
+            0%
+
+        {
+            opacity: 0;
+            transform: translateY(-10px) rotate(0deg);
+        }
+
+        10% {
+            opacity: 0.9;
+        }
+
+        90% {
+            opacity: 0.4;
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateY(100vh) rotate(720deg);
+        }
+
+        }
+
+        /* ===== LOADING ===== */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #ffb3d9, #ff80bf);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+            .loading-overlay.hidden {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+        .loading-heart {
+            font-size: 4rem;
+            animation: loadingPulse 1s ease-in-out infinite;
+        }
+
+        @@keyframes loadingPulse {
+            0%, 100%
+
+        {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1.3);
+            opacity: 0.7;
+        }
+
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            min-height: 100svh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(rgba(255, 182, 193, 0.4), rgba(255, 192, 203, 0.5)), url(""https://images.unsplash.com/photo-1519741497674-611481863552?w=1920"") center/cover no-repeat;
+            background-attachment: fixed;
+        }
+
+            .hero::before {
+                content: """";
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent 70%);
+                animation: rotate 40s linear infinite;
+            }
+
+        @@keyframes rotate {
+            100%
+
+        {
+            transform: rotate(360deg);
+        }
+
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            animation: fadeInUp 1.8s ease-out;
+            padding: 0 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: var(--white);
+            text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            color: var(--white);
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+            margin-bottom: 3rem;
+            font-weight: 600;
+        }
+
+        .hero-icon {
+            font-size: clamp(4rem, 8vw, 6rem);
+            animation: heartbeat 1.5s ease-in-out infinite;
+            margin-bottom: 2rem;
+        }
+
+        @@keyframes heartbeat {
+            0%, 100%
+
+        {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        }
+
+        @@keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        @@keyframes bounce {
+            0%, 100%
+
+        {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        50% {
+            transform: translateX(-50%) translateY(-15px);
+        }
+
+        }
+
+        .decoration-line {
+            width: 100%;
+            max-width: 300px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            margin: 0 auto;
+        }
+
+        /* ===== INVITATION SECTION ===== */
+        .invitation-section {
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .invitation-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+            .invitation-header .icon {
+                font-size: 2.5rem;
+                margin-bottom: 15px;
+                color: #d4a373;
+            }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #8b5e3c;
+            margin-bottom: 10px;
+        }
+
+        .guest-name {
+            
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #ff1493;
+            margin: 10px 0;
+        }
+
+        .invitation-divider {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+            .invitation-divider .icon {
+                font-size: 1.5rem;
+                color: #d4a373;
+            }
+
+        .message {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.8;
+        }
+
+            .message .highlight {
+                color: #d4a373;
+                font-style: italic;
+            }
+
+        .event-info-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .info-card:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-md);
+            }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .info-card-icon {
+            font-size: 2rem;
+            color: #d4a373;
+            margin-right: 12px;
+        }
+
+        .info-card-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.6rem;
+            color: #f596c5;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .info-item-icon {
+            font-size: 1.4rem;
+            margin-right: 12px;
+            color: #d4a373;
+            margin-top: 2px;
+        }
+
+        .info-item-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.95rem;
+            color: #8b5e3c;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            color: #4a3728;
+            font-weight: 600;
+        }
+
+        .map-button {
+            display: inline-flex;
+            align-items: center;
+            background: #f596c5;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+            .map-button:hover {
+                background: #b8860b;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(212, 163, 115, 0.4);
+            }
+
+            .map-button span:first-child {
+                margin-right: 8px;
+            }
+
+        /* ===== TIMELINE SECTION ===== */
+        .timeline-section {
+            margin-top: 50px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .timeline-wrapper {
+            position: relative;
+            padding: 20px 0;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            padding-left: 50px;
+        }
+
+        .timeline-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #d4a373;
+        }
+
+            .timeline-card::before {
+                content: '';
+                position: absolute;
+                left: -54px;
+                top: 30px;
+                width: 12px;
+                height: 12px;
+                background: #d4a373;
+                border-radius: 50%;
+                border: 3px solid #fff;
+                box-shadow: 0 0 0 3px #d4a373;
+            }
+
+            .timeline-card:hover {
+                transform: translateX(8px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            }
+
+            .timeline-card .icon {
+                font-size: 2.5rem;
+                color: #d4a373;
+                margin-bottom: 10px;
+            }
+
+            .timeline-card .time-badge {
+                display: inline-block;
+                background: #f9f5f0;
+                color: #f596c5;
+                border-radius: 25px;
+                font-size: 1rem;
+                margin-bottom: 12px;
+                font-weight: 600;
+            }
+
+            .timeline-card h4 {
+                font-family: 'Playfair Display', serif;
+                font-size: 1.5rem;
+                color: #4a3728;
+                margin-bottom: 10px;
+            }
+
+            .timeline-card p {
+                font-family: 'Quicksand', sans-serif;
+                font-size: 1rem;
+                color: #666;
+                line-height: 1.6;
+            }
+
+        /* ===== DRESS CODE SECTION ===== */
+        .dress-code-section {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .dress-code-wrapper {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .dress-code-icon {
+            font-size: 2.5rem;
+            color: #d4a373;
+            margin-bottom: 15px;
+        }
+
+        .dress-tags {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .dress-tag {
+            background: linear-gradient(135deg, #f9f5f0, #fff5e6);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            color: #4a3728;
+            border: 2px solid #d4a373;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+            .dress-tag:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
+                background: linear-gradient(135deg, #d4a373, #b8860b);
+                color: #fff;
+            }
+
+        /* ===== SCROLL REVEAL ===== */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+            .scroll-reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        /* ===== COUNTDOWN SECTION ===== */
+        .countdown-section {
+            padding: 5rem 1.5rem;
+        }
+
+        .section-header {
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--primary-color);
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 1rem;
+        }
+
+            .section-header::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80px;
+                height: 4px;
+                background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+                border-radius: 2px;
+            }
+
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: linear-gradient(135deg, var(--white) 0%, var(--secondary-color) 100%);
+            border-radius: 20px;
+            padding: 1.5rem;
+            min-width: 90px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+            .countdown-item:hover {
+                transform: translateY(-5px) scale(1.05);
+                box-shadow: var(--shadow-lg);
+            }
+
+        @@keyframes pulse {
+            0%, 100%
+
+        {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.03);
+        }
+
+        }
+
+        .countdown-item .number {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .countdown-item .label {
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            color: var(--text-light);
+            margin-top: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* ===== LOVE STORY SECTION ===== */
+        .love-story-section {
+            padding: 5rem 1.5rem;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .story-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .story-item {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateX(-80px);
+            animation: slideInLeft 1s ease-out forwards;
+        }
+
+            .story-item:nth-child(even) {
+                flex-direction: row-reverse;
+                transform: translateX(80px);
+                animation: slideInRight 1s ease-out forwards;
+            }
+
+            .story-item:nth-child(1) {
+                animation-delay: 0.2s;
+            }
+
+            .story-item:nth-child(2) {
+                animation-delay: 0.4s;
+            }
+
+            .story-item:nth-child(3) {
+                animation-delay: 0.6s;
+            }
+
+        @@keyframes slideInLeft {
+            to
+
+        {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        }
+
+        @@keyframes slideInRight {
+            to
+
+        {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        }
+
+        .story-image {
+            flex: 1;
+            min-width: 300px;
+        }
+
+            .story-image img {
+                width: 100%;
+                height: 320px;
+                object-fit: cover;
+                border-radius: 20px;
+                box-shadow: var(--shadow-md);
+                transition: transform 0.5s ease;
+            }
+
+                .story-image img:hover {
+                    transform: scale(1.05);
+                }
+
+        .story-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: var(--shadow-md);
+        }
+
+            .story-content .icon {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+
+            .story-content h3 {
+                font-size: clamp(1.5rem, 4vw, 2rem);
+                color: var(--primary-color);
+                margin-bottom: 1rem;
+            }
+
+            .story-content p {
+                font-size: clamp(1rem, 2.5vw, 1.1rem);
+                color: var(--text-light);
+                line-height: 1.8;
+            }
+
+        /* ===== GALLERY SECTION ===== */
+        .gallery-section {
+            padding: 5rem 1.5rem;
+            background: linear-gradient(180deg, #fffafc, #fff0f6);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .gallery-section::before {
+                content: """";
+                position: absolute;
+                inset: 0;
+                opacity: 0.05;
+                z-index: 0;
+            }
+
+        .gallery-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .gallery-section .subtitle {
+            color: var(--text-light);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 3rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            cursor: pointer;
+            height: 280px;
+        }
+
+            .gallery-item:nth-child(odd) {
+                animation: floatSoft 6s ease-in-out infinite;
+            }
+
+            .gallery-item:nth-child(even) {
+                animation: floatSoft 7s ease-in-out infinite reverse;
+            }
+
+        @@keyframes floatSoft {
+            0%
+
+        {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(255, 160, 190, 0.4);
+        }
+
+            .gallery-item:hover img {
+                transform: scale(1.1);
+            }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(255, 160, 190, 0.65), transparent);
+            color: var(--white);
+            font-weight: 600;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 1rem;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        /* ===== ALBUM MODAL ===== */
+        .album-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            z-index: 10000;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+            .album-modal.active {
+                visibility: visible;
+                opacity: 1;
+            }
+
+        .album-content {
+            position: relative;
+            width: 90%;
+            max-width: 900px;
+            aspect-ratio: 4 / 3;
+            background: #111;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .album-slide {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 16px;
+            animation: fadeInSlide 0.5s ease;
+        }
+
+        @@keyframes fadeInSlide {
+            from
+
+        {
+            opacity: 0;
+            transform: scale(0.97);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        }
+
+        .album-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            color: var(--white);
+            font-size: 2rem;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+            .album-nav:hover {
+                background: rgba(255, 255, 255, 0.45);
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            .album-nav.prev {
+                left: 20px;
+            }
+
+            .album-nav.next {
+                right: 20px;
+            }
+
+        .album-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            color: var(--white);
+            font-size: 1.8rem;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+            .album-close:hover {
+                background: rgba(255, 255, 255, 0.5);
+                transform: rotate(90deg);
+            }
+
+        .album-counter {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            color: var(--white);
+            font-size: 1rem;
+            font-weight: 600;
+            background: rgba(0,0,0,0.4);
+            padding: 6px 14px;
+            border-radius: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== WISHES FORM ===== */
+        .wishes-section {
+            padding: 5rem 1.5rem;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .wishes-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .wishes-section .subtitle {
+            color: var(--text-light);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 3rem;
+        }
+
+        .wish-form {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255, 192, 203, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+            .form-group label {
+                display: block;
+                color: var(--text-dark);
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+                font-size: 1.1rem;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                width: 100%;
+                padding: 1rem 1.5rem;
+                border-radius: 15px;
+                background: rgba(255, 255, 255, 0.9);
+                border: 2px solid transparent;
+                font-family: 'Quicksand', sans-serif;
+                font-size: 1rem;
+                color: var(--text-dark);
+                transition: all 0.4s ease;
+            }
+
+                .form-group input::placeholder,
+                .form-group textarea::placeholder {
+                    color: #999;
+                }
+
+                .form-group input:focus,
+                .form-group textarea:focus {
+                    outline: none;
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 5px rgba(255, 105, 180, 0.12);
+                    transform: translateY(-3px);
+                    background: var(--white);
+                }
+
+            .form-group textarea {
+                resize: none;
+                min-height: 120px;
+            }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 1.2rem 2rem;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+            .btn-submit:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .btn-submit:active {
+                transform: translateY(-1px) scale(0.98);
+            }
+
+        /* ===== RSVP SECTION ===== */
+        .rsvp-section {
+            padding: 5rem 1.5rem;
+        }
+
+        .rsvp-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .rsvp-section .subtitle {
+            color: var(--text-light);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 3rem;
+        }
+
+        .rsvp-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+
+        .rsvp-btn {
+            position: relative;
+            overflow: hidden;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s ease;
+            color: var(--white);
+        }
+
+            .rsvp-btn.yes {
+                background: linear-gradient(135deg, #10b981, #059669);
+            }
+
+            .rsvp-btn.no {
+                background: linear-gradient(135deg, #f87171, #dc2626);
+            }
+
+            .rsvp-btn::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.4);
+                transform: translate(-50%, -50%);
+                transition: width 0.6s, height 0.6s;
+            }
+
+            .rsvp-btn:hover::before {
+                width: 400px;
+                height: 400px;
+            }
+
+            .rsvp-btn:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .rsvp-btn span {
+                position: relative;
+                z-index: 1;
+            }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, #ffffff, #fff5f9);
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .contact-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: linear-gradient(90deg, #ff69b4, #ff1493, #ff69b4);
+                transform: scaleX(0);
+                transition: transform 0.4s ease;
+            }
+
+            .contact-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 40px rgba(255, 105, 180, 0.2);
+                border-color: #ff69b4;
+            }
+
+                .contact-card:hover::before {
+                    transform: scaleX(1);
+                }
+
+            .contact-card .icon {
+                font-size: 3.5rem;
+                margin-bottom: 20px;
+                display: inline-block;
+                transition: transform 0.4s ease;
+            }
+
+            .contact-card:hover .icon {
+                transform: scale(1.2) rotate(10deg);
+            }
+
+            .contact-card h4 {
+                font-family: 'Playfair Display', serif;
+                font-size: 1.5rem;
+                color: #ff1493;
+                margin-bottom: 20px;
+                font-weight: 600;
+            }
+
+            .contact-card p {
+                font-size: 1.1rem;
+                color: #666;
+                margin: 10px 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                line-height: 1.6;
+            }
+
+                .contact-card p:hover {
+                    color: #ff1493;
+                }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 4rem 1.5rem;
+            text-align: center;
+            background: linear-gradient(to bottom, transparent, rgba(255, 192, 203, 0.1));
+        }
+
+            .footer .decoration-line {
+                max-width: 500px;
+                margin: 0 auto 2rem;
+            }
+
+            .footer .icon {
+                font-size: 4rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .footer p {
+                font-size: clamp(1rem, 2.5vw, 1.3rem);
+                color: var(--text-dark);
+                font-style: italic;
+                margin-bottom: 1rem;
+            }
+
+            .footer .names {
+                font-size: clamp(2rem, 5vw, 3rem);
+                color: var(--primary-color);
+                font-family: 'Dancing Script', cursive;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+            }
+
+            .footer .date-text {
+                color: var(--text-light);
+                font-size: 1rem;
+            }
+
+        /* ===== MUSIC CONTROL ===== */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.4s ease;
+            z-index: 10000;
+            animation: musicPulse 2.5s ease-in-out infinite;
+        }
+
+        @@keyframes musicPulse {
+            0%, 100%
+
+        {
+            box-shadow: 0 12px 35px rgba(255, 105, 180, 0.5);
+        }
+
+        50% {
+            box-shadow: 0 12px 50px rgba(255, 105, 180, 0.7), 0 0 0 15px rgba(255, 105, 180, 0.1);
+        }
+
+        }
+
+        .music-control:hover {
+            transform: scale(1.15);
+        }
+
+        .music-control.paused {
+            animation: none;
+            background: linear-gradient(135deg, #999, #666);
+        }
+
+        /* ===== MODAL NOTIFICATION ===== */
+        .modal-notification {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            animation: fadeIn 0.3s ease;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 3rem 2rem;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: slideInModal 0.4s ease;
+        }
+
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+
+        }
+
+        @@keyframes slideInModal {
+            from
+
+        {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        }
+
+        .modal-content .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content h3 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-content p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            font-weight: 700;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .modal-btn:hover {
+                transform: scale(1.05);
+            }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @@media (max-width: 768px) {
+            .timeline-grid
+
+        {
+            padding-left: 40px;
+        }
+
+        .timeline-line {
+            left: 15px;
+        }
+
+        .timeline-card::before {
+            left: -44px;
+        }
+
+        .story-item {
+            flex-direction: column !important;
+            gap: 1.5rem;
+        }
+
+        .story-image {
+            min-width: 100%;
+        }
+
+        .gallery-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            height: 220px;
+        }
+
+        .rsvp-buttons {
+            flex-direction: column;
+        }
+
+        .rsvp-btn {
+            width: 100%;
+        }
+
+        }
+
+        @@media (max-width: 480px) {
+            .timeline-grid
+
+        {
+            padding-left: 30px;
+        }
+
+        .timeline-line {
+            left: 10px;
+        }
+
+        .timeline-card::before {
+            left: -34px;
+        }
+
+        .dress-tags {
+            gap: 8px;
+        }
+
+        .dress-tag {
+            font-size: 0.9rem;
+            padding: 8px 16px;
+        }
+
+        }
+    </style>
 </head>
 <body>
-
-  <!-- Loading Overlay -->
-  <div class=""loading-overlay"" id=""loadingOverlay"">
-    <div class=""loading-heart"">💕</div>
-  </div>
-
-  <!-- Background Petals -->
-  <script>
-    function createPetal() {{
-      const petal = document.createElement('div');
-      petal.className = 'petal';
-      petal.style.left = Math.random() * 100 + 'vw';
-      petal.style.animationDuration = (Math.random() * 3 + 5) + 's';
-      petal.style.animationDelay = Math.random() * 2 + 's';
-      petal.style.width = (Math.random() * 8 + 8) + 'px';
-      petal.style.height = petal.style.width;
-      document.body.appendChild(petal);
-      setTimeout(() => petal.remove(), 8000);
-    }}
-    setInterval(createPetal, 300);
-  </script>
-
-  <!-- Background Music -->
-  <audio id=""bgMusic"" loop>
-    <source src=""https://dangvudev.github.io/my-profile/music.mp3"" type=""audio/mpeg"">
-  </audio>
-
-  <!-- Music Control -->
-  <div class=""music-control"" id=""musicControl"" title=""Bật/Tắt nhạc"">
-    <svg id=""musicIcon"" width=""32"" height=""32"" viewBox=""0 0 24 24"" fill=""white"">
-      <path d=""M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z""/>
-    </svg>
-  </div>
-
-  <!-- Hero Section -->
-  <section class=""hero"" id=""home"">
-    <div class=""hero-content px-4"">
-      <div class=""hero-icon text-7xl md:text-8xl mb-8"">💕</div>
-      <h1 class=""mb-6"">Ngọc Quyên <br>&<br> Hữu Châu</h1>
-      <p class=""mb-12"">Chúng tôi kết hôn!</p>
-      <div class=""decoration-line max-w-xs mx-auto""></div>
+    <!-- Loading Overlay -->
+    <div class=""loading-overlay"" id=""loadingOverlay"">
+        <div class=""loading-heart"">💕</div>
     </div>
-    <div class=""scroll-indicator"" onclick=""document.getElementById('invitation').scrollIntoView()"">
-      <svg width=""40"" height=""40"" viewBox=""0 0 24 24"" fill=""white"" style=""filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"">
-        <path d=""M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z""/>
-      </svg>
+
+    <!-- Background Petals -->
+    <script>
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            petal.style.animationDelay = Math.random() * 2 + 's';
+            petal.style.width = (Math.random() * 8 + 8) + 'px';
+            petal.style.height = petal.style.width;
+            document.body.appendChild(petal);
+            setTimeout(() => petal.remove(), 8000);
+        }
+        setInterval(createPetal, 300);
+    </script>
+
+    <!-- Configuration -->
+    <script>
+        const WEDDING_CONFIG = @Html.Raw(configJson);
+    </script>
+
+    <!-- Background Music -->
+    <audio id=""bgMusic"" loop>
+        <source id=""musicSource"" src="""" type=""audio/mpeg"">
+    </audio>
+
+    <!-- Music Control -->
+    <div class=""music-control"" id=""musicControl"" title=""Bật/Tắt nhạc"">
+        <svg id=""musicIcon"" width=""32"" height=""32"" viewBox=""0 0 24 24"" fill=""white"">
+            <path d=""M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"" />
+        </svg>
     </div>
-  </section>
 
-  <!-- Invitation Section -->
-  <section class=""invitation-section"" id=""invitation"">
-    <div class=""max-w-4xl mx-auto invitation-content text-center px-4"">
-      
-      <!-- Title -->
-      <div class=""invitation-title mb-8"">
-        <div class=""text-6xl md:text-7xl mb-4"">💌</div>
-        <p class=""text-xl md:text-2xl text-gray-600 font-light tracking-wide"">Trân trọng kính mời</p>
-      </div>
-
-      <!-- Greeting -->
-      <div class=""invitation-greeting mb-12"">
-        <h2 class=""text-4xl md:text-6xl font-bold text-pink-500 mb-6"" style=""font-family: 'Dancing Script', cursive;"">
-          <strong>{{{{GUEST_NAME}}}}</strong>
-        </h2>
-      </div>
-
-      <div class=""divider-ornament"">
-        <div class=""ornament-icon"">✨</div>
-      </div>
-
-      <!-- Message -->
-      <div class=""invitation-message mb-16"">
-        <p class=""text-xl md:text-2xl text-gray-700 leading-relaxed max-w-2xl mx-auto"">
-          Đến dự tiệc chung vui cùng gia đình chúng tôi<br />
-          <span class=""text-pink-500 font-semibold"">trong ngày trọng đại của đời mình</span>
-        </p>
-      </div>
-
-      <!-- Event Details -->
-      <div class=""event-details mb-12"">
-        <div class=""mb-8"">
-          <div class=""text-5xl md:text-6xl mb-6""></div>
-          <div class=""date-badge text-xl md:text-3xl mb-6"">
-            Thứ Bảy, 12 tháng 10 năm 2025
-          </div>
+    <!-- Hero Section -->
+    <section class=""hero"" id=""home"">
+        <div class=""hero-content"">
+            <div class=""hero-icon"">💕</div>
+            <h1 id=""heroNames""></h1>
+            <p>Chúng tôi kết hôn!</p>
+            <div class=""decoration-line""></div>
         </div>
-
-        <div class=""flex flex-wrap justify-center gap-4 md:gap-6 mb-8"">
-          <div class=""time-badge text-lg md:text-xl"">
-            <span>🕐</span>
-            <span class=""font-semibold text-gray-700"">18:00 giờ</span>
-          </div>
+        <div class=""scroll-indicator"" onclick=""document.getElementById('invitation').scrollIntoView()"">
+            <svg width=""40"" height=""40"" viewBox=""0 0 24 24"" fill=""white"" style=""filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"">
+                <path d=""M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"" />
+            </svg>
         </div>
-      </div>
+    </section>
 
-      <div class=""divider-ornament"">
-        <div class=""ornament-icon"">🌸</div>
-      </div>
+    <!-- Invitation Section -->
+    <section class=""invitation-section"" id=""invitation"">
+        <div class=""container"">
+            <div class=""invitation-content"">
+                <!-- Header with Guest Name -->
+                <div class=""invitation-header text-center scroll-reveal"">
+                    <div class=""icon"">💌</div>
+                    <p class=""subtitle"">Trân trọng kính mời</p>
+                    <h2 class=""guest-name"" id=""guestNameDisplay""></h2>
+                    <div class=""invitation-divider"">
+                        <div class=""icon"">✨</div>
+                    </div>
+                    <p class=""message"">
+                        Đến dự tiệc chung vui cùng gia đình chúng tôi<br />
+                        <span class=""highlight"">trong ngày trọng đại của đời mình</span>
+                    </p>
+                </div>
 
-      <!-- Location -->
-      <div class=""location-details mt-12"">
-        <div class=""location-card max-w-xl mx-auto"">
-          <h3 class=""text-2xl md:text-3xl font-bold text-pink-600 mb-4"">
-            Nhà hàng Tiệc Cưới Hoa Mai
-          </h3>
-          <p class=""text-lg md:text-xl text-gray-700 mb-3"">
-            📍 123 Đường Hoa Mai, Quận 10, TP.HCM
-          </p>
-          <a 
-            href=""https://maps.google.com"" 
-            target=""_blank""
-            class=""inline-block mt-4 bg-gradient-to-r from-pink-400 to-pink-600 text-white font-semibold px-8 py-3 rounded-full hover:scale-105 transition-all duration-300 shadow-lg""
-          >
-            🗺️ Xem bản đồ
-          </a>
-        </div>
-      </div>
+                <!-- Event Info Section -->
+                <div class=""event-info-section scroll-reveal"">
+                    <!-- Date & Time Card -->
+                    <div class=""info-card"">
+                        <div class=""info-card-header"">
+                            <div class=""info-card-icon"">📅</div>
+                            <h3 class=""info-card-title"">Thời gian</h3>
+                        </div>
+                        <div class=""info-card-body"">
+                            <div class=""info-item"">
+                                <span class=""info-item-icon"">📆</span>
+                                <div class=""info-item-content"">
+                                    <div class=""info-label"">Ngày</div>
+                                    <div class=""info-value"" id=""weddingDateDisplay""></div>
+                                </div>
+                            </div>
+                            <div class=""info-item"">
+                                <span class=""info-item-icon"">🕐</span>
+                                <div class=""info-item-content"">
+                                    <div class=""info-label"">Giờ</div>
+                                    <div class=""info-value"" id=""weddingTimeDisplay""></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-      <!-- Timeline -->
-      <div class=""mt-20"">
-        <h3 class=""text-3xl md:text-4xl font-bold text-pink-600 mb-12"">Lịch trình sự kiện</h3>
-        <div class=""grid md:grid-cols-3 gap-6 md:gap-8"">
-          
-          <div class=""location-card text-center opacity-0"" style=""animation: fadeInUp 1s ease-out 1.2s forwards;"">
-            <div class=""text-4xl md:text-5xl mb-4"">🍸</div>
-            <div class=""time-badge mb-4 mx-auto"">17:30</div>
-            <h4 class=""text-xl font-bold text-pink-500 mb-2"">Đón khách</h4>
-            <p class=""text-gray-600"">Tiệc chào đón & cocktail</p>
-          </div>
+                    <!-- Location Card -->
+                    <div class=""info-card"">
+                        <div class=""info-card-header"">
+                            <div class=""info-card-icon"">📍</div>
+                            <h3 class=""info-card-title"">Địa điểm</h3>
+                        </div>
+                        <div class=""info-card-body"">
+                            <div class=""info-item"">
+                                <span class=""info-item-icon"">🏛️</span>
+                                <div class=""info-item-content"">
+                                    <div class=""info-label"">Địa chỉ</div>
+                                    <div class=""info-value"" id=""venueDisplay""></div>
+                                    <div class=""info-value"" id=""addressDisplay"" style=""font-size: 1rem; color: #666; margin-top: 5px;""></div>
+                                </div>
+                            </div>
+                            <a href=""#"" id=""mapLink"" target=""_blank"" class=""map-button"">
+                                <span>🗺️</span>
+                                <span>Xem bản đồ</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
-          <div class=""location-card text-center opacity-0"" style=""animation: fadeInUp 1s ease-out 1.4s forwards;"">
-            <div class=""text-4xl md:text-5xl mb-4"">💒</div>
-            <div class=""time-badge mb-4 mx-auto"">18:00</div>
-            <h4 class=""text-xl font-bold text-pink-500 mb-2"">Lễ thành hôn</h4>
-            <p class=""text-gray-600"">Nghi lễ cưới truyền thống</p>
-          </div>
+                <!-- Timeline Section -->
+                <div class=""timeline-section scroll-reveal"">
+                    <h3 class=""section-title"">Lịch trình sự kiện</h3>
+                    <div class=""timeline-wrapper"">
+                        <div class=""timeline-line""></div>
+                        <div class=""timeline-grid"" id=""timelineContainer""></div>
+                    </div>
+                </div>
 
-          <div class=""location-card text-center opacity-0"" style=""animation: fadeInUp 1s ease-out 1.6s forwards;"">
-            <div class=""text-4xl md:text-5xl mb-4"">🎊</div>
-            <div class=""time-badge mb-4 mx-auto"">19:00</div>
-            <h4 class=""text-xl font-bold text-pink-500 mb-2"">Tiệc cưới</h4>
-            <p class=""text-gray-600"">Tiệc tối & giải trí</p>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Dress Code -->
-      <div class=""mt-16 opacity-0"" style=""animation: fadeInUp 1s ease-out 1.8s forwards;"">
-        <div class=""divider-ornament"">
-          <div class=""ornament-icon"">👗</div>
-        </div>
-        <h3 class=""text-2xl md:text-3xl font-bold text-pink-600 mb-6"">Trang phục</h3>
-        <div class=""flex flex-wrap justify-center gap-4"">
-          <span class=""bg-white px-6 py-3 rounded-full shadow-md text-gray-700 font-semibold border-2 border-pink-200"">
-            ✨ Trang trọng
-          </span>
-          <span class=""bg-white px-6 py-3 rounded-full shadow-md text-gray-700 font-semibold border-2 border-pink-200"">
-            💕 Tông màu hồng pastel
-          </span>
-          <span class=""bg-white px-6 py-3 rounded-full shadow-md text-gray-700 font-semibold border-2 border-pink-200"">
-            👔 Vest/Áo dài
-          </span>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Countdown Section -->
-  <section class=""py-20 px-4"">
-    <div class=""max-w-4xl mx-auto text-center"">
-      <h2 class=""section-header text-4xl md:text-5xl font-bold text-pink-600 mb-12"">Đếm ngược đến ngày trọng đại</h2>
-      <div id=""countdown"" class=""flex justify-center gap-4 md:gap-8 flex-wrap""></div>
-    </div>
-  </section>
-
-  <script>
-    const countdownEl = document.getElementById(""countdown"");
-    const weddingDate = new Date(""2025-12-12T18:00:00"").getTime();
-    
-    function updateCountdown() {{
-      const now = new Date().getTime();
-      const distance = weddingDate - now;
-      
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      
-      countdownEl.innerHTML = `
-        <div class=""countdown-item"">
-          <div class=""text-4xl md:text-6xl font-bold text-pink-600"">${{days}}</div>
-          <div class=""text-sm md:text-base text-gray-600 mt-3 font-semibold"">Ngày</div>
-        </div>
-        <div class=""countdown-item"">
-          <div class=""text-4xl md:text-6xl font-bold text-pink-600"">${{hours}}</div>
-          <div class=""text-sm md:text-base text-gray-600 mt-3 font-semibold"">Giờ</div>
-        </div>
-        <div class=""countdown-item"">
-          <div class=""text-4xl md:text-6xl font-bold text-pink-600"">${{minutes}}</div>
-          <div class=""text-sm md:text-base text-gray-600 mt-3 font-semibold"">Phút</div>
-        </div>
-        <div class=""countdown-item"">
-          <div class=""text-4xl md:text-6xl font-bold text-pink-600"">${{seconds}}</div>
-          <div class=""text-sm md:text-base text-gray-600 mt-3 font-semibold"">Giây</div>
-        </div>
-      `;
-    }}
-    
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-  </script>
-
-  <!-- Love Story Timeline -->
-  <section class=""py-20 px-4 bg-white/50"">
-    <div class=""max-w-5xl mx-auto"">
-      <h2 class=""section-header text-4xl md:text-5xl font-bold text-pink-600 text-center mb-16"">Câu chuyện tình yêu</h2>
-      
-      <div class=""space-y-16"">
-        <div class=""timeline-item flex flex-col md:flex-row gap-8 items-center"" style=""animation-delay: 0.2s"">
-          <div class=""w-full md:w-1/2"">
-            <div class=""gallery-item h-72 md:h-80"">
-              <img src=""https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800"" alt=""First meet"" />
+                <!-- Dress Code Section -->
+                <div class=""dress-code-section scroll-reveal"">
+                    <div class=""dress-code-wrapper"">
+                        <div class=""dress-code-icon"">👔</div>
+                        <h3 class=""section-title"">Trang phục đề nghị</h3>
+                        <div class=""dress-tags"" id=""dressCodeContainer""></div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class=""w-full md:w-1/2 bg-white/90 p-10 rounded-3xl shadow-xl"">
-            <div class=""text-5xl mb-4"">💫</div>
-            <h3 class=""text-3xl font-bold text-pink-500 mb-4"">Lần đầu gặp gỡ</h3>
-            <p class=""text-gray-600 leading-relaxed text-lg"">
-              Đó là một ngày thu đầy nắng vàng. Ánh mắt đầu tiên giữa phố đông đã khiến hai trái tim chúng tôi rung động. Một cuộc gặp gỡ tình cờ đã trở thành khởi đầu cho một chuyện tình đẹp không ngờ.
-            </p>
-          </div>
         </div>
+    </section>
 
-        <div class=""timeline-item flex flex-col md:flex-row-reverse gap-8 items-center"" style=""animation-delay: 0.4s"">
-          <div class=""w-full md:w-1/2"">
-            <div class=""gallery-item h-72 md:h-80"">
-              <img src=""https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800"" alt=""First date"" />
+    <!-- Countdown Section -->
+    <section class=""countdown-section"">
+        <div class=""container text-center"">
+            <h2 class=""section-header"">Đếm ngược đến ngày trọng đại</h2>
+            <div class=""countdown-container"" id=""countdown""></div>
+        </div>
+    </section>
+
+    <!-- Love Story Section -->
+    <section class=""love-story-section"">
+        <div class=""container"">
+            <h2 class=""section-header text-center"">Câu chuyện tình yêu</h2>
+            <div class=""story-container"" id=""storyContainer""></div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class=""gallery-section"">
+        <div class=""container"">
+            <div class=""gallery-container text-center"">
+                <h2 class=""section-header"">Album ảnh cưới</h2>
+                <p class=""subtitle"">Những khoảnh khắc đáng nhớ nhất của chúng tôi</p>
+                <div class=""gallery-grid"" id=""galleryGrid""></div>
             </div>
-          </div>
-          <div class=""w-full md:w-1/2 bg-white/90 p-10 rounded-3xl shadow-xl"">
-            <div class=""text-5xl mb-4"">☕</div>
-            <h3 class=""text-3xl font-bold text-pink-500 mb-4"">Buổi hẹn đầu tiên</h3>
-            <p class=""text-gray-600 leading-relaxed text-lg"">
-              Quán cà phê nhỏ góc phố cũ, nơi chúng tôi dành cả buổi chiều kể về những ước mơ và kỷ niệm. Từ đó, mỗi ngày đều có thêm một lý do để yêu nhau nhiều hơn chút nữa.
-            </p>
-          </div>
         </div>
+    </section>
 
-        <div class=""timeline-item flex flex-col md:flex-row gap-8 items-center"" style=""animation-delay: 0.6s"">
-          <div class=""w-full md:w-1/2"">
-            <div class=""gallery-item h-72 md:h-80"">
-              <img src=""https://images.unsplash.com/photo-1519741497674-611481863552?w=800"" alt=""Proposal"" />
+    <!-- Album Modal -->
+    <div id=""albumModal"" class=""album-modal"">
+        <div class=""album-content"">
+            <button class=""album-close"" onclick=""closeAlbum()"" title=""Đóng (ESC)"">&times;</button>
+            <button class=""album-nav prev"" onclick=""changeSlide(-1)"" title=""Trước"">&#10094;</button>
+            <img id=""albumSlide"" class=""album-slide"" src="""" alt=""Wedding photo"" />
+            <button class=""album-nav next"" onclick=""changeSlide(1)"" title=""Sau"">&#10095;</button>
+            <div id=""albumCounter"" class=""album-counter""></div>
+        </div>
+    </div>
+
+    <!-- Wishes Section -->
+    <section class=""wishes-section"">
+        <div class=""container"">
+            <div class=""wishes-container"">
+                <h2 class=""section-header text-center"">Gửi lời chúc</h2>
+                <p class=""subtitle text-center"">Những lời chúc của bạn sẽ là món quà ý nghĩa nhất dành cho chúng tôi</p>
+                <form id=""wishForm"" class=""wish-form"">
+                    <div class=""form-group"">
+                        <label>Tên của bạn</label>
+                        <input type=""text"" placeholder=""Nhập tên của bạn..."" required />
+                    </div>
+                    <div class=""form-group"">
+                        <label>Lời chúc</label>
+                        <textarea placeholder=""Gửi lời chúc tốt đẹp nhất đến đôi uyên ương..."" required></textarea>
+                    </div>
+                    <button type=""submit"" class=""btn-submit"">Gửi lời chúc 💌</button>
+                </form>
             </div>
-          </div>
-          <div class=""w-full md:w-1/2 bg-white/90 p-10 rounded-3xl shadow-xl"">
-            <div class=""text-5xl mb-4"">💍</div>
-            <h3 class=""text-3xl font-bold text-pink-500 mb-4"">Lời cầu hôn</h3>
-            <p class=""text-gray-600 leading-relaxed text-lg"">
-              Dưới bầu trời đêm đầy sao, anh đã quỳ xuống và hỏi em câu hỏi quan trọng nhất đời anh. Và em đã gật đầu với đôi mắt hạnh phúc. Đây là khoảnh khắc đẹp nhất của chúng tôi.
-            </p>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Photo Gallery -->
-  <!-- Wedding Photo Gallery -->
-<section class=""gallery-section py-20 px-4"">
-  <div class=""max-w-6xl mx-auto text-center"">
-    <h2 class=""text-4xl md:text-5xl font-bold text-pink-600 mb-4"">Album ảnh cưới</h2>
-    <p class=""text-gray-600 mb-12 text-lg"">Những khoảnh khắc đáng nhớ nhất của chúng tôi</p>
-
-    <div class=""gallery-grid grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"">
-      <!-- Repeat -->
-      <template id=""gallery-template"">
-        <div class=""gallery-item h-64 md:h-72"">
-          <img src="""" alt=""Wedding Photo"" loading=""lazy"" />
-          <div class=""gallery-overlay"">📸 Xem ảnh</div>
+    <!-- RSVP Section -->
+    <section class=""rsvp-section"">
+        <div class=""container"">
+            <div class=""rsvp-container"">
+                <h2 class=""section-header text-center"">Xác nhận tham dự</h2>
+                <p class=""subtitle text-center"">Vui lòng cho chúng tôi biết bạn có thể tham dự không nhé!</p>
+                <div class=""rsvp-buttons"">
+                    <button class=""rsvp-btn yes"" onclick=""handleRSVP(true)"">
+                        <span>🌸 Tôi sẽ tham dự 🌸</span>
+                    </button>
+                    <button class=""rsvp-btn no"" onclick=""handleRSVP(false)"">
+                        <span>💐 Xin lỗi, tôi không thể đến dự được 🎀</span>
+                    </button>
+                </div>
+                <div class=""contact-info scroll-reveal"">
+                    <div class=""invitation-divider"">
+                        <div class=""icon"">💝</div>
+                    </div>
+                    <h3 class=""section-title"">Thông tin liên hệ</h3>
+                    <div class=""contact-grid"" id=""contactContainer""></div>
+                </div>
+            </div>
         </div>
-      </template>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Modal Viewer -->
-<div id=""albumModal"" class=""album-modal"">
-  <div class=""album-content"">
-    <button class=""album-close"" title=""Đóng (ESC)"">&times;</button>
-    <button class=""album-nav prev"" title=""Trước"">&#10094;</button>
-    <img id=""albumSlide"" class=""album-slide"" src="""" alt=""Wedding photo"" />
-    <button class=""album-nav next"" title=""Sau"">&#10095;</button>
-    <div id=""albumCounter"" class=""album-counter""></div>
-  </div>
-</div>
-
-
-  <script>
-const albumImages = [
-  'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1400',
-  'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1400',
-  'https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=1400',
-  'https://images.unsplash.com/photo-1519741497674-611481863552?w=1400',
-  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1400',
-  'https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=1400',
-  'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1400',
-  'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1400'
-];
-
-const modal = document.getElementById('albumModal');
-const slideImg = document.getElementById('albumSlide');
-const counter = document.getElementById('albumCounter');
-let current = 0;
-
-// Render gallery items dynamically
-const grid = document.querySelector('.gallery-grid');
-const template = document.getElementById('gallery-template');
-albumImages.forEach((src, i) => {{
-  const clone = template.content.cloneNode(true);
-  const img = clone.querySelector('img');
-  img.src = src;
-  clone.querySelector('.gallery-item').onclick = () => openAlbum(i);
-  grid.appendChild(clone);
-}});
-
-function openAlbum(index) {{
-  current = index;
-  showSlide();
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}}
-
-function closeAlbum() {{
-  modal.classList.remove('active');
-  document.body.style.overflow = '';
-}}
-
-function showSlide() {{
-  slideImg.src = albumImages[current];
-  counter.textContent = `${{current + 1}} / ${{albumImages.length}}`;
-}}
-
-function changeSlide(n) {{
-  current = (current + n + albumImages.length) % albumImages.length;
-  showSlide();
-}}
-
-// Controls
-document.querySelector('.album-close').onclick = closeAlbum;
-document.querySelector('.album-nav.prev').onclick = () => changeSlide(-1);
-document.querySelector('.album-nav.next').onclick = () => changeSlide(1);
-modal.addEventListener('click', e => e.target === modal && closeAlbum());
-document.addEventListener('keydown', e => {{
-  if (!modal.classList.contains('active')) return;
-  if (e.key === 'Escape') closeAlbum();
-  if (e.key === 'ArrowRight') changeSlide(1);
-  if (e.key === 'ArrowLeft') changeSlide(-1);
-}});
-</script>
-
-
-  <!-- Wishes Section -->
-  <section class=""py-20 px-4 bg-white/50"">
-    <div class=""max-w-2xl mx-auto"">
-      <h2 class=""section-header text-4xl md:text-5xl font-bold text-pink-600 text-center mb-6"">Gửi lời chúc</h2>
-      <p class=""text-center text-gray-600 mb-12 text-lg"">Những lời chúc của bạn sẽ là món quà ý nghĩa nhất dành cho chúng tôi</p>
-      
-      <form id=""wishForm"" class=""invitation-card p-8 md:p-10"">
-        <div class=""mb-6"">
-          <label class=""block text-gray-700 font-semibold mb-3 text-lg"">Tên của bạn</label>
-          <input 
-            type=""text"" 
-            placeholder=""Nhập tên của bạn..."" 
-            class=""w-full px-6 py-4 rounded-xl bg-white/90 text-gray-800 placeholder-gray-400 text-lg""
-            required
-          />
+    <!-- Footer -->
+    <footer class=""footer"">
+        <div class=""container"">
+            <div class=""decoration-line""></div>
+            <div class=""icon"">💑</div>
+            <p>Cảm ơn bạn đã là một phần trong ngày hạnh phúc của chúng tôi</p>
+            <p class=""names"" id=""footerNames""></p>
+            <p class=""date-text"" id=""footerDate""></p>
+            <div class=""decoration-line""></div>
         </div>
-        <div class=""mb-8"">
-          <label class=""block text-gray-700 font-semibold mb-3 text-lg"">Lời chúc</label>
-          <textarea 
-            placeholder=""Gửi lời chúc tốt đẹp nhất đến đôi uyên ương..."" 
-            rows=""5""
-            class=""w-full px-6 py-4 rounded-xl bg-white/90 text-gray-800 placeholder-gray-400 resize-none text-lg""
-            required
-          ></textarea>
-        </div>
-        <button 
-          type=""submit"" 
-          class=""w-full bg-gradient-to-r from-pink-400 to-pink-600 text-white font-bold py-5 rounded-xl text-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]""
-        >
-          Gửi lời chúc 💌
-        </button>
-      </form>
-    </div>
-  </section>
+    </footer>
 
-  <script>
-  const wishForm = document.getElementById('wishForm');
-  wishForm.addEventListener('submit', async (e) => {{
-    e.preventDefault();
+    <!-- Main JavaScript -->
+    <script>
+        document.addEventListener(""DOMContentLoaded"", init);
 
-    const name = wishForm.querySelector('input').value.trim();
-    const message = wishForm.querySelector('textarea').value.trim();
-    const btn = wishForm.querySelector('button');
-    const originalText = btn.innerHTML;
+        function init() {
+            console.log('WEDDING_CONFIG:', WEDDING_CONFIG);
 
-    if (!name || !message) return;
+            // Scroll reveal
+            const scrollReveals = document.querySelectorAll('.scroll-reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            scrollReveals.forEach(el => observer.observe(el));
 
-    // Gửi yêu cầu lên server
-    try {{
-      const response = await fetch('/api/wedding', {{
-        method: 'POST',
-        headers: {{ 'Content-Type': 'application/json' }},
-        body: JSON.stringify({{ name, message }})
-      }});
+            // Hero background
+            if (WEDDING_CONFIG.heroImage) {
+                document.querySelector('.hero').style.backgroundImage =
+                    `linear-gradient(rgba(255,182,193,0.4), rgba(255,192,203,0.5)), url('${WEDDING_CONFIG.heroImage}')`;
+            }
 
-      if (!response.ok) throw new Error('Send failed');
+            // Names
+            document.getElementById('heroNames').innerHTML = `${WEDDING_CONFIG.groomName} <br>&<br> ${WEDDING_CONFIG.brideName}`;
+            document.getElementById('guestNameDisplay').textContent = WEDDING_CONFIG.guestName || 'Quý khách';
+            document.getElementById('footerNames').textContent = `${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName}`;
 
-      // Hiệu ứng tim bay 💗
-      for (let i = 0; i < 20; i++) {{
-        setTimeout(() => {{
-          const heart = document.createElement('div');
-          heart.className = 'heart-float';
-          heart.textContent = ['💗', '💕', '💖', '💝', '❤️'][Math.floor(Math.random() * 5)];
-          heart.style.left = (Math.random() * window.innerWidth) + 'px';
-          heart.style.top = (window.innerHeight - 100) + 'px';
-          document.body.appendChild(heart);
-          setTimeout(() => heart.remove(), 3500);
-        }}, i * 80);
-      }}
+            // Footer date
+            const weddingDate = new Date(WEDDING_CONFIG.weddingDate);
+            const dateStr = weddingDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            document.getElementById('footerDate').innerHTML = `${dateStr} • Forever & Always 💕`;
 
-      // Thông báo thành công
-      btn.innerHTML = '✓ Đã gửi! Cảm ơn bạn ❤️';
-      btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-      btn.disabled = true;
-      wishForm.reset();
+            // Wedding info
+            document.getElementById('weddingDateDisplay').textContent = WEDDING_CONFIG.weddingDateDisplay || '';
+            document.getElementById('weddingTimeDisplay').textContent = WEDDING_CONFIG.weddingTime || '';
+            document.getElementById('venueDisplay').textContent = WEDDING_CONFIG.venue || '';
+            document.getElementById('addressDisplay').textContent = WEDDING_CONFIG.address || '';
+            document.getElementById('mapLink').href = WEDDING_CONFIG.mapUrl || '#';
 
-      setTimeout(() => {{
-        btn.innerHTML = originalText;
-        btn.style.background = '';
-        btn.disabled = false;
-      }}, 3500);
+            // Music
+            if (WEDDING_CONFIG.musicUrl) {
+                document.getElementById('musicSource').src = WEDDING_CONFIG.musicUrl;
+                document.getElementById('bgMusic').load();
+            }
 
-    }} catch (err) {{
-      alert('❌ Gửi thất bại, vui lòng thử lại.');
-      console.error(err);
-    }}
-  }});
-</script>
+            // Timeline - FIX: Sử dụng lowercase 'timeline'
+            const timelines = WEDDING_CONFIG.timeline || [];
+            const timelineContainer = document.getElementById('timelineContainer');
+            if (timelines && timelines.length > 0) {
+                timelineContainer.innerHTML = timelines.map(event => `
+                    <div class=""timeline-card"">
+                        <div class=""icon"">${event.icon || '⏰'}</div>
+                        <div class=""time-badge"">${event.time || ''}</div>
+                        <h4>${event.title || ''}</h4>
+                        <p>${event.desc || event.description || ''}</p>
+                    </div>
+                `).join('');
+            } else {
+                timelineContainer.innerHTML = '<p style=""text-align:center;color:#999;"">Lịch trình sẽ được cập nhật sớm</p>';
+            }
 
-  <!-- RSVP Section -->
-  <section class=""py-20 px-4"">
-    <div class=""max-w-3xl mx-auto text-center"">
-      <h2 class=""section-header text-4xl md:text-5xl font-bold text-pink-600 mb-6"">Xác nhận tham dự</h2>
-      <p class=""text-gray-600 mb-12 text-lg"">Vui lòng cho chúng tôi biết bạn có thể tham dự không nhé!</p>
-      
-      <div class=""flex flex-col sm:flex-row gap-6 justify-center px-4"">
-        <button 
-          class=""rsvp-btn bg-gradient-to-r from-green-400 to-green-500 text-white font-bold px-12 py-6 rounded-full text-lg shadow-xl""
-          onclick=""handleRSVP(true)""
-        >
-          <span class=""relative z-10"">🌸 Tôi sẽ tham dự 🌸</span>
-        </button>
-        <button 
-          class=""rsvp-btn bg-gradient-to-r from-red-300 to-gray-600 text-white font-bold px-12 py-6 rounded-full text-lg shadow-xl""
-          onclick=""handleRSVP(false)""
-        >
-          <span class=""relative z-10"">💐 Xin lỗi, tôi không thể đến dự được 🎀</span>
-        </button>
-      </div>
+            // Dress Code - FIX: Sử dụng lowercase 'dressCode'
+            const dressCode = WEDDING_CONFIG.dressCode || [];
+            const dressCodeContainer = document.getElementById('dressCodeContainer');
+            if (dressCode && dressCode.length > 0) {
+                dressCodeContainer.innerHTML = dressCode.map(code => `
+                    <div class=""dress-tag"">${code}</div>
+                `).join('');
+            } else {
+                dressCodeContainer.innerHTML = '<p style=""color:#999;"">Trang phục tự do, lịch sự</p>';
+            }
 
-      <div class=""mt-16 invitation-card p-8 md:p-10"">
-        <h3 class=""text-2xl font-bold text-pink-600 mb-6"">Thông tin liên hệ</h3>
-        <div class=""grid md:grid-cols-2 gap-6 text-left"">
-          <div class=""bg-white/80 p-6 rounded-xl"">
-            <div class=""text-4xl mb-3"">👰</div>
-            <h4 class=""font-bold text-lg text-pink-500 mb-2"">Ngọc Quyên</h4>
-            <p class=""text-gray-600 mb-2"">📱 0901 234 567</p>
-            <p class=""text-gray-600"">💌 ngocquyen@email.com</p>
-          </div>
-          <div class=""bg-white/80 p-6 rounded-xl"">
-            <div class=""text-4xl mb-3"">🤵</div>
-            <h4 class=""font-bold text-lg text-pink-500 mb-2"">Hữu Châu</h4>
-            <p class=""text-gray-600 mb-2"">📱 0912 345 678</p>
-            <p class=""text-gray-600"">💌 huuchau@email.com</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+            // Love Story
+            const stories = WEDDING_CONFIG.stories || [];
+            const storyContainer = document.getElementById('storyContainer');
+            if (stories && stories.length > 0) {
+                stories.forEach((story, index) => {
+                    storyContainer.innerHTML += `
+                        <div class=""story-item"">
+                            <div class=""story-image"">
+                                <img src=""${story.image || ''}"" alt=""${story.title || ''}"" loading=""lazy"" />
+                            </div>
+                            <div class=""story-content"">
+                                <div class=""icon"">${story.icon || '💝'}</div>
+                                <h3>${story.title || ''}</h3>
+                                <p>${story.desc || story.description || ''}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
 
-  <script>
-    function handleRSVP(attending) {{
-      const message = attending 
-        ? '🎊 Cảm ơn bạn! Chúng tôi rất mong được gặp bạn!' 
-        : '💝 Cảm ơn vì đã thông báo. Hy vọng có dịp gặp lại!';
-      
-      for (let i = 0; i < 25; i++) {{
-        setTimeout(() => {{
-          const heart = document.createElement('div');
-          heart.className = 'heart-float';
-          heart.textContent = attending ? '🎉' : '💝';
-          heart.style.left = (Math.random() * window.innerWidth) + 'px';
-          heart.style.top = (window.innerHeight - 100) + 'px';
-          document.body.appendChild(heart);
-          setTimeout(() => heart.remove(), 3500);
-        }}, i * 60);
-      }}
-      
-      const modal = document.createElement('div');
-      modal.className = 'fixed inset-0 flex items-center justify-center z-50 px-4';
-      modal.style.background = 'rgba(0,0,0,0.7)';
-      modal.style.animation = 'fadeIn 0.3s ease';
-      modal.innerHTML = `
-        <div class=""bg-white rounded-3xl p-10 max-w-md text-center shadow-2xl"" style=""animation: slideIn 0.4s ease;"">
-          <div class=""text-6xl mb-4"">${{attending ? '🎊' : '💝'}}</div>
-          <p class=""text-2xl font-bold text-gray-800 mb-2"">${{attending ? 'Tuyệt vời!' : 'Cảm ơn <br>{{{{GUEST_NAME}}}} '}}</p>
-          <p class=""text-gray-600 text-lg mb-6"">${{message}}</p>
-          <button onclick=""this.closest('div').parentElement.remove()"" 
-            class=""bg-gradient-to-r from-pink-400 to-pink-600 text-white font-bold px-8 py-3 rounded-full hover:scale-105 transition-transform"">
-            Đóng
-          </button>
-        </div>
-      `;
-      document.body.appendChild(modal);
-      setTimeout(() => modal.remove(), 5000);
-    }}
-  </script>
+            // Gallery
+            const gallery = WEDDING_CONFIG.gallery || [];
+            const galleryGrid = document.getElementById('galleryGrid');
+            if (gallery && gallery.length > 0) {
+                gallery.forEach((img, index) => {
+                    galleryGrid.innerHTML += `
+                        <div class=""gallery-item"" onclick=""openAlbum(${index})"">
+                            <img src=""${img}"" alt=""Wedding ${index + 1}"" loading=""lazy"" />
+                            <div class=""gallery-overlay"">📸 Xem ảnh</div>
+                        </div>
+                    `;
+                });
+            }
 
-  <!-- Footer -->
-  <footer class=""py-16 text-center bg-gradient-to-b from-transparent to-pink-50"">
-    <div class=""decoration-line max-w-md mx-auto mb-8""></div>
-    <div class=""text-7xl mb-6"">💑</div>
-    <p class=""text-xl md:text-2xl text-gray-700 italic mb-4 px-4"">
-      Cảm ơn bạn đã là một phần trong ngày hạnh phúc của chúng tôi
-    </p>
-    <p class=""text-pink-500 font-bold text-3xl md:text-4xl mb-2"" style=""font-family: 'Dancing Script', cursive;"">
-      Ngọc Quyên & Hữu Châu
-    </p>
-    <p class=""text-gray-500 mt-6 text-base"">
-      12.10.2025 • Forever & Always 💕
-    </p>
-    <div class=""decoration-line max-w-md mx-auto mt-8""></div>
-  </footer>
+            // Contacts
+            const contacts = WEDDING_CONFIG.contacts || [];
+            const brideName = WEDDING_CONFIG.brideName;
+            const groomName = WEDDING_CONFIG.groomName;
+            const contactContainer = document.getElementById('contactContainer');
+            if (contacts && contacts.length > 0) {
+                contacts.forEach(contact => {
+                    const name = (contact.name || '')
+                        .replace('{{BRIDE_NAME}}', brideName)
+                        .replace('{{GROOM_NAME}}', groomName);
+                    contactContainer.innerHTML += `
+                        <div class=""contact-card"">
+                            <div class=""icon"">${contact.icon || '👤'}</div>
+                            <h4>${name}</h4>
+                            <p>📱 ${contact.phone || ''}</p>
+                            ${contact.email ? `<p>💌 ${contact.email}</p>` : ''}
+                        </div>
+                    `;
+                });
+            }
 
-  <!-- Music Control Script -->
-  <script>
-    const music = document.getElementById('bgMusic');
-    const musicControl = document.getElementById('musicControl');
-    const musicIcon = document.getElementById('musicIcon');
-    let isPlaying = false;
+            // Countdown
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
 
-    document.body.addEventListener('click', () => {{
-      if (!isPlaying) {{
-        music.play().then(() => {{
-          isPlaying = true;
-          musicControl.classList.remove('paused');
-          updateMusicIcon();
-        }}).catch(() => {{}});
-      }}
-    }}, {{ once: true }});
+        // Countdown Function
+        function updateCountdown() {
+            const weddingDate = new Date(WEDDING_CONFIG.weddingDate).getTime();
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
 
-    musicControl.addEventListener('click', (e) => {{
-      e.stopPropagation();
-      if (isPlaying) {{
-        music.pause();
-        isPlaying = false;
-        musicControl.classList.add('paused');
-      }} else {{
-        music.play();
-        isPlaying = true;
-        musicControl.classList.remove('paused');
-      }}
-      updateMusicIcon();
-    }});
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = `
+                    <div class=""countdown-item"" style=""min-width: 200px;"">
+                        <div class=""number"">💑</div>
+                        <div class=""label"">Đã kết hôn!</div>
+                    </div>
+                `;
+                return;
+            }
 
-    function updateMusicIcon() {{
-      if (isPlaying) {{
-        musicIcon.innerHTML = '<path d=""M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z""/>';
-      }} else {{
-        musicIcon.innerHTML = '<path d=""M4.27 3L3 4.27l9 9v.28c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4v-1.73L19.73 21 21 19.73 4.27 3zM14 7h4V3h-6v5.18l2 2z""/>';
-      }}
-    }}
-  </script>
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  <!-- Loading Script -->
-  <script>
-    window.addEventListener('load', () => {{
-      setTimeout(() => {{
-        document.getElementById('loadingOverlay').classList.add('hidden');
-      }}, 1000);
-    }});
-  </script>
+            document.getElementById('countdown').innerHTML = `
+                <div class=""countdown-item""><div class=""number"">${days}</div><div class=""label"">Ngày</div></div>
+                <div class=""countdown-item""><div class=""number"">${hours}</div><div class=""label"">Giờ</div></div>
+                <div class=""countdown-item""><div class=""number"">${minutes}</div><div class=""label"">Phút</div></div>
+                <div class=""countdown-item""><div class=""number"">${seconds}</div><div class=""label"">Giây</div></div>
+            `;
+        }
 
+        // Gallery Modal
+        let currentSlide = 0;
+
+        function openAlbum(index) {
+            currentSlide = index;
+            showSlide();
+            document.getElementById('albumModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAlbum() {
+            document.getElementById('albumModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function changeSlide(direction) {
+            const gallery = WEDDING_CONFIG.gallery || [];
+            if (gallery.length === 0) return;
+
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = gallery.length - 1;
+            if (currentSlide >= gallery.length) currentSlide = 0;
+            showSlide();
+        }
+
+        function showSlide() {
+            const gallery = WEDDING_CONFIG.gallery || [];
+            if (gallery.length === 0) return;
+
+            document.getElementById('albumSlide').src = gallery[currentSlide];
+            document.getElementById('albumCounter').textContent = `${currentSlide + 1} / ${gallery.length}`;
+        }
+
+        // Keyboard Navigation for Gallery
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('albumModal').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') changeSlide(-1);
+                if (e.key === 'ArrowRight') changeSlide(1);
+                if (e.key === 'Escape') closeAlbum();
+            }
+        });
+
+        // Click Outside to Close
+        document.getElementById('albumModal').addEventListener('click', (e) => {
+            if (e.target.id === 'albumModal') closeAlbum();
+        });
+
+        // Music Control
+        const music = document.getElementById('bgMusic');
+        const musicControl = document.getElementById('musicControl');
+        const musicIcon = document.getElementById('musicIcon');
+        let isPlaying = false;
+
+        // Auto-play on first interaction
+        document.body.addEventListener('click', () => {
+            if (!isPlaying && WEDDING_CONFIG.musicUrl) {
+                music.play().then(() => {
+                    isPlaying = true;
+                    musicControl.classList.remove('paused');
+                    musicIcon.innerHTML = `<path d=""M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"" />`;
+                }).catch(err => console.log('Auto-play prevented:', err));
+            }
+        }, { once: true });
+
+        musicControl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isPlaying) {
+                music.pause();
+                isPlaying = false;
+                musicControl.classList.add('paused');
+                musicIcon.innerHTML = `<path d=""M8 5v14l11-7z"" />`;
+            } else {
+                music.play().then(() => {
+                    isPlaying = true;
+                    musicControl.classList.remove('paused');
+                    musicIcon.innerHTML = `<path d=""M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"" />`;
+                }).catch(err => console.error('Music play error:', err));
+            }
+        });
+
+        // Wish Form Submission
+         document.getElementById('wishForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = e.target.querySelector('input').value;
+            const message = e.target.querySelector('textarea').value;
+
+            try {
+                console.log('Submitting wish:', JSON.stringify({ name, message }));
+                const response = await fetch('/api/wedding/wish', { // Use absolute path
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, message })
+                });
+
+                if (response.ok) {
+                    showModal('Cảm ơn bạn!', 'Lời chúc của bạn đã được gửi thành công! 💖', 'success');
+                    e.target.reset();
+                } else {
+                    const result = await response.json();
+                    showModal('Lỗi', result.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                }
+            } catch (error) {
+                console.error('Wish submission error:', error);
+                showModal('Lỗi', 'Không thể kết nối đến server. Vui lòng thử lại sau.', 'error');
+            }
+        });
+
+        // RSVP Handling
+        async function handleRSVP(isAttending) {
+            try {
+                const url = new URL(window.location.href);
+                const guestId = url.searchParams.get('id') || 'default';
+                const response = await fetch('/api/wedding/rsvp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        guestId: guestId,
+                        isAttending
+                    })
+                });
+
+                if (response.ok) {
+                    showModal(
+                        'Cảm ơn bạn!',
+                        isAttending
+                            ? 'Chúng tôi rất vui được chào đón bạn tại đám cưới! 🌸'
+                            : 'Cảm ơn bạn đã phản hồi. Chúng tôi rất tiếc khi bạn không thể tham dự. 💐',
+                        'success'
+                    );
+                } else {
+                    const result = await response.json();
+                    showModal('Lỗi', result.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showModal('Lỗi', 'Không thể kết nối đến server. Vui lòng thử lại sau.', 'error');
+            }
+        }
+
+        // Modal Notification
+        function showModal(title, message, type = 'success') {
+            const modal = document.createElement('div');
+            modal.className = 'modal-notification';
+            modal.innerHTML = `
+                <div class=""modal-content"">
+                    <div class=""icon"">${type === 'success' ? '🎉' : '⚠️'}</div>
+                    <h3>${title}</h3>
+                    <p>${message}</p>
+                    <button class=""modal-btn"" onclick=""this.parentElement.parentElement.remove()"">Đóng</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Auto close after 5 seconds
+            setTimeout(() => {
+                if (modal.parentElement) {
+                    modal.remove();
+                }
+            }, 5000);
+        }
+
+        // Remove Loading Overlay
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 1000);
+        });
+    </script>
 </body>
 </html>";
+
     }
 }
