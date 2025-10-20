@@ -75,6 +75,7 @@ jobs:
             docker run -d \
               --name weddingserver \
               -p 80:8080 \
+              -p 443:8081 \
               -e aspnetcore_environment=Production \
               -e Password="${{ secrets.ADMIN_PASSWORD }}" \
               -e Cloudinary__CloudName="${{ secrets.CLOUDINARY_NAME }}" \
