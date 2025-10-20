@@ -338,18 +338,21 @@
 
         .hero h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            color: var(--white);
-            text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5);
+            font-size: clamp(4rem, 12vw, 8rem);
+            color: #ff69b4; /* Chữ màu hồng */
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 1); /* Viền trắng rõ ràng, không trong suốt */
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), /* Bóng trắng mạnh, nổi trên nền tối */
+            0 0 20px rgba(255, 105, 180, 0.7), /* Bóng hồng lan tỏa, nổi trên nền sáng */
+            2px 2px 8px rgba(0, 0, 0, 0.4); /* Bóng đen nhẹ để tăng tương phản */
             letter-spacing: 2px;
-            font-weight: 400;
+            font-weight: 700;
             margin-bottom: 1.5rem;
         }
 
         .hero p {
-            color: var(--white);
             font-size: clamp(1.2rem, 3vw, 1.5rem);
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+            color: #8b5e3c;
+            text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.9), 0 0 12px rgba(255, 105, 180, 0.5);
             margin-bottom: 3rem;
             font-weight: 600;
         }
@@ -1456,6 +1459,27 @@
 
         /* Responsive */
         @@media (max-width: 768px) {
+
+            .hero {
+                background-attachment: scroll;
+                background-size: contain; /* Hiển thị toàn bộ ảnh, có thể để lại khoảng trống */
+                background-position: center;
+                background-repeat: no-repeat; /* Ngăn lặp lại ảnh */
+            }
+
+                .hero h1 {
+                    font-size: clamp(2.8rem, 8vw, 5rem);
+                    -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.9); /* Viền mỏng hơn, vẫn rõ */
+                    text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), /* Bóng trắng nhẹ hơn */
+                    0 0 15px rgba(255, 105, 180, 0.6), /* Bóng hồng nhẹ hơn */
+                    1px 1px 6px rgba(0, 0, 0, 0.3); /* Bóng đen nhẹ hơn */
+                    letter-spacing: 1.5px;
+                }
+
+                .hero p {
+                    font-size: clamp(1rem, 2.5vw, 1.3rem);
+                    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 105, 180, 0.4);
+                }
             .timeline-grid
 
         {
@@ -1498,6 +1522,13 @@
 
         }
         @@media (max-width: 480px) {
+
+            .hero {
+                background-size: cover;
+                background-position: center top;
+                background-repeat: no-repeat;
+                background-attachment: scroll;
+            }
             .timeline-grid
 
         {
