@@ -75,7 +75,6 @@ jobs:
             docker run -d \
               --name weddingserver \
               -p 80:8080 \
-              -p 443:8081 \
               -e aspnetcore_environment=Production \
               -e Password="${{ secrets.ADMIN_PASSWORD }}" \
               -e Cloudinary__CloudName="${{ secrets.CLOUDINARY_NAME }}" \
@@ -84,4 +83,5 @@ jobs:
               -e MongoSettings__DatabaseWedding1__ConnectionString="${{ secrets.MONGO_URI }}" \
               -e MongoSettings__DatabaseWedding1__DatabaseName=WeddingManager \
               weddingserver:latest
+            sudo systemctl reload nginx
             echo "✅ Deployment successful!"
