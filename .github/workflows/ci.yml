@@ -67,7 +67,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASS }}
           port: 24700
+          script_stop: true
           script: |
+            set -e
             echo "🚀 Deploying WeddingServer container..."
             docker load -i /root/weddingserver.tar
             docker stop weddingserver || true
@@ -75,7 +77,7 @@ jobs:
             docker run -d \
               --name weddingserver \
               -p 80:8080 \
-              -e aspnetcore_environment=Production \
+              -e ASPNETCORE_ENVIRONMENT=Production \
               -e Password="${{ secrets.ADMIN_PASSWORD }}" \
               -e Cloudinary__CloudName="${{ secrets.CLOUDINARY_NAME }}" \
               -e Cloudinary__ApiKey="${{ secrets.CLOUDINARY_KEY }}" \
@@ -83,5 +85,4 @@ jobs:
               -e MongoSettings__DatabaseWedding1__ConnectionString="${{ secrets.MONGO_URI }}" \
               -e MongoSettings__DatabaseWedding1__DatabaseName=WeddingManager \
               weddingserver:latest
-            sudo systemctl reload nginx
             echo "✅ Deployment successful!"
