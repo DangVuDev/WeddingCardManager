@@ -76,7 +76,7 @@ jobs:
             docker rm weddingserver || true
             docker run -d \
               --name weddingserver \
-              -p 80:8080 \
+              -p 8080:8080 \
               -e ASPNETCORE_ENVIRONMENT=Production \
               -e Password="${{ secrets.ADMIN_PASSWORD }}" \
               -e Cloudinary__CloudName="${{ secrets.CLOUDINARY_NAME }}" \
