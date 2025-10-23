@@ -4,7 +4,6 @@
 @model WeddingConfigModel
 @{
     ViewData["Title"] = "Thiệp Cưới";
-
     var options = new JsonSerializerOptions
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -17,7 +16,7 @@
         groomName = Model.GroomName,
         brideName = Model.BrideName,
         guestName = Model.GuestName,
-        weddingDate = Model.WeddingDate,
+        weddingDate = Model.WeddingDate.ToString("yyyy-MM-ddTHH:mm:ss"),
         weddingDateDisplay = Model.WeddingDateDisplay,
         weddingTime = Model.WeddingTime,
         venue = Model.Venue,
@@ -36,42 +35,1413 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thiệp Cưới @Model.GroomName & @Model.BrideName</title>
-    <meta property="og:title" content="Thiệp Cưới @Model.GroomName & @Model.BrideName - Mời @Model.GuestName" />
-    <meta property="og:description" content="Trân trọng mời @Model.GuestName đến dự lễ cưới của @Model.GroomName và @Model.BrideName vào @Model.WeddingDateDisplay tại @Model.Venue." />
-    <meta property="og:image" content="@Model.HeroImage" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600;700&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiệp Cưới</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        /* ==================== LIQUID GLASS DESIGN - PINK THEME ==================== */
+
+        :root {
+            --pink-50: #fff1f5;
+            --pink-100: #ffe4ec;
+            --pink-200: #ffc9dc;
+            --pink-300: #ff9dbd;
+            --pink-400: #ff6b9d;
+            --pink-500: #ff3d7f;
+            --pink-600: #f01d66;
+            --pink-700: #d10f54;
+            --glass-white: rgba(255, 255, 255, 0.75);
+            --glass-pink: rgba(255, 107, 157, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow-glass: 0 8px 32px 0 rgba(255, 107, 157, 0.15);
+            --shadow-hover: 0 16px 48px 0 rgba(255, 107, 157, 0.25);
+            --blur-sm: 12px;
+            --blur-md: 20px;
+            --blur-lg: 40px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html {
             scroll-behavior: smooth;
         }
 
-        :root {
-            --primary-color: #ff69b4;
-            --primary-dark: #ff1493;
-            --secondary-color: #ffe5f1;
-            --text-dark: #333;
-            --text-light: #666;
-            --white: #fff;
-            --shadow-sm: 0 5px 15px rgba(255, 105, 180, 0.1);
-            --shadow-md: 0 10px 30px rgba(255, 105, 180, 0.2);
-            --shadow-lg: 0 15px 45px rgba(255, 105, 180, 0.3);
-        }
-
         body {
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #fff5f7 0%, #ffe5f1 25%, #fff0f8 50%, #fce4ec 75%, #fff5f7 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe4ec 25%, #ffd1e3 50%, #ffe4ec 75%, #fff5f7 100%);
             background-size: 400% 400%;
             animation: gradientShift 20s ease infinite;
-            overflow-x: hidden;
-            color: var(--text-dark);
+            color: #2d1b2e;
             line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
         }
+
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(circle at 20% 30%, rgba(255, 107, 157, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(255, 61, 127, 0.08) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(255, 157, 189, 0.05) 0%, transparent 60%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+        ::selection {
+            background: rgba(255, 107, 157, 0.3);
+            color: #2d1b2e;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--pink-300), var(--pink-400));
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(135deg, var(--pink-400), var(--pink-500));
+            }
+
+        /* ==================== LOADING SCREEN ==================== */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: linear-gradient(135deg, #fff1f5 0%, #ffc9dc 50%, #ff9dbd 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            perspective: 1500px;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+        }
+
+            .loading-screen.hidden {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+
+        .loading-envelope {
+            width: 420px;
+            height: 580px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 32px;
+            box-shadow: 0 8px 32px 0 rgba(255, 107, 157, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+            transform-style: preserve-3d;
+            animation: envelopeFloat 3s ease-in-out infinite;
+            transition: all 1.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .loading-envelope::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+                border-radius: 32px;
+            }
+
+        .loading-screen.closing .loading-envelope {
+            animation: envelopeOpen 1.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        .loading-flap-top, .loading-flap-bottom {
+            position: absolute;
+            width: 100%;
+            height: 160px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 1.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .loading-flap-top {
+            top: 0;
+            border-radius: 32px 32px 0 0;
+            clip-path: polygon(0 0, 100% 0, 50% 100%, 0 100%);
+            transform-origin: top;
+            box-shadow: 0 4px 16px rgba(255, 107, 157, 0.15);
+        }
+
+        .loading-flap-bottom {
+            bottom: 0;
+            border-radius: 0 0 32px 32px;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 100%);
+            transform-origin: bottom;
+            box-shadow: 0 -4px 16px rgba(255, 107, 157, 0.15);
+        }
+
+        .loading-screen.closing .loading-flap-top {
+            transform: rotateX(-120deg) translateZ(-50px);
+        }
+
+        .loading-screen.closing .loading-flap-bottom {
+            transform: rotateX(120deg) translateZ(-50px);
+        }
+
+        .loading-card-inside {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 360px;
+            height: 440px;
+            background: rgba(255, 107, 157, 0.2);
+            backdrop-filter: blur(40px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 28px;
+            transform: translate(-50%, -50%) translateZ(20px);
+            opacity: 0;
+            scale: 0.8;
+            transition: all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.6s;
+            box-shadow: 0 16px 48px rgba(255, 107, 157, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .loading-screen.closing .loading-card-inside {
+            opacity: 1;
+            scale: 1;
+            transform: translate(-50%, -50%) translateZ(0px);
+        }
+
+        .loading-heart-inside {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 72px;
+            filter: drop-shadow(0 4px 12px rgba(255, 107, 157, 0.4));
+            opacity: 0;
+            animation: heartPop 0.8s ease-out 1.2s forwards;
+        }
+
+        .loading-names-inside {
+            position: absolute;
+            top: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            text-align: center;
+            line-height: 1.3;
+            opacity: 0;
+            animation: fadeInUpCard 0.8s ease-out 1.4s forwards;
+            text-shadow: 0 4px 20px rgba(255, 107, 157, 0.5);
+        }
+
+        .loading-subtitle-inside {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            opacity: 0;
+            animation: fadeInUpCard 0.8s ease-out 1.6s forwards;
+            text-shadow: 0 2px 12px rgba(255, 107, 157, 0.4);
+        }
+
+        .loading-text {
+            margin-top: 120px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease-out 0.5s backwards;
+            text-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+        }
+
+        /* ==================== HERO ==================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(rgba(255, 182, 193, 0.4), rgba(255, 192, 203, 0.5)), url("https://images.unsplash.com/photo-1519741497674-611481863552?w=1920") center/cover no-repeat;
+            background-attachment: fixed;
+        }
+
+            .hero::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at 30% 20%, rgba(255, 107, 157, 0.15) 0%, transparent 40%), radial-gradient(circle at 70% 80%, rgba(255, 61, 127, 0.12) 0%, transparent 40%);
+                animation: heroFloat 15s ease-in-out infinite;
+                backdrop-filter: blur(2px);
+            }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            padding: 80px 20px;
+            max-width: 800px;
+            margin: 0 20px;
+        }
+
+        .hero-heart {
+            font-size: 90px;
+            animation: floatHeart 3.5s ease-in-out infinite;
+            filter: drop-shadow(0 8px 24px rgba(255, 107, 157, 0.4));
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-600), var(--pink-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 1);
+            background-clip: text;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), margin: 32px 0 20px;
+            line-height: 1.1;
+            filter: drop-shadow(0 4px 12px rgba(255, 107, 157, 0.3));
+            animation: fadeInUp 1.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+
+            
+        }
+
+            .hero-title span {
+                display: inline-block;
+                font-size: 0.5em;
+                margin: 0 24px;
+                opacity: 0.9;
+            }
+
+        .hero-subtitle {
+            font-size: clamp(20px, 4.5vw, 28px);
+            color: #5a2d5e;
+            font-weight: 600;
+            opacity: 0.9;
+            animation: fadeInUp 1.1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.7s backwards;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 20;
+        }
+
+        @@keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(-15px);
+            }
+        }
+
+        /* ==================== SECTIONS ==================== */
+        .section {
+            padding: 100px 20px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+        }
+
+            .section.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: clamp(36px, 7vw, 52px);
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 70px;
+            position: relative;
+            filter: drop-shadow(0 2px 8px rgba(255, 107, 157, 0.2));
+        }
+
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: -25px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 120px;
+                height: 4px;
+                background: linear-gradient(90deg, transparent, var(--pink-400), transparent);
+                border-radius: 2px;
+            }
+
+        /* ==================== GLASS CARDS ==================== */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(var(--blur-md));
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 28px;
+            padding: 48px;
+            box-shadow: 0 8px 32px 0 rgba(255, 107, 157, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .glass-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.6s ease;
+            }
+
+            .glass-card:hover::before {
+                left: 100%;
+            }
+
+            .glass-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 16px 48px 0 rgba(255, 107, 157, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+                border-color: rgba(255, 255, 255, 0.5);
+            }
+
+        /* ==================== INVITATION HEADER ==================== */
+        .invitation-header {
+            max-width: 720px;
+            margin: 0 auto 80px;
+            padding: 80px 48px;
+            text-align: center;
+            backdrop-filter: blur(var(--blur-lg));
+        }
+
+        .invitation-envelope {
+            font-size: 56px;
+            filter: drop-shadow(0 8px 24px rgba(255, 107, 157, 0.3));
+            animation: floatHeart 3.5s ease-in-out infinite;
+            margin-bottom: 30px;
+        }
+
+        .invite-main {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(30px, 5.5vw, 46px);
+            color: #7a3f7d;
+            font-weight: 400;
+            margin: 30px 0 24px 0;
+        }
+
+        .guest-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(56px, 13vw, 96px);
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 400;
+            margin: 16px 0 32px;
+            filter: drop-shadow(0 4px 16px rgba(255, 107, 157, 0.3));
+        }
+
+        .stars-line {
+            font-size: 32px;
+            margin: 16px 0;
+            opacity: 0.8;
+        }
+
+        .final-line {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(22px, 4.5vw, 30px);
+            color: #7a3f7d;
+            font-weight: 300;
+            line-height: 1.6;
+            margin: 36px auto 0;
+            max-width: 560px;
+        }
+
+        /* ==================== WEDDING INFO ==================== */
+        .wedding-info {
+            margin-top: 40px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(var(--blur-md));
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(255, 107, 157, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+            .wedding-info:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 16px 48px 0 rgba(255, 107, 157, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+            }
+
+        .info-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 14px 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.1);
+            color: #5a2d5e;
+            font-weight: 600;
+        }
+
+        /* ==================== COUNTDOWN ==================== */
+        .countdown-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 12px;
+        }
+
+        .count-item {
+            padding: 40px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(var(--blur-md));
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(255, 107, 157, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .count-item::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(255, 107, 157, 0.1) 0%, transparent 50%);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+
+            .count-item:hover::before {
+                opacity: 1;
+            }
+
+            .count-item:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 16px 48px 0 rgba(255, 107, 157, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+                border-color: rgba(255, 255, 255, 0.5);
+            }
+
+        .count-number {
+            display: block;
+            font-size: 56px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            transition: transform 0.2s ease;
+            filter: drop-shadow(0 2px 8px rgba(255, 107, 157, 0.2));
+        }
+
+            .count-number.change {
+                transform: scale(1.15);
+            }
+
+        .count-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #5a2d5e;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* ==================== TIMELINE ==================== */
+        .timeline-wrapper {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: linear-gradient(180deg, transparent 0%, var(--pink-300) 10%, var(--pink-400) 50%, var(--pink-300) 90%, transparent 100% );
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+        }
+
+        .timeline-content {
+            margin: 0 28px;
+            max-width: 480px;
+            padding: 44px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(var(--blur-md));
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 28px;
+            box-shadow: 0 8px 32px 0 rgba(255, 107, 157, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 40px;
+        }
+
+            .timeline-content:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 16px 48px 0 rgba(255, 107, 157, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+            }
+
+            .timeline-content::before {
+                content: '';
+                position: absolute;
+                width: 28px;
+                height: 28px;
+                background: linear-gradient(135deg, var(--pink-400), var(--pink-500));
+                border: 4px solid rgba(255, 255, 255, 0.8);
+                border-radius: 50%;
+                top: 50px;
+                box-shadow: 0 0 0 6px rgba(255, 107, 157, 0.2), 0 4px 12px rgba(255, 107, 157, 0.3);
+                transition: all 0.4s ease;
+            }
+
+            .timeline-content:hover::before {
+                transform: scale(1.2);
+                box-shadow: 0 0 0 10px rgba(255, 107, 157, 0.25), 0 6px 16px rgba(255, 107, 157, 0.4);
+            }
+
+        .timeline-time {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .timeline-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #2d1b2e;
+            margin-bottom: 18px;
+        }
+
+        .timeline-desc {
+            font-size: 18px;
+            color: #5a2d5e;
+            line-height: 1.8;
+        }
+
+        /* ==================== RSVP & DRESSCODE ==================== */
+        .rsvp-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 36px;
+        }
+
+        .rsvp-btn {
+            padding: 52px 40px;
+            cursor: pointer;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(var(--blur-md));
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 28px;
+            box-shadow: 0 8px 32px 0 rgba(255, 107, 157, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .rsvp-btn::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(255, 107, 157, 0.15) 0%, transparent 50%);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+
+            .rsvp-btn:hover::before {
+                opacity: 1;
+            }
+
+            .rsvp-btn:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 20px 60px 0 rgba(255, 107, 157, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+                border-color: rgba(255, 255, 255, 0.6);
+            }
+
+        .rsvp-icon {
+            font-size: 80px;
+            margin-bottom: 28px;
+            filter: drop-shadow(0 8px 20px rgba(255, 107, 157, 0.3));
+            transition: transform 0.4s ease;
+        }
+
+        .rsvp-btn:hover .rsvp-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .rsvp-text {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2d1b2e;
+        }
+
+        /* ==================== STORIES ==================== */
+        .stories-grid {
+            display: grid;
+            gap: 60px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .story-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            padding: 52px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 32px;
+            box-shadow: 0 16px 64px 0 rgba(255, 107, 157, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .story-card:hover {
+                transform: translateY(-12px);
+                box-shadow: 0 24px 80px 0 rgba(255, 107, 157, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+            }
+
+        .story-image {
+            width: 100%;
+            height: 360px;
+            object-fit: cover;
+            border-radius: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 12px 40px rgba(255, 107, 157, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .story-card:hover .story-image {
+            transform: scale(1.05);
+            box-shadow: 0 16px 56px rgba(255, 107, 157, 0.3);
+        }
+
+        .story-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 12px rgba(255, 107, 157, 0.3));
+        }
+
+        .story-title {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .story-text {
+            font-size: 18px;
+            color: #5a2d5e;
+            line-height: 1.8;
+        }
+
+        /* ==================== GALLERY ==================== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(255, 107, 157, 0.15);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+            .gallery-item::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), rgba(255, 61, 127, 0.15));
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                z-index: 2;
+                backdrop-filter: blur(8px);
+            }
+
+            .gallery-item:hover::before {
+                opacity: 1;
+            }
+
+            .gallery-item::after {
+                content: '✨';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 56px;
+                opacity: 0;
+                transition: all 0.4s ease;
+                z-index: 3;
+            }
+
+            .gallery-item:hover::after {
+                opacity: 1;
+                animation: heartFloat 2s ease-in-out infinite;
+            }
+
+            .gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: all 0.5s ease;
+            }
+
+            .gallery-item:hover {
+                transform: translateY(-12px) scale(1.03);
+                box-shadow: 0 20px 60px rgba(255, 107, 157, 0.3);
+                border-color: rgba(255, 255, 255, 0.6);
+            }
+
+                .gallery-item:hover img {
+                    transform: scale(1.1);
+                    filter: brightness(1.1);
+                }
+
+        /* ==================== LOCATION ==================== */
+        .location-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .location-info {
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(var(--blur-md));
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 28px;
+            box-shadow: 0 8px 32px 0 rgba(255, 107, 157, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+        }
+
+            .location-info h3 {
+                font-size: 36px;
+                font-weight: 800;
+                background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 24px;
+            }
+
+            .location-info p {
+                font-size: 20px;
+                color: #5a2d5e;
+                line-height: 1.8;
+                margin-bottom: 32px;
+            }
+
+        .location-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-500));
+            color: #fff;
+            text-decoration: none;
+            border-radius: 16px;
+            font-size: 20px;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+            .location-btn:hover {
+                transform: translateY(-6px) scale(1.03);
+                box-shadow: 0 16px 48px rgba(255, 107, 157, 0.5);
+                background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            }
+
+        .location-map {
+            border-radius: 28px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 16px 64px rgba(255, 107, 157, 0.2);
+            transition: all 0.4s ease;
+        }
+
+            .location-map:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 24px 80px rgba(255, 107, 157, 0.3);
+            }
+
+        /* ==================== CONTACTS ==================== */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 44px;
+        }
+
+        .contact-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 56px 32px;
+            gap: 24px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 32px;
+            box-shadow: 0 16px 64px 0 rgba(255, 107, 157, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .contact-card:hover {
+                transform: translateY(-12px);
+                box-shadow: 0 24px 80px 0 rgba(255, 107, 157, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+            }
+
+        .contact-avatar {
+            width: 100px;
+            height: 100px;
+            font-size: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            box-shadow: 0 12px 40px rgba(255, 107, 157, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .contact-name {
+            font-size: 30px;
+            font-weight: 800;
+            color: #2d1b2e;
+        }
+
+        .contact-phone {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--pink-500);
+            text-decoration: none;
+            padding: 18px 36px;
+            border-radius: 16px;
+            background: rgba(255, 107, 157, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 107, 157, 0.2);
+            transition: all 0.3s ease;
+        }
+
+            .contact-phone:hover {
+                background: rgba(255, 107, 157, 0.2);
+                transform: translateY(-4px);
+                box-shadow: 0 8px 24px rgba(255, 107, 157, 0.3);
+                border-color: rgba(255, 107, 157, 0.4);
+            }
+
+        .qr-toggle-btn {
+            padding: 18px 40px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            color: var(--pink-600);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(255, 107, 157, 0.15);
+        }
+
+            .qr-toggle-btn:hover {
+                background: rgba(255, 107, 157, 0.2);
+                transform: translateY(-6px) scale(1.03);
+                box-shadow: 0 12px 40px rgba(255, 107, 157, 0.3);
+                border-color: rgba(255, 107, 157, 0.4);
+            }
+
+        /* ==================== QR MODAL ==================== */
+        .qr-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(45, 27, 46, 0.8);
+            backdrop-filter: blur(40px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+            .qr-modal-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .qr-modal-container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 40px;
+            overflow: hidden;
+            transform: scale(0.85);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 32px 96px rgba(255, 107, 157, 0.4);
+            position: relative;
+        }
+
+        .qr-modal-overlay.active .qr-modal-container {
+            transform: scale(1);
+        }
+
+        .qr-modal-body {
+            padding: 70px 48px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .qr-title {
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .qr-code-container {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            border-radius: 28px;
+            padding: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 16px 48px rgba(255, 107, 157, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+            .qr-code-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                border-radius: 16px;
+            }
+
+        .qr-instruction {
+            font-size: 20px;
+            color: #5a2d5e;
+            line-height: 1.7;
+            font-weight: 600;
+        }
+
+        .qr-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            color: var(--pink-600);
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(255, 107, 157, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .qr-close:hover {
+                background: rgba(255, 107, 157, 0.3);
+                transform: scale(1.15) rotate(90deg);
+                box-shadow: 0 8px 32px rgba(255, 107, 157, 0.4);
+            }
+
+        /* ==================== WISHES FORM ==================== */
+        .wishes-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .wishes-subtitle {
+            font-size: 22px;
+            color: #5a2d5e;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        .wish-form-card {
+            padding: 64px 52px;
+            max-width: 740px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 32px;
+            box-shadow: 0 16px 64px 0 rgba(255, 107, 157, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .form-group {
+            margin-bottom: 36px;
+            text-align: left;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 20px;
+                font-weight: 700;
+                color: #2d1b2e;
+                margin-bottom: 18px;
+            }
+
+                .form-group label span {
+                    color: var(--pink-500);
+                }
+
+            .form-group input,
+            .form-group textarea {
+                width: 100%;
+                padding: 20px 28px;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+                border-radius: 16px;
+                font-size: 18px;
+                font-family: inherit;
+                background: rgba(255, 255, 255, 0.5);
+                backdrop-filter: blur(10px);
+                color: #2d1b2e;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(255, 107, 157, 0.1);
+            }
+
+                .form-group input:focus,
+                .form-group textarea:focus {
+                    outline: none;
+                    border-color: var(--pink-400);
+                    background: rgba(255, 255, 255, 0.7);
+                    box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.15), 0 8px 24px rgba(255, 107, 157, 0.2);
+                    transform: translateY(-2px);
+                }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 160px;
+            }
+
+        .wish-submit-btn {
+            width: 100%;
+            padding: 24px 40px;
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-500));
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 22px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 12px 40px rgba(255, 107, 157, 0.3);
+        }
+
+            .wish-submit-btn:hover {
+                transform: translateY(-6px) scale(1.02);
+                box-shadow: 0 20px 60px rgba(255, 107, 157, 0.5);
+                background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            }
+
+            .wish-submit-btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        /* ==================== MUSIC CONTROL ==================== */
+        .music-control {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 72px;
+            height: 72px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(var(--blur-md));
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 12px 40px rgba(255, 107, 157, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .music-control:hover {
+                transform: scale(1.15);
+                box-shadow: 0 16px 56px rgba(255, 107, 157, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                background: rgba(255, 107, 157, 0.3);
+            }
+
+            .music-control i {
+                color: var(--pink-600);
+                font-size: 28px;
+            }
+
+        /* ==================== FOOTER ==================== */
+        .footer {
+            padding: 100px 20px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(var(--blur-lg));
+            border-top: 2px solid rgba(255, 255, 255, 0.4);
+            text-align: center;
+            position: relative;
+        }
+
+            .footer::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, var(--pink-400), transparent);
+            }
+
+        .footer-heart-big {
+            font-size: 72px;
+            margin-bottom: 32px;
+            filter: drop-shadow(0 8px 24px rgba(255, 107, 157, 0.4));
+        }
+
+        .footer-names {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+            .footer-names span:nth-child(2) {
+                font-size: 0.6em;
+            }
+
+        .footer-date {
+            font-size: 24px;
+            font-weight: 700;
+            color: #5a2d5e;
+            margin-bottom: 36px;
+        }
+
+        .footer-message {
+            font-size: 18px;
+            color: #5a2d5e;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-500));
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(255, 107, 157, 0.3);
+        }
+
+            .share-btn:hover {
+                transform: translateY(-6px) scale(1.03);
+                box-shadow: 0 16px 48px rgba(255, 107, 157, 0.5);
+                background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            }
+
+        /* ==================== MODAL ==================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10002;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(45, 27, 46, 0.8);
+            backdrop-filter: blur(40px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+            .modal-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .modal {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 32px;
+            padding: 64px 44px;
+            text-align: center;
+            box-shadow: 0 32px 96px rgba(255, 107, 157, 0.4);
+            transform: scale(0.85);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 72px;
+            margin-bottom: 28px;
+            filter: drop-shadow(0 8px 24px rgba(255, 107, 157, 0.3));
+        }
+
+        .modal h3 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #2d1b2e;
+            margin-bottom: 20px;
+        }
+
+        .modal p {
+            font-size: 18px;
+            color: #5a2d5e;
+            line-height: 1.8;
+            margin-bottom: 36px;
+        }
+
+        .modal-close-btn {
+            padding: 20px 44px;
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-500));
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(255, 107, 157, 0.3);
+        }
+
+            .modal-close-btn:hover {
+                transform: translateY(-4px) scale(1.03);
+                box-shadow: 0 16px 48px rgba(255, 107, 157, 0.5);
+                background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            }
+
+        /* ==================== ANIMATIONS ==================== */
         @@keyframes gradientShift {
             0%, 100%
 
@@ -85,295 +1455,68 @@
 
         }
 
-        h1, h2, h3, h4 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
+        @@keyframes envelopeFloat {
+            0%, 100%
+
+        {
+            transform: translateY(0) rotateX(0deg);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
+        50% {
+            transform: translateY(-20px) rotateX(2deg);
         }
 
-        .text-center {
-            text-align: center;
         }
 
-        /* Falling Petals */
-        .petal {
-            position: fixed;
-            width: 12px;
-            height: 12px;
-            background: radial-gradient(circle, #ffb3d9, #ff80bf);
-            border-radius: 50% 0 50% 0;
-            pointer-events: none;
-            animation: fall linear infinite;
+        @@keyframes envelopeOpen {
+            0%
+
+        {
+            transform: translateY(0) rotateX(0deg) scale(1);
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-200px) rotateX(-100deg) scale(0.7);
             opacity: 0;
-            z-index: 9999;
-            filter: blur(0.5px);
         }
-        @@keyframes fall {
+
+        }
+
+        @@keyframes heartPop {
             0%
 
         {
             opacity: 0;
-            transform: translateY(-10px) rotate(0deg);
+            transform: translateX(-50%) scale(0) rotate(-30deg);
         }
 
-        10% {
-            opacity: 0.9;
-        }
-
-        90% {
-            opacity: 0.4;
+        70% {
+            transform: translateX(-50%) scale(1.2) rotate(10deg);
         }
 
         100% {
-            opacity: 0;
-            transform: translateY(100vh) rotate(720deg);
-        }
-
-        }
-
-        /* Loading */
-        .loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #ffb3d9, #ff80bf);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-            .loading-overlay.hidden {
-                opacity: 0;
-                visibility: hidden;
-            }
-
-        .loading-heart {
-            font-size: 4rem;
-            animation: loadingPulse 1s ease-in-out infinite;
-        }
-        @@keyframes loadingPulse {
-            0%, 100%
-
-        {
-            transform: scale(1);
             opacity: 1;
-        }
-
-        50% {
-            transform: scale(1.3);
-            opacity: 0.7;
+            transform: translateX(-50%) scale(1) rotate(0deg);
         }
 
         }
 
-        /* Scroll Reveal Animations */
-        .scroll-reveal {
+        @@keyframes fadeInUpCard {
+            0%
+
+        {
             opacity: 0;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-50%) translateY(40px);
         }
 
-            .scroll-reveal.fade-up {
-                transform: translateY(50px);
-            }
-
-                .scroll-reveal.fade-up.active {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-
-            .scroll-reveal.fade-left {
-                transform: translateX(-80px);
-            }
-
-                .scroll-reveal.fade-left.active {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-            .scroll-reveal.fade-right {
-                transform: translateX(80px);
-            }
-
-                .scroll-reveal.fade-right.active {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-            .scroll-reveal.scale-in {
-                transform: scale(0.7);
-            }
-
-                .scroll-reveal.scale-in.active {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-
-            .scroll-reveal.rotate-in {
-                transform: rotate(-15deg) scale(0.8);
-            }
-
-                .scroll-reveal.rotate-in.active {
-                    opacity: 1;
-                    transform: rotate(0deg) scale(1);
-                }
-
-            .scroll-reveal.flip-in {
-                transform: perspective(1000px) rotateY(-90deg);
-            }
-
-                .scroll-reveal.flip-in.active {
-                    opacity: 1;
-                    transform: perspective(1000px) rotateY(0deg);
-                }
-
-            .scroll-reveal.zoom-blur {
-                transform: scale(1.3);
-                filter: blur(10px);
-            }
-
-                .scroll-reveal.zoom-blur.active {
-                    opacity: 1;
-                    transform: scale(1);
-                    filter: blur(0);
-                }
-
-            .scroll-reveal.slide-rotate {
-                transform: translateX(-100px) rotate(-45deg);
-            }
-
-                .scroll-reveal.slide-rotate.active {
-                    opacity: 1;
-                    transform: translateX(0) rotate(0deg);
-                }
-
-            .scroll-reveal.bounce-in {
-                transform: scale(0.3);
-                transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            }
-
-                .scroll-reveal.bounce-in.active {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-
-            .scroll-reveal.flip-up {
-                transform: perspective(1000px) rotateX(90deg);
-                transform-origin: bottom;
-            }
-
-                .scroll-reveal.flip-up.active {
-                    opacity: 1;
-                    transform: perspective(1000px) rotateX(0deg);
-                }
-
-        .delay-100 {
-            transition-delay: 0.1s;
-        }
-
-        .delay-200 {
-            transition-delay: 0.2s;
-        }
-
-        .delay-300 {
-            transition-delay: 0.3s;
-        }
-
-        .delay-400 {
-            transition-delay: 0.4s;
-        }
-
-        .delay-500 {
-            transition-delay: 0.5s;
-        }
-
-        .delay-600 {
-            transition-delay: 0.6s;
-        }
-
-        /* Hero */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(rgba(255, 182, 193, 0.4), rgba(255, 192, 203, 0.5)), url("https://images.unsplash.com/photo-1519741497674-611481863552?w=1920") center/cover no-repeat;
-            background-attachment: fixed;
-        }
-
-            .hero::before {
-                content: "";
-                position: absolute;
-                top: -50%;
-                left: -50%;
-                width: 200%;
-                height: 200%;
-                background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent 70%);
-                animation: rotate 40s linear infinite;
-            }
-        @@keyframes rotate {
-            100%
-
-        {
-            transform: rotate(360deg);
+        100% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            animation: fadeInUp 1.8s ease-out;
-            padding: 0 1rem;
-        }
-
-        .hero h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(4rem, 12vw, 8rem);
-            color: #ff69b4; /* Chữ màu hồng */
-            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 1); /* Viền trắng rõ ràng, không trong suốt */
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), /* Bóng trắng mạnh, nổi trên nền tối */
-            0 0 20px rgba(255, 105, 180, 0.7), /* Bóng hồng lan tỏa, nổi trên nền sáng */
-            2px 2px 8px rgba(0, 0, 0, 0.4); /* Bóng đen nhẹ để tăng tương phản */
-            letter-spacing: 2px;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero p {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            color: #8b5e3c;
-            text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.9), 0 0 12px rgba(255, 105, 180, 0.5);
-            margin-bottom: 3rem;
-            font-weight: 600;
-        }
-
-        .hero-icon {
-            font-size: clamp(4rem, 8vw, 6rem);
-            animation: heartbeat 1.5s ease-in-out infinite;
-            margin-bottom: 2rem;
-        }
-        @@keyframes heartbeat {
-            0%, 100%
-
-        {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.1);
-        }
-
-        }
         @@keyframes fadeInUp {
             from
 
@@ -389,1218 +1532,198 @@
 
         }
 
-        .scroll-indicator {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-            cursor: pointer;
-            z-index: 20;
-        }
-        @@keyframes bounce {
+        @@keyframes floatHeart {
             0%, 100%
 
         {
-            transform: translateX(-50%) translateY(0);
+            transform: translateY(0) rotate(-3deg);
         }
 
         50% {
-            transform: translateX(-50%) translateY(-15px);
+            transform: translateY(-20px) rotate(3deg);
         }
 
         }
 
-        .decoration-line {
-            width: 100%;
-            max-width: 300px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-            margin: 0 auto;
+        @@keyframes heroFloat {
+            0%, 100%
+
+        {
+            opacity: 0.6;
+            transform: scale(1) rotate(0deg);
         }
 
-        /* Invitation Section */
-        .invitation-section {
-            padding: 60px 20px;
-            position: relative;
-            overflow: hidden;
+        50% {
+            opacity: 0.9;
+            transform: scale(1.1) rotate(5deg);
         }
 
-        .invitation-header {
-            text-align: center;
-            margin-bottom: 50px;
         }
 
-            .invitation-header .icon {
-                font-size: 2.5rem;
-                margin-bottom: 15px;
-                color: #d4a373;
+        @@keyframes heartFloat {
+            0%, 100%
+
+        {
+            transform: translate(-50%, -50%) translateY(0);
+        }
+
+        50% {
+            transform: translate(-50%, -50%) translateY(-15px);
+        }
+
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @@media (min-width: 769px) {
+            .timeline-content:nth-child(odd)
+
+        {
+            margin-right: 28px;
+            margin-left: auto;
+        }
+
+        .timeline-content:nth-child(even) {
+            margin-left: 28px;
+            margin-right: auto;
+        }
+
+        .timeline-content:nth-child(odd)::before {
+            left: -66px;
+        }
+
+        .timeline-content:nth-child(even)::before {
+            right: -66px;
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .section
+
+        {
+            padding: 80px 20px;
+        }
+
+        .story-card, .location-main {
+            grid-template-columns: 1fr;
+            gap: 36px;
+        }
+
+        .countdown-container {
+            gap: 12px;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .count-item {
+            padding: 28px 12px;
+        }
+
+        .count-number {
+            font-size: 42px;
+        }
+
+        .timeline-line {
+            left: 0;
+        }
+
+        .timeline-content {
+            margin-left: 68px;
+            margin-right: 28px;
+        }
+
+            .timeline-content::before {
+                left: -66px;
             }
 
-        .subtitle {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            color: #8b5e3c;
-            margin-bottom: 10px;
         }
 
-        .guest-name {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            color: #ff1493;
-            margin: 10px 0;
+        @@media (max-width: 480px) {
+            .section
+
+        {
+            padding: 60px 16px;
         }
 
-        .invitation-divider {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
+        .hero-content {
+            padding: 60px 24px;
         }
 
-            .invitation-divider .icon {
-                font-size: 1.5rem;
-                color: #d4a373;
-            }
-
-        .message {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.2rem;
-            color: #666;
-            line-height: 1.8;
-        }
-
-            .message .highlight {
-                color: #d4a373;
-                font-style: italic;
-            }
-
-        .event-info-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: var(--shadow-md);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-            .info-card:hover {
-                transform: translateY(-5px);
-                box-shadow: var(--shadow-md);
-            }
-
-        .info-card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .info-card-icon {
-            font-size: 2rem;
-            color: #d4a373;
-            margin-right: 12px;
-        }
-
-        .info-card-title {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.6rem;
-            color: #f596c5;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .info-item-icon {
-            font-size: 1.4rem;
-            margin-right: 12px;
-            color: #d4a373;
-            margin-top: 2px;
-        }
-
-        .info-item-content {
-            flex: 1;
-        }
-
-        .info-label {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 0.95rem;
-            color: #8b5e3c;
-            margin-bottom: 4px;
-        }
-
-        .info-value {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.1rem;
-            color: #4a3728;
-            font-weight: 600;
-        }
-
-        .map-button {
-            display: inline-flex;
-            align-items: center;
-            background: #f596c5;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1rem;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-            .map-button:hover {
-                background: #b8860b;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(212, 163, 115, 0.4);
-            }
-
-            .map-button span:first-child {
-                margin-right: 8px;
-            }
-
-        /* Timeline */
-        .timeline-section {
-            margin-top: 50px;
+        .hero-title {
+            font-size: 44px;
         }
 
         .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 30px;
+            font-size: 36px;
         }
-
-        .timeline-wrapper {
-            position: relative;
-            padding: 20px 0;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .timeline-line {
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--primary-color);
-            border-radius: 2px;
-        }
-
-        .timeline-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            padding-left: 50px;
-        }
-
-        .timeline-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 25px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-left: 4px solid #d4a373;
-        }
-
-            .timeline-card::before {
-                content: '';
-                position: absolute;
-                left: -54px;
-                top: 30px;
-                width: 12px;
-                height: 12px;
-                background: #d4a373;
-                border-radius: 50%;
-                border: 3px solid #fff;
-                box-shadow: 0 0 0 3px #d4a373;
-            }
-
-            .timeline-card:hover {
-                transform: translateX(8px);
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            }
-
-            .timeline-card .icon {
-                font-size: 2.5rem;
-                color: #d4a373;
-                margin-bottom: 10px;
-            }
-
-            .timeline-card .time-badge {
-                display: inline-block;
-                background: #f9f5f0;
-                color: #f596c5;
-                border-radius: 25px;
-                font-size: 1rem;
-                margin-bottom: 12px;
-                font-weight: 600;
-            }
-
-            .timeline-card h4 {
-                font-family: 'Playfair Display', serif;
-                font-size: 1.5rem;
-                color: #4a3728;
-                margin-bottom: 10px;
-            }
-
-            .timeline-card p {
-                font-family: 'Quicksand', sans-serif;
-                font-size: 1rem;
-                color: #666;
-                line-height: 1.6;
-            }
-
-        /* Dress Code */
-        .dress-code-section {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .dress-code-wrapper {
-            background: #fff;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .dress-code-icon {
-            font-size: 2.5rem;
-            color: #d4a373;
-            margin-bottom: 15px;
-        }
-
-        .dress-tags {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .dress-tag {
-            background: linear-gradient(135deg, #f9f5f0, #fff5e6);
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1rem;
-            color: #4a3728;
-            border: 2px solid #d4a373;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-            .dress-tag:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
-                background: linear-gradient(135deg, #d4a373, #b8860b);
-                color: #fff;
-            }
-
-        /* Countdown */
-        .countdown-section {
-            padding: 5rem 1.5rem;
-        }
-
-        .section-header {
-            font-size: clamp(2rem, 5vw, 3rem);
-            color: var(--primary-color);
-            margin-bottom: 3rem;
-            position: relative;
-            display: inline-block;
-            padding-bottom: 1rem;
-        }
-
-            .section-header::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 80px;
-                height: 4px;
-                background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-                border-radius: 2px;
-            }
 
         .countdown-container {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .countdown-item {
-            background: linear-gradient(135deg, var(--white) 0%, var(--secondary-color) 100%);
-            border-radius: 20px;
-            padding: 1.5rem;
-            min-width: 90px;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-            .countdown-item:hover {
-                transform: translateY(-5px) scale(1.05);
-                box-shadow: var(--shadow-lg);
-            }
-        @@keyframes pulse {
-            0%, 100%
-
-        {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.03);
-        }
-
-        }
-
-        .countdown-item .number {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .countdown-item .label {
-            font-size: clamp(0.85rem, 2vw, 1rem);
-            color: var(--text-light);
-            margin-top: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Love Story */
-        .love-story-section {
-            padding: 5rem 1.5rem;
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .story-container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .story-item {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            margin-bottom: 4rem;
-        }
-
-            .story-item:nth-child(even) {
-                flex-direction: row-reverse;
-            }
-
-        .story-image {
-            flex: 1;
-            min-width: 300px;
-        }
-
-            .story-image img {
-                width: 100%;
-                height: 320px;
-                object-fit: cover;
-                border-radius: 20px;
-                box-shadow: var(--shadow-md);
-                transition: transform 0.5s ease;
-            }
-
-                .story-image img:hover {
-                    transform: scale(1.05);
-                }
-
-        .story-content {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2.5rem;
-            border-radius: 25px;
-            box-shadow: var(--shadow-md);
-        }
-
-            .story-content .icon {
-                font-size: 3rem;
-                margin-bottom: 1rem;
-            }
-
-            .story-content h3 {
-                font-size: clamp(1.5rem, 4vw, 2rem);
-                color: var(--primary-color);
-                margin-bottom: 1rem;
-            }
-
-            .story-content p {
-                font-size: clamp(1rem, 2.5vw, 1.1rem);
-                color: var(--text-light);
-                line-height: 1.8;
-            }
-
-        /* Gallery */
-        .gallery-section {
-            padding: 5rem 1.5rem;
-            background: linear-gradient(180deg, #fffafc, #fff0f6);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .gallery-container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .gallery-section .subtitle {
-            color: var(--text-light);
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            margin-bottom: 3rem;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .gallery-item {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-            cursor: pointer;
-            height: 280px;
-        }
-
-            .gallery-item:nth-child(odd) {
-                animation: floatSoft 6s ease-in-out infinite;
-            }
-
-            .gallery-item:nth-child(even) {
-                animation: floatSoft 7s ease-in-out infinite reverse;
-            }
-        @@keyframes floatSoft {
-            0%
-
-        {
-            transform: translateY(0px);
-        }
-
-        50% {
-            transform: translateY(-8px);
-        }
-
-        100% {
-            transform: translateY(0px);
-        }
-
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s ease;
-        }
-
-        .gallery-item:hover {
-            transform: translateY(-10px) scale(1.03);
-            box-shadow: 0 15px 35px rgba(255, 160, 190, 0.4);
-        }
-
-            .gallery-item:hover img {
-                transform: scale(1.1);
-            }
-
-        .gallery-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(255, 160, 190, 0.65), transparent);
-            color: var(--white);
-            font-weight: 600;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 1rem;
-            font-size: 1.1rem;
-            letter-spacing: 0.5px;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .gallery-item:hover .gallery-overlay {
-            opacity: 1;
-        }
-
-        /* Album Modal */
-        .album-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            z-index: 10000;
-            transition: opacity 0.35s ease, visibility 0.35s ease;
-        }
-
-            .album-modal.active {
-                visibility: visible;
-                opacity: 1;
-            }
-
-        .album-content {
-            position: relative;
-            width: 90%;
-            max-width: 900px;
-            aspect-ratio: 4 / 3;
-            background: #111;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .album-slide {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 16px;
-            animation: fadeInSlide 0.5s ease;
-        }
-        @@keyframes fadeInSlide {
-            from
-
-        {
-            opacity: 0;
-            transform: scale(0.97);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        }
-
-        .album-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.25);
-            border: none;
-            color: var(--white);
-            font-size: 2rem;
-            cursor: pointer;
-            border-radius: 50%;
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-            .album-nav:hover {
-                background: rgba(255, 255, 255, 0.45);
-                transform: translateY(-50%) scale(1.1);
-            }
-
-            .album-nav.prev {
-                left: 20px;
-            }
-
-            .album-nav.next {
-                right: 20px;
-            }
-
-        .album-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.25);
-            border: none;
-            color: var(--white);
-            font-size: 1.8rem;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-            .album-close:hover {
-                background: rgba(255, 255, 255, 0.5);
-                transform: rotate(90deg);
-            }
-
-        .album-counter {
-            position: absolute;
-            bottom: 20px;
-            right: 30px;
-            color: var(--white);
-            font-size: 1rem;
-            font-weight: 600;
-            background: rgba(0,0,0,0.4);
-            padding: 6px 14px;
-            border-radius: 12px;
-            letter-spacing: 1px;
-        }
-
-        /* Wishes */
-        .wishes-section {
-            padding: 5rem 1.5rem;
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .wishes-container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .wish-form {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            padding: 2.5rem;
-            border-radius: 25px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(255, 192, 203, 0.3);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-            .form-group label {
-                display: block;
-                color: var(--text-dark);
-                font-weight: 600;
-                margin-bottom: 0.75rem;
-                font-size: 1.1rem;
-            }
-
-            .form-group input, .form-group textarea {
-                width: 100%;
-                padding: 1rem 1.5rem;
-                border-radius: 15px;
-                background: rgba(255, 255, 255, 0.9);
-                border: 2px solid transparent;
-                font-family: 'Quicksand', sans-serif;
-                font-size: 1rem;
-                color: var(--text-dark);
-                transition: all 0.4s ease;
-            }
-
-                .form-group input::placeholder, .form-group textarea::placeholder {
-                    color: #999;
-                }
-
-                .form-group input:focus, .form-group textarea:focus {
-                    outline: none;
-                    border-color: var(--primary-color);
-                    box-shadow: 0 0 0 5px rgba(255, 105, 180, 0.12);
-                    transform: translateY(-3px);
-                    background: var(--white);
-                }
-
-            .form-group textarea {
-                resize: none;
-                min-height: 120px;
-            }
-
-        .btn-submit {
-            width: 100%;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: var(--white);
-            font-weight: 700;
-            font-size: 1.1rem;
-            padding: 1.2rem 2rem;
-            border-radius: 15px;
-            border: none;
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-        }
-
-            .btn-submit:hover {
-                transform: translateY(-3px);
-                box-shadow: var(--shadow-lg);
-            }
-
-            .btn-submit:active {
-                transform: translateY(-1px) scale(0.98);
-            }
-
-        /* RSVP */
-        .rsvp-section {
-            padding: 5rem 1.5rem;
-        }
-
-        .rsvp-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .rsvp-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            justify-content: center;
-            margin-bottom: 4rem;
-        }
-
-        .rsvp-btn {
-            position: relative;
-            overflow: hidden;
-            padding: 1.5rem 3rem;
-            border-radius: 50px;
-            border: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            transition: all 0.4s ease;
-            color: var(--white);
-        }
-
-            .rsvp-btn.yes {
-                background: linear-gradient(135deg, #10b981, #059669);
-            }
-
-            .rsvp-btn.no {
-                background: linear-gradient(135deg, #f87171, #dc2626);
-            }
-
-            .rsvp-btn::before {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 0;
-                height: 0;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.4);
-                transform: translate(-50%, -50%);
-                transition: width 0.6s, height 0.6s;
-            }
-
-            .rsvp-btn:hover::before {
-                width: 400px;
-                height: 400px;
-            }
-
-            .rsvp-btn:hover {
-                transform: translateY(-5px);
-                box-shadow: var(--shadow-lg);
-            }
-
-            .rsvp-btn span {
-                position: relative;
-                z-index: 1;
-            }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .contact-card {
-            background: linear-gradient(135deg, #ffffff, #fff5f9);
-            border-radius: 25px;
-            padding: 40px 30px;
-            text-align: center;
-            border: 2px solid rgba(255, 182, 193, 0.3);
-            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.1);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-            .contact-card::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 5px;
-                background: linear-gradient(90deg, #ff69b4, #ff1493, #ff69b4);
-                transform: scaleX(0);
-                transition: transform 0.4s ease;
-            }
-
-            .contact-card:hover {
-                transform: translateY(-10px);
-                box-shadow: 0 15px 40px rgba(255, 105, 180, 0.2);
-                border-color: #ff69b4;
-            }
-
-                .contact-card:hover::before {
-                    transform: scaleX(1);
-                }
-
-            .contact-card .icon {
-                font-size: 3.5rem;
-                margin-bottom: 20px;
-                display: inline-block;
-                transition: transform 0.4s ease;
-            }
-
-            .contact-card:hover .icon {
-                transform: scale(1.2) rotate(10deg);
-            }
-
-            .contact-card h4 {
-                font-family: 'Playfair Display', serif;
-                font-size: 1.5rem;
-                color: #ff1493;
-                margin-bottom: 20px;
-                font-weight: 600;
-            }
-
-            .contact-card p {
-                font-size: 1.1rem;
-                color: #666;
-                margin: 10px 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                line-height: 1.6;
-            }
-
-                .contact-card p:hover {
-                    color: #ff1493;
-                }
-
-        /* Footer */
-        .footer {
-            padding: 4rem 1.5rem;
-            text-align: center;
-            background: linear-gradient(to bottom, transparent, rgba(255, 192, 203, 0.1));
-        }
-
-            .footer .decoration-line {
-                max-width: 500px;
-                margin: 0 auto 2rem;
-            }
-
-            .footer .icon {
-                font-size: 4rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .footer p {
-                font-size: clamp(1rem, 2.5vw, 1.3rem);
-                color: var(--text-dark);
-                font-style: italic;
-                margin-bottom: 1rem;
-            }
-
-            .footer .names {
-                font-size: clamp(2rem, 5vw, 3rem);
-                color: var(--primary-color);
-                font-family: 'Dancing Script', cursive;
-                font-weight: 700;
-                margin-bottom: 1.5rem;
-            }
-
-            .footer .date-text {
-                color: var(--text-light);
-                font-size: 1rem;
-            }
-
-        /* Music Control */
-        .music-control {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 65px;
-            height: 65px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            transition: all 0.4s ease;
-            z-index: 10000;
-            animation: musicPulse 2.5s ease-in-out infinite;
-        }
-        @@keyframes musicPulse {
-            0%, 100%
-
-        {
-            box-shadow: 0 12px 35px rgba(255, 105, 180, 0.5);
-        }
-
-        50% {
-            box-shadow: 0 12px 50px rgba(255, 105, 180, 0.7), 0 0 0 15px rgba(255, 105, 180, 0.1);
-        }
-
-        }
-
-        .music-control:hover {
-            transform: scale(1.15);
-        }
-
-        .music-control.paused {
-            animation: none;
-            background: linear-gradient(135deg, #999, #666);
-        }
-
-        /* Modal Notification */
-        .modal-notification {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10001;
-            animation: fadeIn 0.3s ease;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: var(--white);
-            border-radius: 25px;
-            padding: 3rem 2rem;
-            max-width: 450px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            animation: slideInModal 0.4s ease;
-        }
-        @@keyframes fadeIn {
-            from
-
-        {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-
-        }
-        @@keyframes slideInModal {
-            from
-
-        {
-            opacity: 0;
-            transform: scale(0.9) translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        }
-
-        .modal-content .icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal-content h3 {
-            font-size: 1.8rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-content p {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: var(--white);
-            font-weight: 700;
-            padding: 0.75rem 2rem;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-            .modal-btn:hover {
-                transform: scale(1.05);
-            }
-
-        /* Responsive */
-        @@media (max-width: 768px) {
-
-            .hero {
-                background-attachment: scroll;
-                background-size: contain; /* Hiển thị toàn bộ ảnh, có thể để lại khoảng trống */
-                background-position: center;
-                background-repeat: no-repeat; /* Ngăn lặp lại ảnh */
-            }
-
-                .hero h1 {
-                    font-size: clamp(2.8rem, 8vw, 5rem);
-                    -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.9); /* Viền mỏng hơn, vẫn rõ */
-                    text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), /* Bóng trắng nhẹ hơn */
-                    0 0 15px rgba(255, 105, 180, 0.6), /* Bóng hồng nhẹ hơn */
-                    1px 1px 6px rgba(0, 0, 0, 0.3); /* Bóng đen nhẹ hơn */
-                    letter-spacing: 1.5px;
-                }
-
-                .hero p {
-                    font-size: clamp(1rem, 2.5vw, 1.3rem);
-                    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 105, 180, 0.4);
-                }
-            .timeline-grid
-
-        {
-            padding-left: 40px;
-        }
-
-        .timeline-line {
-            left: 15px;
-        }
-
-        .timeline-card::before {
-            left: -44px;
-        }
-
-        .story-item {
-            flex-direction: column !important;
-            gap: 1.5rem;
-        }
-
-        .story-image {
-            min-width: 100%;
-        }
-
-        .gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-
-        .gallery-item {
-            height: 220px;
-        }
-
-        .rsvp-buttons {
-            flex-direction: column;
-        }
-
-        .rsvp-btn {
-            width: 100%;
-        }
-
-        }
-        @@media (max-width: 480px) {
-
-            .hero {
-                background-size: cover;
-                background-position: center top;
-                background-repeat: no-repeat;
-                background-attachment: scroll;
-            }
-            .timeline-grid
-
-        {
-            padding-left: 30px;
-        }
-
-        .timeline-line {
-            left: 10px;
-        }
-
-        .timeline-card::before {
-            left: -34px;
-        }
-
-        .dress-tags {
             gap: 8px;
+            padding: 0 8px;
         }
 
-        .dress-tag {
-            font-size: 0.9rem;
-            padding: 8px 16px;
+        .count-item {
+            padding: 16px 8px;
+        }
+
+        .count-number {
+            font-size: 32px;
+        }
+
+        .count-label {
+            font-size: 11px;
+        }
+
+        .gallery-grid {
+            gap: 12px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .glass-card {
+            padding: 32px 24px;
+        }
+
+        .wish-form-card {
+            padding: 48px 28px;
+        }
+
+        .invitation-header {
+            padding: 60px 32px;
         }
 
         }
     </style>
+
+
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-heart">💕</div>
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-envelope">
+            <div class="loading-flap-top"></div>
+            <div class="loading-card-inside">
+                <div class="loading-heart-inside">💖</div>
+                <div class="loading-names-inside" id="loadingNamesInside">Loading...</div>
+                <div class="loading-subtitle-inside">Đang chuẩn bị...</div>
+            </div>
+            <div class="loading-flap-bottom"></div>
+        </div>
+        <div class="loading-text">Đang chuẩn bị những điều tuyệt vời...</div>
     </div>
 
-    <!-- Background Petals -->
-    <script>
-        function createPetal() {
-            const petal = document.createElement('div');
-            petal.className = 'petal';
-            petal.style.left = Math.random() * 100 + 'vw';
-            petal.style.animationDuration = (Math.random() * 3 + 5) + 's';
-            petal.style.animationDelay = Math.random() * 2 + 's';
-            petal.style.width = (Math.random() * 8 + 8) + 'px';
-            petal.style.height = petal.style.width;
-            document.body.appendChild(petal);
-            setTimeout(() => petal.remove(), 8000);
-        }
-        setInterval(createPetal, 300);
-    </script>
-
-    <!-- Configuration -->
-    <script>
-        const WEDDING_CONFIG = @Html.Raw(configJson);
-    </script>
-
-    <!-- Background Music -->
+    <!-- MUSIC PLAYER -->
     <audio id="bgMusic" loop>
         <source id="musicSource" src="" type="audio/mpeg">
     </audio>
-
-    <!-- Music Control -->
-    <div class="music-control" id="musicControl" title="Bật/Tắt nhạc">
-        <svg id="musicIcon" width="32" height="32" viewBox="0 0 24 24" fill="white">
-            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-        </svg>
+    <div class="music-control" id="musicControl">
+        <i class="fas fa-play"></i>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
+    <!-- HERO -->
+    <section class="hero" id="heroSection">
         <div class="hero-content">
-            <div class="hero-icon">💕</div>
-            <h1 id="heroNames"></h1>
-            <p>Chúng tôi kết hôn!</p>
-            <div class="decoration-line"></div>
+            <div class="hero-heart">💕</div>
+            <h1 class="hero-title" id="heroNames">Chú Rể <span>&</span> Cô Dâu</h1>
+            <p class="hero-subtitle" id="heroSubtitle">Chúng tôi sắp về chung một nhà!</p>
         </div>
         <div class="scroll-indicator" onclick="document.getElementById('invitation').scrollIntoView()">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="white" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
@@ -1609,521 +1732,421 @@
         </div>
     </section>
 
-    <!-- Invitation Section -->
-    <section class="invitation-section" id="invitation">
+    <!-- INVITATION -->
+    <section class="section">
         <div class="container">
-            <div class="invitation-content">
-                <div class="invitation-header text-center scroll-reveal fade-up">
-                    <div class="icon">💌</div>
-                    <p class="subtitle">Trân trọng kính mời</p>
-                    <h2 class="guest-name" id="guestNameDisplay"></h2>
-                    <div class="invitation-divider">
-                        <div class="icon">✨</div>
-                    </div>
-                    <p class="message">
-                        Đến dự tiệc chung vui cùng gia đình chúng tôi<br />
-                        <span class="highlight">trong ngày trọng đại của đời mình</span>
-                    </p>
-                </div>
+            <div class="invitation-header">
+                <div class="invitation-envelope">💌</div>
+                <p class="invite-main">Trân trọng kính mời</p>
+                <h2 id="guestNameDisplay" class="guest-name">Quý khách</h2>
+                <div class="stars-line">✨✨</div>
+                <p class="final-line">Đến dự chung vui cùng gia đình<br>trong ngày trọng đại của đôi mình</p>
+            </div>
+        </div>
+    </section>
 
-                <div class="event-info-section scroll-reveal scale-in delay-200">
-                    <div class="info-card">
-                        <div class="info-card-header">
-                            <div class="info-card-icon">📅</div>
-                            <h3 class="info-card-title">Thời gian</h3>
-                        </div>
-                        <div class="info-card-body">
-                            <div class="info-item">
-                                <span class="info-item-icon">📆</span>
-                                <div class="info-item-content">
-                                    <div class="info-label">Ngày</div>
-                                    <div class="info-value" id="weddingDateDisplay"></div>
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-item-icon">🕐</span>
-                                <div class="info-item-content">
-                                    <div class="info-label">Giờ</div>
-                                    <div class="info-value" id="weddingTimeDisplay"></div>
-                                </div>
-                            </div>
-                        </div>
+    <!-- TIME INFO -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Thời Gian</h2>
+            <div class="wedding-info">
+                <div class="info-title">Ngày & Giờ Tổ Chức</div>
+                <div class="info-content" id="weddingTimeInfo">
+                    <div class="info-item">
+                        <span class="icon">📅</span>
+                        <span class="text">20/12/2025</span>
                     </div>
-
-                    <div class="info-card">
-                        <div class="info-card-header">
-                            <div class="info-card-icon">📍</div>
-                            <h3 class="info-card-title">Địa điểm</h3>
-                        </div>
-                        <div class="info-card-body">
-                            <div class="info-item">
-                                <span class="info-item-icon">🏛️</span>
-                                <div class="info-item-content">
-                                    <div class="info-label">Địa chỉ</div>
-                                    <div class="info-value" id="venueDisplay"></div>
-                                    <div class="info-value" id="addressDisplay" style="font-size: 1rem; color: #666; margin-top: 5px;"></div>
-                                </div>
-                            </div>
-                            <a href="#" id="mapLink" target="_blank" class="map-button">
-                                <span>🗺️</span>
-                                <span>Xem bản đồ</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="timeline-section scroll-reveal flip-in delay-300">
-                    <h3 class="section-title">Lịch trình sự kiện</h3>
-                    <div class="timeline-wrapper">
-                        <div class="timeline-line"></div>
-                        <div class="timeline-grid" id="timelineContainer"></div>
-                    </div>
-                </div>
-
-                <div class="dress-code-section scroll-reveal bounce-in delay-400">
-                    <div class="dress-code-wrapper">
-                        <div class="dress-code-icon">👔</div>
-                        <h3 class="section-title">Trang phục đề nghị</h3>
-                        <div class="dress-tags" id="dressCodeContainer"></div>
+                    <div style="width: 2px; height: 28px; background: #e5b88a; border-radius: 1px;"></div>
+                    <div class="info-item">
+                        <span class="icon">⏰</span>
+                        <span class="text">18:00</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Countdown Section -->
-    <section class="countdown-section">
-        <div class="container text-center">
-            <h2 class="section-header scroll-reveal zoom-blur">Đếm ngược đến ngày trọng đại</h2>
-            <div class="countdown-container scroll-reveal scale-in delay-200" id="countdown"></div>
+    <!-- LOCATION -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">📍 Địa Điểm</h2>
+            <div id="locationWrapper"></div>
         </div>
     </section>
 
-    <!-- Love Story Section -->
-    <section class="love-story-section">
+    <!-- COUNTDOWN -->
+    <section class="section">
         <div class="container">
-            <h2 class="section-header text-center scroll-reveal rotate-in">Câu chuyện tình yêu</h2>
-            <div class="story-container" id="storyContainer"></div>
+            <h2 class="section-title">⏰ Còn Lại</h2>
+            <div class="countdown-container" id="countdownContainer"></div>
         </div>
     </section>
 
-    <!-- Gallery Section -->
-    <section class="gallery-section">
+    <!-- TIMELINE -->
+    <section class="section">
         <div class="container">
-            <div class="gallery-container text-center">
-                <h2 class="section-header scroll-reveal flip-up">Album ảnh cưới</h2>
-                <p class="subtitle scroll-reveal fade-up delay-100">Những khoảnh khắc đáng nhớ nhất của chúng tôi</p>
-                <div class="gallery-grid" id="galleryGrid"></div>
-            </div>
+            <h2 class="section-title">📅 Lịch Trình</h2>
+            <div class="timeline-wrapper" id="timelineWrapper"></div>
         </div>
     </section>
 
-    <!-- Album Modal -->
-    <div id="albumModal" class="album-modal">
-        <div class="album-content">
-            <button class="album-close" onclick="closeAlbum()" title="Đóng (ESC)">&times;</button>
-            <button class="album-nav prev" onclick="changeSlide(-1)" title="Trước">&#10094;</button>
-            <img id="albumSlide" class="album-slide" src="" alt="Wedding photo" />
-            <button class="album-nav next" onclick="changeSlide(1)" title="Sau">&#10095;</button>
-            <div id="albumCounter" class="album-counter"></div>
-        </div>
-    </div>
-
-    <!-- Wishes Section -->
-    <section class="wishes-section">
+    <!-- STORIES -->
+    <section class="section">
         <div class="container">
+            <h2 class="section-title">💕 Câu Chuyện Tình Yêu</h2>
+            <div class="stories-grid" id="storiesGrid"></div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">📸 Khoảnh Khắc</h2>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+    </section>
+
+    <!-- WISHES -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">💌 Gửi Lời Chúc</h2>
             <div class="wishes-container">
-                <h2 class="section-header text-center scroll-reveal slide-rotate">Gửi lời chúc</h2>
-                <p class="subtitle text-center scroll-reveal fade-up delay-100">Những lời chúc của bạn sẽ là món quà ý nghĩa nhất dành cho chúng tôi</p>
-                <form id="wishForm" class="wish-form scroll-reveal scale-in delay-200">
+                <p class="wishes-subtitle">Những lời chúc của bạn là món quà ý nghĩa nhất 💝</p>
+                <form class="wish-form-card" id="wishForm">
                     <div class="form-group">
-                        <label>Tên của bạn</label>
-                        <input type="text" placeholder="Nhập tên của bạn..." required />
+                        <label>Tên của bạn <span>*</span></label>
+                        <input type="text" id="wishName" placeholder="Nhập tên bạn..." required>
                     </div>
                     <div class="form-group">
-                        <label>Lời chúc</label>
-                        <textarea placeholder="Gửi lời chúc tốt đẹp nhất đến đôi uyên ương..." required></textarea>
+                        <label>Lời chúc mừng <span>*</span></label>
+                        <textarea id="wishMessage" rows="5" placeholder="Gửi những lời chúc tốt đẹp nhất đến đôi uyên ương..." required></textarea>
                     </div>
-                    <button type="submit" class="btn-submit">Gửi lời chúc 💌</button>
+                    <button type="submit" class="wish-submit-btn">
+                        <i class="fas fa-paper-plane"></i> Gửi Lời Chúc
+                    </button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- RSVP Section -->
-    <section class="rsvp-section">
+    <!-- RSVP -->
+    <section class="section">
         <div class="container">
-            <div class="rsvp-container">
-                <h2 class="section-header text-center scroll-reveal flip-in">Xác nhận tham dự</h2>
-                <p class="subtitle text-center scroll-reveal fade-up delay-100">Vui lòng cho chúng tôi biết bạn có thể tham dự không nhé!</p>
-                <div class="rsvp-buttons scroll-reveal bounce-in delay-200">
-                    <button class="rsvp-btn yes" onclick="handleRSVP(true)">
-                        <span>🌸 Tôi sẽ tham dự 🌸</span>
-                    </button>
-                    <button class="rsvp-btn no" onclick="handleRSVP(false)">
-                        <span>💐 Xin lỗi, tôi không thể đến dự được 🎀</span>
-                    </button>
-                </div>
-                <div class="contact-info scroll-reveal fade-up delay-300">
-                    <div class="invitation-divider">
-                        <div class="icon">💝</div>
-                    </div>
-                    <h3 class="section-title">Thông tin liên hệ</h3>
-                    <div class="contact-grid" id="contactContainer"></div>
-                </div>
+            <h2 class="section-title">✅ Xác Nhận Tham Dự</h2>
+            <div class="rsvp-buttons">
+                <button class="rsvp-btn" onclick="handleRSVP(true)">
+                    <div class="rsvp-icon">🌸</div>
+                    <div class="rsvp-text">Tôi sẽ tham dự</div>
+                </button>
+                <button class="rsvp-btn" onclick="handleRSVP(false)">
+                    <div class="rsvp-icon">💐</div>
+                    <div class="rsvp-text">Không thể tham dự</div>
+                </button>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- CONTACTS -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">📞 Liên Hệ</h2>
+            <div class="contacts-grid" id="contactsGrid"></div>
+        </div>
+    </section>
+
+    <!-- QR MODAL -->
+    <div class="qr-modal-overlay" id="qrModalOverlay">
+        <div class="qr-modal-container">
+            <button class="qr-close" id="qrCloseBtn">&times;</button>
+            <div class="qr-modal-body">
+                <h3 class="qr-title">💕 Quét QR Mừng Cưới</h3>
+                <div class="qr-code-container">
+                    <img id="qrModalImage" src="" alt="QR Code">
+                </div>
+                <p class="qr-instruction">Mở app ngân hàng → Quét QR → Gửi lời chúc 💝</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
     <footer class="footer">
         <div class="container">
-            <div class="decoration-line"></div>
-            <div class="icon">💑</div>
-            <p>Cảm ơn bạn đã là một phần trong ngày hạnh phúc của chúng tôi</p>
-            <p class="names" id="footerNames"></p>
-            <p class="date-text" id="footerDate"></p>
-            <div class="decoration-line"></div>
+            <div class="footer-heart-big">💖</div>
+            <div class="footer-names">
+                <span id="footerGroom">Chú Rể</span>
+                <span>&</span>
+                <span id="footerBride">Cô Dâu</span>
+            </div>
+            <div class="footer-date" id="footerDate">20/12/2025</div>
+            <div class="footer-message">
+                Cảm ơn bạn đã dành thời gian ghé thăm thiệp cưới của chúng tôi 💕
+            </div>
+            <div class="footer-share">
+                <button class="share-btn" id="shareWedding">
+                    <i class="fas fa-share-alt"></i> Chia sẻ thiệp cưới
+                </button>
+            </div>
         </div>
     </footer>
 
-    <!-- Main JavaScript -->
+    <!-- Configuration -->
     <script>
-            // Biến global cho scroll observer
-        let scrollObserver = null;
+        const WEDDING_CONFIG = @Html.Raw(configJson);
+    </script>
 
-        document.addEventListener("DOMContentLoaded", init);
+    <script>
+        
+        let isMusicPlaying = false;
 
-        function init() {
-            console.log('WEDDING_CONFIG:', WEDDING_CONFIG);
+        // INIT APP
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Wedding App Initialized');
+            initWedding();
+        });
 
-            // Render basic info
-            renderBasicInfo();
-
-            // Render timeline
+        function initWedding() {
+            renderHero();
             renderTimeline();
-
-            // Render dress code
-            renderDressCode();
-
-            // Render love story
             renderStories();
-
-            // Render gallery
             renderGallery();
-
-            // Render contacts
+            renderLocation();
             renderContacts();
-
-            // Setup music
+            setupWishesForm();
+            setupScrollReveal();
             setupMusic();
+            setupShare();
+            setupQRModal();
+            startCountdown();
+            hideLoading();
+        }
 
-            // Start countdown
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
+        // LOADING
+        function hideLoading() {
+            document.getElementById('loadingNamesInside').innerHTML =
+                `${WEDDING_CONFIG.groomName}<br><span style="font-size:0.6em;opacity:0.9">&</span><br>${WEDDING_CONFIG.brideName}`;
 
-            // Setup scroll reveal SAU KHI đã render xong TẤT CẢ
             setTimeout(() => {
-                setupScrollReveal();
-            }, 100);
+                document.getElementById('loadingScreen').classList.add('closing');
+            }, 500);
+
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                document.getElementById('heroSection').classList.add('active');
+            }, 2200);
         }
 
-        function renderBasicInfo() {
-            if (WEDDING_CONFIG.heroImage) {
-                document.querySelector('.hero').style.backgroundImage =
-                    `linear-gradient(rgba(255,182,193,0.4), rgba(255,192,203,0.5)), url('${WEDDING_CONFIG.heroImage}')`;
-            }
+        // HERO
+        function renderHero() {
+            document.getElementById('heroNames').innerHTML =
+                `${WEDDING_CONFIG.groomName}<br><span>&</span><br>${WEDDING_CONFIG.brideName}`;
+            document.getElementById('guestNameDisplay').textContent = WEDDING_CONFIG.guestName;
+            document.getElementById('footerGroom').textContent = WEDDING_CONFIG.groomName;
+            document.getElementById('footerBride').textContent = WEDDING_CONFIG.brideName;
+            document.getElementById('footerDate').textContent = WEDDING_CONFIG.weddingDateDisplay;
+        }
 
-            document.getElementById('heroNames').innerHTML = `${WEDDING_CONFIG.groomName} <br>&<br> ${WEDDING_CONFIG.brideName}`;
-            document.getElementById('guestNameDisplay').textContent = WEDDING_CONFIG.guestName || 'Quý khách';
-            document.getElementById('footerNames').textContent = `${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName}`;
-
+        // COUNTDOWN
+        function startCountdown() {
+            const container = document.getElementById('countdownContainer');
             const weddingDate = new Date(WEDDING_CONFIG.weddingDate);
-            const dateStr = weddingDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            document.getElementById('footerDate').innerHTML = `${dateStr} • Forever & Always 💕`;
 
-            document.getElementById('weddingDateDisplay').textContent = WEDDING_CONFIG.weddingDateDisplay || '';
-            document.getElementById('weddingTimeDisplay').textContent = WEDDING_CONFIG.weddingTime || '';
-            document.getElementById('venueDisplay').textContent = WEDDING_CONFIG.venue || '';
-            document.getElementById('addressDisplay').textContent = WEDDING_CONFIG.address || '';
-            document.getElementById('mapLink').href = WEDDING_CONFIG.mapUrl || '#';
-        }
+            const update = () => {
+                const now = new Date().getTime();
+                const distance = weddingDate - now;
 
-        function renderTimeline() {
-            const timelines = WEDDING_CONFIG.timeline || [];
-            const timelineContainer = document.getElementById('timelineContainer');
+                if (distance > 0) {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            if (timelines && timelines.length > 0) {
-                timelineContainer.innerHTML = timelines.map(event => `
-                    <div class="timeline-card">
-                        <div class="icon">${event.icon || '⏰'}</div>
-                        <div class="time-badge">${event.time || ''}</div>
-                        <h4>${event.title || ''}</h4>
-                        <p>${event.desc || event.description || ''}</p>
-                    </div>
-                `).join('');
-            } else {
-                timelineContainer.innerHTML = '<p style="text-align:center;color:#999;">Lịch trình sẽ được cập nhật sớm</p>';
-            }
-        }
-
-        function renderDressCode() {
-            const dressCode = WEDDING_CONFIG.dressCode || [];
-            const dressCodeContainer = document.getElementById('dressCodeContainer');
-
-            if (dressCode && dressCode.length > 0) {
-                dressCodeContainer.innerHTML = dressCode.map(code => `
-                    <div class="dress-tag">${code}</div>
-                `).join('');
-            } else {
-                dressCodeContainer.innerHTML = '<p style="color:#999;">Trang phục tự do, lịch sự</p>';
-            }
-        }
-
-        function renderStories() {
-            const stories = WEDDING_CONFIG.stories || [];
-            const storyContainer = document.getElementById('storyContainer');
-            storyContainer.innerHTML = '';
-
-            if (stories && stories.length > 0) {
-                const storyHTML = stories.map((story, index) => {
-                    const animClass = index % 2 === 0 ? 'fade-left' : 'fade-right';
-                    const delay = `delay-${(index + 1) * 100}`;
-                    return `
-                        <div class="story-item scroll-reveal ${animClass} ${delay}">
-                            <div class="story-image">
-                                <img src="${story.image || ''}" alt="${story.title || ''}" loading="lazy" />
-                            </div>
-                            <div class="story-content">
-                                <div class="icon">${story.icon || '💝'}</div>
-                                <h3>${story.title || ''}</h3>
-                                <p>${story.desc || story.description || ''}</p>
-                            </div>
-                        </div>
+                    container.innerHTML = `
+                        ${makeCountItem(days, 'Ngày')}
+                        ${makeCountItem(hours, 'Giờ')}
+                        ${makeCountItem(minutes, 'Phút')}
+                        ${makeCountItem(seconds, 'Giây')}
                     `;
-                }).join('');
-                storyContainer.innerHTML = storyHTML;
-            }
-        }
-
-        function renderGallery() {
-            const gallery = WEDDING_CONFIG.gallery || [];
-            const galleryGrid = document.getElementById('galleryGrid');
-            galleryGrid.innerHTML = '';
-
-            if (gallery && gallery.length > 0) {
-                const animations = ['scale-in', 'rotate-in', 'flip-in', 'zoom-blur'];
-                const galleryHTML = gallery.map((img, index) => {
-                    const animClass = animations[index % animations.length];
-                    const delay = `delay-${(index % 6) * 100}`;
-                    return `
-                        <div class="gallery-item scroll-reveal ${animClass} ${delay}" onclick="openAlbum(${index})">
-                            <img src="${img}" alt="Wedding ${index + 1}" loading="lazy" />
-                            <div class="gallery-overlay">📸 Xem ảnh</div>
-                        </div>
-                    `;
-                }).join('');
-                galleryGrid.innerHTML = galleryHTML;
-            }
-        }
-
-        function renderContacts() {
-            const contacts = WEDDING_CONFIG.contacts || [];
-            const brideName = WEDDING_CONFIG.brideName;
-            const groomName = WEDDING_CONFIG.groomName;
-            const contactContainer = document.getElementById('contactContainer');
-            contactContainer.innerHTML = '';
-
-            if (contacts && contacts.length > 0) {
-                const contactsHTML = contacts.map((contact, index) => {
-                    const name = (contact.name || '')
-                        .replace('{{BRIDE_NAME}}', brideName)
-                        .replace('{{GROOM_NAME}}', groomName);
-                    const delay = `delay-${(index + 1) * 100}`;
-                    return `
-                        <div class="contact-card scroll-reveal bounce-in ${delay}">
-                            <div class="icon">${contact.icon || '👤'}</div>
-                            <h4>${name}</h4>
-                            <p>📱 ${contact.phone || ''}</p>
-                            ${contact.email ? `<p>💌 ${contact.email}</p>` : ''}
-                        </div>
-                    `;
-                }).join('');
-                contactContainer.innerHTML = contactsHTML;
-            }
-        }
-
-        function setupMusic() {
-            if (WEDDING_CONFIG.musicUrl) {
-                document.getElementById('musicSource').src = WEDDING_CONFIG.musicUrl;
-                document.getElementById('bgMusic').load();
-            }
-        }
-
-        function setupScrollReveal() {
-            // Disconnect observer cũ nếu có
-            if (scrollObserver) {
-                scrollObserver.disconnect();
-            }
-
-            const scrollReveals = document.querySelectorAll('.scroll-reveal');
-            console.log('Setting up scroll reveal for', scrollReveals.length, 'elements');
-
-            scrollObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
-            scrollReveals.forEach(el => {
-                scrollObserver.observe(el);
-
-                // Kích hoạt ngay cho elements đang trong viewport
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    el.classList.add('active');
+                } else {
+                    container.innerHTML = `<div style="font-size:36px;font-weight:800;color:var(--pink-main);padding:40px 20px;text-align:center;">💒 HÔN LỄ ĐÃ DIỄN RA 💖</div>`;
+                    clearInterval(timer);
                 }
-            });
+            };
+
+            const makeCountItem = (num, label) => `
+                <div class="count-item">
+                    <span class="count-number">${num.toString().padStart(2, '0')}</span>
+                    <span class="count-label">${label}</span>
+                </div>
+            `;
+
+            update();
+            const timer = setInterval(update, 1000);
         }
 
-        function updateCountdown() {
-            const weddingDate = new Date(WEDDING_CONFIG.weddingDate).getTime();
-            const now = new Date().getTime();
-            const distance = weddingDate - now;
+        // TIMELINE
+        function renderTimeline() {
+            const timeline = WEDDING_CONFIG.timeline || [];
+            const container = document.getElementById('timelineWrapper');
 
-            if (distance < 0) {
-                document.getElementById('countdown').innerHTML = `
-                    <div class="countdown-item" style="min-width: 200px;">
-                        <div class="number">💑</div>
-                        <div class="label">Đã kết hôn!</div>
-                    </div>
-                `;
+            if (timeline.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text-light);">Chưa có lịch trình</div>';
                 return;
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('countdown').innerHTML = `
-                <div class="countdown-item"><div class="number">${days}</div><div class="label">Ngày</div></div>
-                <div class="countdown-item"><div class="number">${hours}</div><div class="label">Giờ</div></div>
-                <div class="countdown-item"><div class="number">${minutes}</div><div class="label">Phút</div></div>
-                <div class="countdown-item"><div class="number">${seconds}</div><div class="label">Giây</div></div>
+            container.innerHTML = `
+                <div class="timeline-line"></div>
+                ${timeline.map(item => `
+                    <div class="timeline-content">
+                        <div class="timeline-time">${item.icon || '⏰'} ${item.time}</div>
+                        <h3 class="timeline-title">${item.title}</h3>
+                        <p class="timeline-desc">${item.desc}</p>
+                    </div>
+                `).join('')}
             `;
         }
 
-        let currentSlide = 0;
+        // STORIES
+        function renderStories() {
+            const stories = WEDDING_CONFIG.stories || [];
+            const container = document.getElementById('storiesGrid');
 
-        function openAlbum(index) {
-            currentSlide = index;
-            showSlide();
-            document.getElementById('albumModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
+            if (stories.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text-light);">Chưa có chuyện tình</div>';
+                return;
+            }
+
+            container.innerHTML = stories.map(story => `
+                <article class="story-card">
+                    ${story.image ? `<img src="${story.image}" alt="${story.title}" class="story-image">` : ''}
+                    <div>
+                        <div class="story-icon">${story.icon || '💕'}</div>
+                        <h3 class="story-title">${story.title}</h3>
+                        <p class="story-text">${story.desc}</p>
+                    </div>
+                </article>
+            `).join('');
         }
 
-        function closeAlbum() {
-            document.getElementById('albumModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function changeSlide(direction) {
+        // GALLERY
+        function renderGallery() {
             const gallery = WEDDING_CONFIG.gallery || [];
-            if (gallery.length === 0) return;
+            const container = document.getElementById('galleryGrid');
 
-            currentSlide += direction;
-            if (currentSlide < 0) currentSlide = gallery.length - 1;
-            if (currentSlide >= gallery.length) currentSlide = 0;
-            showSlide();
+            if (gallery.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text-light);">Chưa có ảnh</div>';
+                return;
+            }
+
+            container.innerHTML = gallery.map(img => `
+                <div class="gallery-item">
+                    <img src="${img}" alt="Gallery" loading="lazy">
+                </div>
+            `).join('');
         }
 
-        function showSlide() {
-            const gallery = WEDDING_CONFIG.gallery || [];
-            if (gallery.length === 0) return;
+        // LOCATION
+        function renderLocation() {
+            const mapEmbedUrl = WEDDING_CONFIG.mapUrl ?
+                WEDDING_CONFIG.mapUrl.replace('maps.google.com', 'www.google.com/maps/embed') : '';
 
-            document.getElementById('albumSlide').src = gallery[currentSlide];
-            document.getElementById('albumCounter').textContent = `${currentSlide + 1} / ${gallery.length}`;
+            document.getElementById('locationWrapper').innerHTML = `
+                <div class="location-main">
+                    <div class="location-info">
+                        <h3>${WEDDING_CONFIG.venue}</h3>
+                        <p>${WEDDING_CONFIG.address}</p>
+                        <a href="${WEDDING_CONFIG.mapUrl}" target="_blank" class="location-btn">
+                            <i class="fas fa-map-marker-alt"></i> Mở Google Maps
+                        </a>
+                    </div>
+                    <div class="location-map">
+                        <iframe src="${mapEmbedUrl}" width="100%" height="400"
+                            style="border:0;border-radius:var(--r-lg);" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            `;
         }
 
-        document.addEventListener('keydown', (e) => {
-            if (document.getElementById('albumModal').classList.contains('active')) {
-                if (e.key === 'ArrowLeft') changeSlide(-1);
-                if (e.key === 'ArrowRight') changeSlide(1);
-                if (e.key === 'Escape') closeAlbum();
-            }
-        });
+        // CONTACTS
+        function renderContacts() {
+            const contacts = WEDDING_CONFIG.contacts || [];
+            const container = document.getElementById("contactsGrid");
 
-        document.getElementById('albumModal').addEventListener('click', (e) => {
-            if (e.target.id === 'albumModal') closeAlbum();
-        });
+            container.innerHTML = contacts.map((contact, index) => `
+                <div class="contact-card">
+                    <div class="contact-avatar">${contact.icon || "💌"}</div>
+                    <div class="contact-name">${contact.name}</div>
+                    ${contact.phone ? `<a href="tel:${contact.phone}" class="contact-phone">${contact.phone}</a>` : ""}
+                    ${contact.qrCodeImageUrl ? `
+                        <button class="qr-toggle-btn" data-qr="${contact.qrCodeImageUrl}">
+                            📷 Quét QR mừng cưới
+                        </button>
+                    ` : ""}
+                </div>
+            `).join("");
+        }
 
-        const music = document.getElementById('bgMusic');
-        const musicControl = document.getElementById('musicControl');
-        const musicIcon = document.getElementById('musicIcon');
-        let isPlaying = false;
-
-        document.body.addEventListener('click', () => {
-            if (!isPlaying && WEDDING_CONFIG.musicUrl) {
-                music.play().then(() => {
-                    isPlaying = true;
-                    musicControl.classList.remove('paused');
-                    musicIcon.innerHTML = `<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />`;
-                }).catch(err => console.log('Auto-play prevented:', err));
-            }
-        }, { once: true });
-
-        musicControl.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (isPlaying) {
-                music.pause();
-                isPlaying = false;
-                musicControl.classList.add('paused');
-                musicIcon.innerHTML = `<path d="M8 5v14l11-7z" />`;
-            } else {
-                music.play().then(() => {
-                    isPlaying = true;
-                    musicControl.classList.remove('paused');
-                    musicIcon.innerHTML = `<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />`;
-                }).catch(err => console.error('Music play error:', err));
-            }
-        });
-
-        document.getElementById('wishForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = e.target.querySelector('input').value;
-            const message = e.target.querySelector('textarea').value;
-
-            try {
-                console.log('Submitting wish:', JSON.stringify({ name, message }));
-                const response = await fetch('/api/wedding/wish', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, message })
-                });
-
-                if (response.ok) {
-                    showModal('Cảm ơn bạn!', 'Lời chúc của bạn đã được gửi thành công! 💖', 'success');
-                    e.target.reset();
-                } else {
-                    const result = await response.json();
-                    showModal('Lỗi', result.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.', 'error');
+        // QR MODAL
+        function setupQRModal() {
+            document.getElementById('contactsGrid').addEventListener('click', function(e) {
+                if (e.target.classList.contains('qr-toggle-btn')) {
+                    const qrUrl = e.target.getAttribute('data-qr');
+                    document.getElementById('qrModalImage').src = qrUrl;
+                    document.getElementById('qrModalOverlay').classList.add('active');
                 }
-            } catch (error) {
-                console.error('Wish submission error:', error);
-                showModal('Lỗi', 'Không thể kết nối đến server. Vui lòng thử lại sau.', 'error');
-            }
-        });
+            });
 
+            document.getElementById('qrCloseBtn').addEventListener('click', function() {
+                document.getElementById('qrModalOverlay').classList.remove('active');
+            });
+
+            document.getElementById('qrModalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        }
+
+        // WISHES FORM - UPDATED WITH API CALL
+        function setupWishesForm() {
+            document.getElementById('wishForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = e.target.querySelector('#wishName').value;
+                const message = e.target.querySelector('#wishMessage').value;
+                const submitBtn = e.target.querySelector('.wish-submit-btn');
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+
+                try {
+                    const response = await fetch('/api/wedding/wish', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, message })
+                    });
+
+                    if (response.ok) {
+                        showModal('success', 'Cảm ơn bạn!', 'Lời chúc của bạn đã được gửi thành công! 💖');
+                        e.target.reset();
+                    } else {
+                        const result = await response.json();
+                        showModal('error', 'Lỗi', result.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
+                    }
+                } catch (error) {
+                    console.error('Wish submission error:', error);
+                    showModal('error', 'Lỗi', 'Không thể kết nối đến server. Vui lòng thử lại sau.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi Lời Chúc';
+                }
+            });
+        }
+
+        // RSVP - UPDATED WITH API CALL
         async function handleRSVP(isAttending) {
             try {
                 const url = new URL(window.location.href);
                 const guestId = url.searchParams.get('id') || 'default';
+
                 const response = await fetch('/api/wedding/rsvp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -2135,47 +2158,113 @@
 
                 if (response.ok) {
                     showModal(
+                        'success',
                         'Cảm ơn bạn!',
                         isAttending
                             ? 'Chúng tôi rất vui được chào đón bạn tại đám cưới! 🌸'
-                            : 'Cảm ơn bạn đã phản hồi. Chúng tôi rất tiếc khi bạn không thể tham dự. 💐',
-                        'success'
+                            : 'Cảm ơn bạn đã phản hồi. Chúng tôi rất tiếc khi bạn không thể tham dự. 💐'
                     );
                 } else {
                     const result = await response.json();
-                    showModal('Lỗi', result.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.', 'error');
+                    showModal('error', 'Lỗi', result.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showModal('Lỗi', 'Không thể kết nối đến server. Vui lòng thử lại sau.', 'error');
+                console.error('RSVP error:', error);
+                showModal('error', 'Lỗi', 'Không thể kết nối đến server. Vui lòng thử lại sau.');
             }
         }
 
-        function showModal(title, message, type = 'success') {
+        // MODAL - UNIFIED FUNCTION
+        function showModal(type, title, message) {
             const modal = document.createElement('div');
-            modal.className = 'modal-notification';
+            modal.className = 'modal-overlay active';
+
+            const icon = type === 'success' ? '✅' : '❌';
+
             modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="icon">${type === 'success' ? '🎉' : '⚠️'}</div>
+                <div class="modal">
+                    <div class="modal-icon">${icon}</div>
                     <h3>${title}</h3>
                     <p>${message}</p>
-                    <button class="modal-btn" onclick="this.parentElement.parentElement.remove()">Đóng</button>
+                    <button class="modal-close-btn" onclick="this.closest('.modal-overlay').remove()">
+                        ${type === 'success' ? 'Đóng' : 'Thử lại'}
+                    </button>
                 </div>
             `;
+
             document.body.appendChild(modal);
 
-            setTimeout(() => {
-                if (modal.parentElement) {
-                    modal.remove();
-                }
-            }, 5000);
+            // Auto close after 5 seconds for success
+            if (type === 'success') {
+                setTimeout(() => {
+                    if (modal.parentElement) {
+                        modal.classList.remove('active');
+                        setTimeout(() => modal.remove(), 300);
+                    }
+                }, 5000);
+            }
         }
 
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loadingOverlay').classList.add('hidden');
-            }, 1000);
-        });
+        // MUSIC
+        function setupMusic() {
+            const control = document.getElementById('musicControl');
+            const music = document.getElementById('bgMusic');
+            const icon = control.querySelector('i');
+
+            if (WEDDING_CONFIG.musicUrl) {
+                document.getElementById('musicSource').src = WEDDING_CONFIG.musicUrl;
+                music.load();
+            }
+
+            control.addEventListener('click', () => {
+                if (isMusicPlaying) {
+                    music.pause();
+                    isMusicPlaying = false;
+                    icon.className = 'fas fa-play';
+                } else {
+                    music.play().catch(err => console.log('Music play error:', err));
+                    isMusicPlaying = true;
+                    icon.className = 'fas fa-pause';
+                }
+            });
+        }
+
+        // SCROLL REVEAL
+        function setupScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.section').forEach(el => observer.observe(el));
+        }
+
+        // SHARE
+        function setupShare() {
+            document.getElementById('shareWedding').addEventListener('click', async () => {
+                const shareData = {
+                    title: `Thiệp cưới ${WEDDING_CONFIG.groomName} & ${WEDDING_CONFIG.brideName}`,
+                    text: `Mời bạn đến dự lễ cưới của ${WEDDING_CONFIG.groomName} và ${WEDDING_CONFIG.brideName}`,
+                    url: window.location.href
+                };
+
+                try {
+                    if (navigator.share) {
+                        await navigator.share(shareData);
+                    } else {
+                        await navigator.clipboard.writeText(window.location.href);
+                        showModal('success', 'Đã sao chép!', 'Link thiệp cưới đã được sao chép vào clipboard! 📋');
+                    }
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        console.error('Share error:', err);
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>

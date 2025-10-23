@@ -68,7 +68,8 @@ namespace WeddingServer.Controllers
                     Icon = c.Icon,
                     Name = c.Name,
                     Phone = c.Phone,
-                    Email = c.Email
+                    Email = c.Email,
+                    QrCodeImageUrl = c.QrCodeImageUrl
                 }).ToList() ?? new List<ContactInfo>(),
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow

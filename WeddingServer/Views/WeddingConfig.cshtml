@@ -763,7 +763,15 @@
                            oninput='config.contacts[${i}].phone=this.value; console.log("Updated contacts[${i}].phone:", this.value); console.log("Current config:", config)'>
                     <input placeholder='Email' value='${item.email || ''}'
                            oninput='config.contacts[${i}].email=this.value; console.log("Updated contacts[${i}].email:", this.value); console.log("Current config:", config)'>
-                    <button type='button' class='btn-danger btn-small' onclick='removeItem("contacts",${i})'>
+                    <div class='file-upload'>
+                        <input type='text' value='${item.qrCodeImageUrl}' placeholder='URL ảnh'
+                               oninput='config.contacts[${i}].qrCodeImageUrl=this.value; console.log('Updated qrImage:', this.value); console.log('Current config:', config)'>
+                        <input type='file' accept='image/*'
+                               onchange='uploadAndSetUrl(this,"qrImage",${i})'>
+                    </div>
+                    ${item.qrCodeImageUrl ? `<img src='${item.qrCodeImageUrl}' style='max-width:200px;margin-top:10px;border-radius:8px;'>` : ''}
+                  
+                           <button type='button' class='btn-danger btn-small' onclick='removeItem("contacts",${i})'>
                         🗑️ Xóa
                     </button>
                 </div>
@@ -839,6 +847,8 @@
                     config.gallery[index] = data.url;
                 } else if (target === "storyImage") {
                     config.stories[index].image = data.url;
+                } else if (target === "qrImage") {
+                    config.contacts[index].qrCodeImageUrl = data.url;
                 } else {
                     document.getElementById(target).value = data.url;
                     config[target] = data.url;

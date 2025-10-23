@@ -47,18 +47,11 @@
     <meta charset=""UTF-8"" />
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"" />
     <title>Thiệp Cưới @Model.GroomName & @Model.BrideName</title>
-
-    <!-- Open Graph Tags -->
     <meta property=""og:title"" content=""Thiệp Cưới @Model.GroomName & @Model.BrideName - Mời @Model.GuestName"" />
     <meta property=""og:description"" content=""Trân trọng mời @Model.GuestName đến dự lễ cưới của @Model.GroomName và @Model.BrideName vào @Model.WeddingDateDisplay tại @Model.Venue."" />
     <meta property=""og:image"" content=""@Model.HeroImage"" />
-    <meta property=""og:url"" content=""@Model.HeroImage"" />
-    <meta property=""og:type"" content=""website"" />
-    <meta property=""og:site_name"" content=""Thiệp Cưới @Model.GroomName & @Model.BrideName"" />
-
     <link href=""https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Quicksand:wght@300;400;500;600;700&family=Dancing+Script:wght@400;600;700&display=swap"" rel=""stylesheet"">
     <style>
-        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -87,7 +80,6 @@
             color: var(--text-dark);
             line-height: 1.6;
         }
-
         @@keyframes gradientShift {
             0%, 100%
 
@@ -106,7 +98,6 @@
             font-weight: 700;
         }
 
-        /* ===== UTILITIES ===== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -117,7 +108,7 @@
             text-align: center;
         }
 
-        /* ===== FALLING PETALS ===== */
+        /* Falling Petals */
         .petal {
             position: fixed;
             width: 12px;
@@ -130,7 +121,6 @@
             z-index: 9999;
             filter: blur(0.5px);
         }
-
         @@keyframes fall {
             0%
 
@@ -154,7 +144,7 @@
 
         }
 
-        /* ===== LOADING ===== */
+        /* Loading */
         .loading-overlay {
             position: fixed;
             inset: 0;
@@ -175,7 +165,6 @@
             font-size: 4rem;
             animation: loadingPulse 1s ease-in-out infinite;
         }
-
         @@keyframes loadingPulse {
             0%, 100%
 
@@ -191,10 +180,133 @@
 
         }
 
-        /* ===== HERO SECTION ===== */
+        /* Scroll Reveal Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .scroll-reveal.fade-up {
+                transform: translateY(50px);
+            }
+
+                .scroll-reveal.fade-up.active {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+            .scroll-reveal.fade-left {
+                transform: translateX(-80px);
+            }
+
+                .scroll-reveal.fade-left.active {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+
+            .scroll-reveal.fade-right {
+                transform: translateX(80px);
+            }
+
+                .scroll-reveal.fade-right.active {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+
+            .scroll-reveal.scale-in {
+                transform: scale(0.7);
+            }
+
+                .scroll-reveal.scale-in.active {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+
+            .scroll-reveal.rotate-in {
+                transform: rotate(-15deg) scale(0.8);
+            }
+
+                .scroll-reveal.rotate-in.active {
+                    opacity: 1;
+                    transform: rotate(0deg) scale(1);
+                }
+
+            .scroll-reveal.flip-in {
+                transform: perspective(1000px) rotateY(-90deg);
+            }
+
+                .scroll-reveal.flip-in.active {
+                    opacity: 1;
+                    transform: perspective(1000px) rotateY(0deg);
+                }
+
+            .scroll-reveal.zoom-blur {
+                transform: scale(1.3);
+                filter: blur(10px);
+            }
+
+                .scroll-reveal.zoom-blur.active {
+                    opacity: 1;
+                    transform: scale(1);
+                    filter: blur(0);
+                }
+
+            .scroll-reveal.slide-rotate {
+                transform: translateX(-100px) rotate(-45deg);
+            }
+
+                .scroll-reveal.slide-rotate.active {
+                    opacity: 1;
+                    transform: translateX(0) rotate(0deg);
+                }
+
+            .scroll-reveal.bounce-in {
+                transform: scale(0.3);
+                transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            }
+
+                .scroll-reveal.bounce-in.active {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+
+            .scroll-reveal.flip-up {
+                transform: perspective(1000px) rotateX(90deg);
+                transform-origin: bottom;
+            }
+
+                .scroll-reveal.flip-up.active {
+                    opacity: 1;
+                    transform: perspective(1000px) rotateX(0deg);
+                }
+
+        .delay-100 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-200 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-300 {
+            transition-delay: 0.3s;
+        }
+
+        .delay-400 {
+            transition-delay: 0.4s;
+        }
+
+        .delay-500 {
+            transition-delay: 0.5s;
+        }
+
+        .delay-600 {
+            transition-delay: 0.6s;
+        }
+
+        /* Hero */
         .hero {
             min-height: 100vh;
-            min-height: 100svh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -216,7 +328,6 @@
                 background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent 70%);
                 animation: rotate 40s linear infinite;
             }
-
         @@keyframes rotate {
             100%
 
@@ -235,18 +346,21 @@
 
         .hero h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            color: var(--white);
-            text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5);
+            font-size: clamp(4rem, 12vw, 8rem);
+            color: #ff69b4; /* Chữ màu hồng */
+            -webkit-text-stroke: 1.5px rgba(255, 255, 255, 1); /* Viền trắng rõ ràng, không trong suốt */
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), /* Bóng trắng mạnh, nổi trên nền tối */
+            0 0 20px rgba(255, 105, 180, 0.7), /* Bóng hồng lan tỏa, nổi trên nền sáng */
+            2px 2px 8px rgba(0, 0, 0, 0.4); /* Bóng đen nhẹ để tăng tương phản */
             letter-spacing: 2px;
-            font-weight: 400;
+            font-weight: 700;
             margin-bottom: 1.5rem;
         }
 
         .hero p {
-            color: var(--white);
             font-size: clamp(1.2rem, 3vw, 1.5rem);
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+            color: #8b5e3c;
+            text-shadow: 3px 3px 8px rgba(255, 255, 255, 0.9), 0 0 12px rgba(255, 105, 180, 0.5);
             margin-bottom: 3rem;
             font-weight: 600;
         }
@@ -256,7 +370,6 @@
             animation: heartbeat 1.5s ease-in-out infinite;
             margin-bottom: 2rem;
         }
-
         @@keyframes heartbeat {
             0%, 100%
 
@@ -269,7 +382,6 @@
         }
 
         }
-
         @@keyframes fadeInUp {
             from
 
@@ -294,7 +406,6 @@
             cursor: pointer;
             z-index: 20;
         }
-
         @@keyframes bounce {
             0%, 100%
 
@@ -316,7 +427,7 @@
             margin: 0 auto;
         }
 
-        /* ===== INVITATION SECTION ===== */
+        /* Invitation Section */
         .invitation-section {
             padding: 60px 20px;
             position: relative;
@@ -342,7 +453,6 @@
         }
 
         .guest-name {
-            
             font-family: 'Dancing Script', cursive;
             font-size: 3rem;
             color: #ff1493;
@@ -467,7 +577,7 @@
                 margin-right: 8px;
             }
 
-        /* ===== TIMELINE SECTION ===== */
+        /* Timeline */
         .timeline-section {
             margin-top: 50px;
         }
@@ -562,7 +672,7 @@
                 line-height: 1.6;
             }
 
-        /* ===== DRESS CODE SECTION ===== */
+        /* Dress Code */
         .dress-code-section {
             text-align: center;
             margin-top: 50px;
@@ -610,19 +720,7 @@
                 color: #fff;
             }
 
-        /* ===== SCROLL REVEAL ===== */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-
-            .scroll-reveal.active {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-        /* ===== COUNTDOWN SECTION ===== */
+        /* Countdown */
         .countdown-section {
             padding: 5rem 1.5rem;
         }
@@ -669,7 +767,6 @@
                 transform: translateY(-5px) scale(1.05);
                 box-shadow: var(--shadow-lg);
             }
-
         @@keyframes pulse {
             0%, 100%
 
@@ -696,7 +793,7 @@
             font-weight: 600;
         }
 
-        /* ===== LOVE STORY SECTION ===== */
+        /* Love Story */
         .love-story-section {
             padding: 5rem 1.5rem;
             background: rgba(255, 255, 255, 0.5);
@@ -712,48 +809,11 @@
             gap: 2rem;
             align-items: center;
             margin-bottom: 4rem;
-            opacity: 0;
-            transform: translateX(-80px);
-            animation: slideInLeft 1s ease-out forwards;
         }
 
             .story-item:nth-child(even) {
                 flex-direction: row-reverse;
-                transform: translateX(80px);
-                animation: slideInRight 1s ease-out forwards;
             }
-
-            .story-item:nth-child(1) {
-                animation-delay: 0.2s;
-            }
-
-            .story-item:nth-child(2) {
-                animation-delay: 0.4s;
-            }
-
-            .story-item:nth-child(3) {
-                animation-delay: 0.6s;
-            }
-
-        @@keyframes slideInLeft {
-            to
-
-        {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        }
-
-        @@keyframes slideInRight {
-            to
-
-        {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        }
 
         .story-image {
             flex: 1;
@@ -798,7 +858,7 @@
                 line-height: 1.8;
             }
 
-        /* ===== GALLERY SECTION ===== */
+        /* Gallery */
         .gallery-section {
             padding: 5rem 1.5rem;
             background: linear-gradient(180deg, #fffafc, #fff0f6);
@@ -806,23 +866,11 @@
             overflow: hidden;
         }
 
-            .gallery-section::before {
-                content: """";
-                position: absolute;
-                inset: 0;
-                opacity: 0.05;
-                z-index: 0;
-            }
-
         .gallery-container {
             position: relative;
             z-index: 1;
             max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .gallery-section h2 {
-            margin-bottom: 1rem;
         }
 
         .gallery-section .subtitle {
@@ -854,7 +902,6 @@
             .gallery-item:nth-child(even) {
                 animation: floatSoft 7s ease-in-out infinite reverse;
             }
-
         @@keyframes floatSoft {
             0%
 
@@ -908,7 +955,7 @@
             opacity: 1;
         }
 
-        /* ===== ALBUM MODAL ===== */
+        /* Album Modal */
         .album-modal {
             position: fixed;
             inset: 0;
@@ -949,7 +996,6 @@
             border-radius: 16px;
             animation: fadeInSlide 0.5s ease;
         }
-
         @@keyframes fadeInSlide {
             from
 
@@ -1034,7 +1080,7 @@
             letter-spacing: 1px;
         }
 
-        /* ===== WISHES FORM ===== */
+        /* Wishes */
         .wishes-section {
             padding: 5rem 1.5rem;
             background: rgba(255, 255, 255, 0.5);
@@ -1043,12 +1089,6 @@
         .wishes-container {
             max-width: 700px;
             margin: 0 auto;
-        }
-
-        .wishes-section .subtitle {
-            color: var(--text-light);
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            margin-bottom: 3rem;
         }
 
         .wish-form {
@@ -1072,8 +1112,7 @@
                 font-size: 1.1rem;
             }
 
-            .form-group input,
-            .form-group textarea {
+            .form-group input, .form-group textarea {
                 width: 100%;
                 padding: 1rem 1.5rem;
                 border-radius: 15px;
@@ -1085,13 +1124,11 @@
                 transition: all 0.4s ease;
             }
 
-                .form-group input::placeholder,
-                .form-group textarea::placeholder {
+                .form-group input::placeholder, .form-group textarea::placeholder {
                     color: #999;
                 }
 
-                .form-group input:focus,
-                .form-group textarea:focus {
+                .form-group input:focus, .form-group textarea:focus {
                     outline: none;
                     border-color: var(--primary-color);
                     box-shadow: 0 0 0 5px rgba(255, 105, 180, 0.12);
@@ -1127,7 +1164,7 @@
                 transform: translateY(-1px) scale(0.98);
             }
 
-        /* ===== RSVP SECTION ===== */
+        /* RSVP */
         .rsvp-section {
             padding: 5rem 1.5rem;
         }
@@ -1135,12 +1172,6 @@
         .rsvp-container {
             max-width: 900px;
             margin: 0 auto;
-        }
-
-        .rsvp-section .subtitle {
-            color: var(--text-light);
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            margin-bottom: 3rem;
         }
 
         .rsvp-buttons {
@@ -1276,7 +1307,7 @@
                     color: #ff1493;
                 }
 
-        /* ===== FOOTER ===== */
+        /* Footer */
         .footer {
             padding: 4rem 1.5rem;
             text-align: center;
@@ -1313,7 +1344,7 @@
                 font-size: 1rem;
             }
 
-        /* ===== MUSIC CONTROL ===== */
+        /* Music Control */
         .music-control {
             position: fixed;
             bottom: 30px;
@@ -1331,7 +1362,6 @@
             z-index: 10000;
             animation: musicPulse 2.5s ease-in-out infinite;
         }
-
         @@keyframes musicPulse {
             0%, 100%
 
@@ -1354,7 +1384,7 @@
             background: linear-gradient(135deg, #999, #666);
         }
 
-        /* ===== MODAL NOTIFICATION ===== */
+        /* Modal Notification */
         .modal-notification {
             position: fixed;
             inset: 0;
@@ -1376,7 +1406,6 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             animation: slideInModal 0.4s ease;
         }
-
         @@keyframes fadeIn {
             from
 
@@ -1389,7 +1418,6 @@
         }
 
         }
-
         @@keyframes slideInModal {
             from
 
@@ -1437,8 +1465,29 @@
                 transform: scale(1.05);
             }
 
-        /* ===== RESPONSIVE DESIGN ===== */
+        /* Responsive */
         @@media (max-width: 768px) {
+
+            .hero {
+                background-attachment: scroll;
+                background-size: contain; /* Hiển thị toàn bộ ảnh, có thể để lại khoảng trống */
+                background-position: center;
+                background-repeat: no-repeat; /* Ngăn lặp lại ảnh */
+            }
+
+                .hero h1 {
+                    font-size: clamp(2.8rem, 8vw, 5rem);
+                    -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.9); /* Viền mỏng hơn, vẫn rõ */
+                    text-shadow: 0 0 12px rgba(255, 255, 255, 0.8), /* Bóng trắng nhẹ hơn */
+                    0 0 15px rgba(255, 105, 180, 0.6), /* Bóng hồng nhẹ hơn */
+                    1px 1px 6px rgba(0, 0, 0, 0.3); /* Bóng đen nhẹ hơn */
+                    letter-spacing: 1.5px;
+                }
+
+                .hero p {
+                    font-size: clamp(1rem, 2.5vw, 1.3rem);
+                    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 105, 180, 0.4);
+                }
             .timeline-grid
 
         {
@@ -1480,8 +1529,14 @@
         }
 
         }
-
         @@media (max-width: 480px) {
+
+            .hero {
+                background-size: cover;
+                background-position: center top;
+                background-repeat: no-repeat;
+                background-attachment: scroll;
+            }
             .timeline-grid
 
         {
@@ -1566,8 +1621,7 @@
     <section class=""invitation-section"" id=""invitation"">
         <div class=""container"">
             <div class=""invitation-content"">
-                <!-- Header with Guest Name -->
-                <div class=""invitation-header text-center scroll-reveal"">
+                <div class=""invitation-header text-center scroll-reveal fade-up"">
                     <div class=""icon"">💌</div>
                     <p class=""subtitle"">Trân trọng kính mời</p>
                     <h2 class=""guest-name"" id=""guestNameDisplay""></h2>
@@ -1580,9 +1634,7 @@
                     </p>
                 </div>
 
-                <!-- Event Info Section -->
-                <div class=""event-info-section scroll-reveal"">
-                    <!-- Date & Time Card -->
+                <div class=""event-info-section scroll-reveal scale-in delay-200"">
                     <div class=""info-card"">
                         <div class=""info-card-header"">
                             <div class=""info-card-icon"">📅</div>
@@ -1606,7 +1658,6 @@
                         </div>
                     </div>
 
-                    <!-- Location Card -->
                     <div class=""info-card"">
                         <div class=""info-card-header"">
                             <div class=""info-card-icon"">📍</div>
@@ -1629,8 +1680,7 @@
                     </div>
                 </div>
 
-                <!-- Timeline Section -->
-                <div class=""timeline-section scroll-reveal"">
+                <div class=""timeline-section scroll-reveal flip-in delay-300"">
                     <h3 class=""section-title"">Lịch trình sự kiện</h3>
                     <div class=""timeline-wrapper"">
                         <div class=""timeline-line""></div>
@@ -1638,14 +1688,13 @@
                     </div>
                 </div>
 
-                <!-- Dress Code Section -->
-                <div class=""dress-code-section scroll-reveal"">
+                @* <div class=""dress-code-section scroll-reveal bounce-in delay-400"">
                     <div class=""dress-code-wrapper"">
                         <div class=""dress-code-icon"">👔</div>
                         <h3 class=""section-title"">Trang phục đề nghị</h3>
                         <div class=""dress-tags"" id=""dressCodeContainer""></div>
                     </div>
-                </div>
+                </div> *@
             </div>
         </div>
     </section>
@@ -1653,15 +1702,15 @@
     <!-- Countdown Section -->
     <section class=""countdown-section"">
         <div class=""container text-center"">
-            <h2 class=""section-header"">Đếm ngược đến ngày trọng đại</h2>
-            <div class=""countdown-container"" id=""countdown""></div>
+            <h2 class=""section-header scroll-reveal zoom-blur"">Đếm ngược đến ngày trọng đại</h2>
+            <div class=""countdown-container scroll-reveal scale-in delay-200"" id=""countdown""></div>
         </div>
     </section>
 
     <!-- Love Story Section -->
     <section class=""love-story-section"">
         <div class=""container"">
-            <h2 class=""section-header text-center"">Câu chuyện tình yêu</h2>
+            <h2 class=""section-header text-center scroll-reveal rotate-in"">Câu chuyện tình yêu</h2>
             <div class=""story-container"" id=""storyContainer""></div>
         </div>
     </section>
@@ -1670,8 +1719,8 @@
     <section class=""gallery-section"">
         <div class=""container"">
             <div class=""gallery-container text-center"">
-                <h2 class=""section-header"">Album ảnh cưới</h2>
-                <p class=""subtitle"">Những khoảnh khắc đáng nhớ nhất của chúng tôi</p>
+                <h2 class=""section-header scroll-reveal flip-up"">Album ảnh cưới</h2>
+                <p class=""subtitle scroll-reveal fade-up delay-100"">Những khoảnh khắc đáng nhớ nhất của chúng tôi</p>
                 <div class=""gallery-grid"" id=""galleryGrid""></div>
             </div>
         </div>
@@ -1692,9 +1741,9 @@
     <section class=""wishes-section"">
         <div class=""container"">
             <div class=""wishes-container"">
-                <h2 class=""section-header text-center"">Gửi lời chúc</h2>
-                <p class=""subtitle text-center"">Những lời chúc của bạn sẽ là món quà ý nghĩa nhất dành cho chúng tôi</p>
-                <form id=""wishForm"" class=""wish-form"">
+                <h2 class=""section-header text-center scroll-reveal slide-rotate"">Gửi lời chúc</h2>
+                <p class=""subtitle text-center scroll-reveal fade-up delay-100"">Những lời chúc của bạn sẽ là món quà ý nghĩa nhất dành cho chúng tôi</p>
+                <form id=""wishForm"" class=""wish-form scroll-reveal scale-in delay-200"">
                     <div class=""form-group"">
                         <label>Tên của bạn</label>
                         <input type=""text"" placeholder=""Nhập tên của bạn..."" required />
@@ -1713,9 +1762,9 @@
     <section class=""rsvp-section"">
         <div class=""container"">
             <div class=""rsvp-container"">
-                <h2 class=""section-header text-center"">Xác nhận tham dự</h2>
-                <p class=""subtitle text-center"">Vui lòng cho chúng tôi biết bạn có thể tham dự không nhé!</p>
-                <div class=""rsvp-buttons"">
+                <h2 class=""section-header text-center scroll-reveal flip-in"">Xác nhận tham dự</h2>
+                <p class=""subtitle text-center scroll-reveal fade-up delay-100"">Vui lòng cho chúng tôi biết bạn có thể tham dự không nhé!</p>
+                <div class=""rsvp-buttons scroll-reveal bounce-in delay-200"">
                     <button class=""rsvp-btn yes"" onclick=""handleRSVP(true)"">
                         <span>🌸 Tôi sẽ tham dự 🌸</span>
                     </button>
@@ -1723,7 +1772,7 @@
                         <span>💐 Xin lỗi, tôi không thể đến dự được 🎀</span>
                     </button>
                 </div>
-                <div class=""contact-info scroll-reveal"">
+                <div class=""contact-info scroll-reveal fade-up delay-300"">
                     <div class=""invitation-divider"">
                         <div class=""icon"">💝</div>
                     </div>
@@ -1748,54 +1797,70 @@
 
     <!-- Main JavaScript -->
     <script>
+            // Biến global cho scroll observer
+        let scrollObserver = null;
+
         document.addEventListener(""DOMContentLoaded"", init);
 
         function init() {
             console.log('WEDDING_CONFIG:', WEDDING_CONFIG);
 
-            // Scroll reveal
-            const scrollReveals = document.querySelectorAll('.scroll-reveal');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-            scrollReveals.forEach(el => observer.observe(el));
+            // Render basic info
+            renderBasicInfo();
 
-            // Hero background
+            // Render timeline
+            renderTimeline();
+
+            // Render dress code
+            //renderDressCode();
+
+            // Render love story
+            renderStories();
+
+            // Render gallery
+            renderGallery();
+
+            // Render contacts
+            renderContacts();
+
+            // Setup music
+            setupMusic();
+
+            // Start countdown
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // Setup scroll reveal SAU KHI đã render xong TẤT CẢ
+            setTimeout(() => {
+                setupScrollReveal();
+            }, 100);
+        }
+
+        function renderBasicInfo() {
             if (WEDDING_CONFIG.heroImage) {
                 document.querySelector('.hero').style.backgroundImage =
                     `linear-gradient(rgba(255,182,193,0.4), rgba(255,192,203,0.5)), url('${WEDDING_CONFIG.heroImage}')`;
             }
 
-            // Names
             document.getElementById('heroNames').innerHTML = `${WEDDING_CONFIG.groomName} <br>&<br> ${WEDDING_CONFIG.brideName}`;
             document.getElementById('guestNameDisplay').textContent = WEDDING_CONFIG.guestName || 'Quý khách';
             document.getElementById('footerNames').textContent = `${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName}`;
 
-            // Footer date
             const weddingDate = new Date(WEDDING_CONFIG.weddingDate);
             const dateStr = weddingDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
             document.getElementById('footerDate').innerHTML = `${dateStr} • Forever & Always 💕`;
 
-            // Wedding info
             document.getElementById('weddingDateDisplay').textContent = WEDDING_CONFIG.weddingDateDisplay || '';
             document.getElementById('weddingTimeDisplay').textContent = WEDDING_CONFIG.weddingTime || '';
             document.getElementById('venueDisplay').textContent = WEDDING_CONFIG.venue || '';
             document.getElementById('addressDisplay').textContent = WEDDING_CONFIG.address || '';
             document.getElementById('mapLink').href = WEDDING_CONFIG.mapUrl || '#';
+        }
 
-            // Music
-            if (WEDDING_CONFIG.musicUrl) {
-                document.getElementById('musicSource').src = WEDDING_CONFIG.musicUrl;
-                document.getElementById('bgMusic').load();
-            }
-
-            // Timeline - FIX: Sử dụng lowercase 'timeline'
+        function renderTimeline() {
             const timelines = WEDDING_CONFIG.timeline || [];
             const timelineContainer = document.getElementById('timelineContainer');
+
             if (timelines && timelines.length > 0) {
                 timelineContainer.innerHTML = timelines.map(event => `
                     <div class=""timeline-card"">
@@ -1808,10 +1873,12 @@
             } else {
                 timelineContainer.innerHTML = '<p style=""text-align:center;color:#999;"">Lịch trình sẽ được cập nhật sớm</p>';
             }
+        }
 
-            // Dress Code - FIX: Sử dụng lowercase 'dressCode'
+        function renderDressCode() {
             const dressCode = WEDDING_CONFIG.dressCode || [];
             const dressCodeContainer = document.getElementById('dressCodeContainer');
+
             if (dressCode && dressCode.length > 0) {
                 dressCodeContainer.innerHTML = dressCode.map(code => `
                     <div class=""dress-tag"">${code}</div>
@@ -1819,14 +1886,19 @@
             } else {
                 dressCodeContainer.innerHTML = '<p style=""color:#999;"">Trang phục tự do, lịch sự</p>';
             }
+        }
 
-            // Love Story
+        function renderStories() {
             const stories = WEDDING_CONFIG.stories || [];
             const storyContainer = document.getElementById('storyContainer');
+            storyContainer.innerHTML = '';
+
             if (stories && stories.length > 0) {
-                stories.forEach((story, index) => {
-                    storyContainer.innerHTML += `
-                        <div class=""story-item"">
+                const storyHTML = stories.map((story, index) => {
+                    const animClass = index % 2 === 0 ? 'fade-left' : 'fade-right';
+                    const delay = `delay-${(index + 1) * 100}`;
+                    return `
+                        <div class=""story-item scroll-reveal ${animClass} ${delay}"">
                             <div class=""story-image"">
                                 <img src=""${story.image || ''}"" alt=""${story.title || ''}"" loading=""lazy"" />
                             </div>
@@ -1837,50 +1909,96 @@
                             </div>
                         </div>
                     `;
-                });
+                }).join('');
+                storyContainer.innerHTML = storyHTML;
             }
+        }
 
-            // Gallery
+        function renderGallery() {
             const gallery = WEDDING_CONFIG.gallery || [];
             const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = '';
+
             if (gallery && gallery.length > 0) {
-                gallery.forEach((img, index) => {
-                    galleryGrid.innerHTML += `
-                        <div class=""gallery-item"" onclick=""openAlbum(${index})"">
+                const animations = ['scale-in', 'rotate-in', 'flip-in', 'zoom-blur'];
+                const galleryHTML = gallery.map((img, index) => {
+                    const animClass = animations[index % animations.length];
+                    const delay = `delay-${(index % 6) * 100}`;
+                    return `
+                        <div class=""gallery-item scroll-reveal ${animClass} ${delay}"" onclick=""openAlbum(${index})"">
                             <img src=""${img}"" alt=""Wedding ${index + 1}"" loading=""lazy"" />
                             <div class=""gallery-overlay"">📸 Xem ảnh</div>
                         </div>
                     `;
-                });
+                }).join('');
+                galleryGrid.innerHTML = galleryHTML;
             }
+        }
 
-            // Contacts
+        function renderContacts() {
             const contacts = WEDDING_CONFIG.contacts || [];
             const brideName = WEDDING_CONFIG.brideName;
             const groomName = WEDDING_CONFIG.groomName;
             const contactContainer = document.getElementById('contactContainer');
+            contactContainer.innerHTML = '';
+
             if (contacts && contacts.length > 0) {
-                contacts.forEach(contact => {
+                const contactsHTML = contacts.map((contact, index) => {
                     const name = (contact.name || '')
                         .replace('{{BRIDE_NAME}}', brideName)
                         .replace('{{GROOM_NAME}}', groomName);
-                    contactContainer.innerHTML += `
-                        <div class=""contact-card"">
+                    const delay = `delay-${(index + 1) * 100}`;
+                    return `
+                        <div class=""contact-card scroll-reveal bounce-in ${delay}"">
                             <div class=""icon"">${contact.icon || '👤'}</div>
                             <h4>${name}</h4>
                             <p>📱 ${contact.phone || ''}</p>
                             ${contact.email ? `<p>💌 ${contact.email}</p>` : ''}
                         </div>
                     `;
-                });
+                }).join('');
+                contactContainer.innerHTML = contactsHTML;
             }
-
-            // Countdown
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
         }
 
-        // Countdown Function
+        function setupMusic() {
+            if (WEDDING_CONFIG.musicUrl) {
+                document.getElementById('musicSource').src = WEDDING_CONFIG.musicUrl;
+                document.getElementById('bgMusic').load();
+            }
+        }
+
+        function setupScrollReveal() {
+            // Disconnect observer cũ nếu có
+            if (scrollObserver) {
+                scrollObserver.disconnect();
+            }
+
+            const scrollReveals = document.querySelectorAll('.scroll-reveal');
+            console.log('Setting up scroll reveal for', scrollReveals.length, 'elements');
+
+            scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            scrollReveals.forEach(el => {
+                scrollObserver.observe(el);
+
+                // Kích hoạt ngay cho elements đang trong viewport
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
         function updateCountdown() {
             const weddingDate = new Date(WEDDING_CONFIG.weddingDate).getTime();
             const now = new Date().getTime();
@@ -1909,7 +2027,6 @@
             `;
         }
 
-        // Gallery Modal
         let currentSlide = 0;
 
         function openAlbum(index) {
@@ -1942,7 +2059,6 @@
             document.getElementById('albumCounter').textContent = `${currentSlide + 1} / ${gallery.length}`;
         }
 
-        // Keyboard Navigation for Gallery
         document.addEventListener('keydown', (e) => {
             if (document.getElementById('albumModal').classList.contains('active')) {
                 if (e.key === 'ArrowLeft') changeSlide(-1);
@@ -1951,18 +2067,15 @@
             }
         });
 
-        // Click Outside to Close
         document.getElementById('albumModal').addEventListener('click', (e) => {
             if (e.target.id === 'albumModal') closeAlbum();
         });
 
-        // Music Control
         const music = document.getElementById('bgMusic');
         const musicControl = document.getElementById('musicControl');
         const musicIcon = document.getElementById('musicIcon');
         let isPlaying = false;
 
-        // Auto-play on first interaction
         document.body.addEventListener('click', () => {
             if (!isPlaying && WEDDING_CONFIG.musicUrl) {
                 music.play().then(() => {
@@ -1989,15 +2102,14 @@
             }
         });
 
-        // Wish Form Submission
-         document.getElementById('wishForm').addEventListener('submit', async (e) => {
+        document.getElementById('wishForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = e.target.querySelector('input').value;
             const message = e.target.querySelector('textarea').value;
 
             try {
                 console.log('Submitting wish:', JSON.stringify({ name, message }));
-                const response = await fetch('/api/wedding/wish', { // Use absolute path
+                const response = await fetch('/api/wedding/wish', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, message })
@@ -2016,7 +2128,6 @@
             }
         });
 
-        // RSVP Handling
         async function handleRSVP(isAttending) {
             try {
                 const url = new URL(window.location.href);
@@ -2048,7 +2159,6 @@
             }
         }
 
-        // Modal Notification
         function showModal(title, message, type = 'success') {
             const modal = document.createElement('div');
             modal.className = 'modal-notification';
@@ -2062,7 +2172,6 @@
             `;
             document.body.appendChild(modal);
 
-            // Auto close after 5 seconds
             setTimeout(() => {
                 if (modal.parentElement) {
                     modal.remove();
@@ -2070,7 +2179,6 @@
             }, 5000);
         }
 
-        // Remove Loading Overlay
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('loadingOverlay').classList.add('hidden');
@@ -2079,6 +2187,5 @@
     </script>
 </body>
 </html>";
-
     }
 }
