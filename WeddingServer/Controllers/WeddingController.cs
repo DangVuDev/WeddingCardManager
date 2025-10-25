@@ -153,6 +153,8 @@ namespace WeddingServer.Controllers
             string visited = guest!.IsSuccess && guest?.Data != null ? guest.Data.Name : "Quý khách";
 
             data.GuestName = visited;
+
+            ViewData["guestEndpoint"] = $"{Request.Scheme}://{Request.Host}/api/wedding/ui-wedding-card?id={id}";
             return View("Views/WeddingCard.cshtml", data);
 
 
