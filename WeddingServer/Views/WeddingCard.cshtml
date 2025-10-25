@@ -2396,7 +2396,7 @@
         }
 
         // MUSIC
-        function setupMusic() {
+                function setupMusic() {
             const control = document.getElementById('musicControl');
             const music = document.getElementById('bgMusic');
             const icon = control.querySelector('i');
@@ -2406,17 +2406,46 @@
                 music.load();
             }
 
-            control.addEventListener('click', () => {
+            // Hàm toggle music
+            const toggleMusic = () => {
                 if (isMusicPlaying) {
                     music.pause();
                     isMusicPlaying = false;
                     icon.className = 'fas fa-play';
+                    control.classList.remove('playing');
                 } else {
                     music.play().catch(err => console.log('Music play error:', err));
                     isMusicPlaying = true;
                     icon.className = 'fas fa-pause';
+                    control.classList.add('playing');
                 }
-            });
+            };
+
+            // Click vào nút music
+            control.addEventListener('click', toggleMusic);
+
+            // TỰ ĐỘNG PHÁT khi user tương tác lần đầu với trang
+            const autoPlayOnInteraction = () => {
+                if (!isMusicPlaying) {
+                    music.play()
+                        .then(() => {
+                            isMusicPlaying = true;
+                            icon.className = 'fas fa-pause';
+                            control.classList.add('playing');
+                            console.log('🎵 Music auto-started');
+                        })
+                        .catch(err => console.log('Autoplay blocked:', err));
+                }
+                // Chỉ chạy 1 lần
+                document.removeEventListener('click', autoPlayOnInteraction);
+                document.removeEventListener('touchstart', autoPlayOnInteraction);
+                document.removeEventListener('scroll', autoPlayOnInteraction);
+            };
+
+            // Lắng nghe tương tác đầu tiên
+            document.addEventListener('click', autoPlayOnInteraction, { once: true });
+            document.addEventListener('touchstart', autoPlayOnInteraction, { once: true });
+            document.addEventListener('scroll', autoPlayOnInteraction, { once: true });
         }
 
         // SCROLL REVEAL
