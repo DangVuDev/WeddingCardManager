@@ -22,6 +22,7 @@
         venue = Model.Venue,
         address = Model.Address,
         mapUrl = Model.MapUrl,
+        mapViewUrl = Model.MapViewUrl,
         heroImage = Model.HeroImage,
         musicUrl = Model.MusicUrl,
         timeline = Model.Timeline,
@@ -2251,8 +2252,8 @@
 
         // LOCATION
         function renderLocation() {
-            const mapEmbedUrl = WEDDING_CONFIG.mapUrl ?
-                WEDDING_CONFIG.mapUrl.replace('maps.google.com', 'www.google.com/maps/embed') : '';
+            const mapEmbedUrl = WEDDING_CONFIG.mapViewUrl ?
+                WEDDING_CONFIG.mapViewUrl.replace('maps.google.com', 'www.google.com/maps/embed') : '';
 
             document.getElementById('locationWrapper').innerHTML = `
                 <div class="location-main">

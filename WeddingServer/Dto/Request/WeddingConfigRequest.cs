@@ -14,6 +14,7 @@ namespace WeddingServer.Dto.Request
         public string Venue { get; set; } = "";
         public string Address { get; set; } = "";
         public string MapUrl { get; set; } = "";
+        public string? MapViewUrl { get; set; } = "";
         public string HeroImage { get; set; } = "";
         public string MusicUrl { get; set; } = "";
 

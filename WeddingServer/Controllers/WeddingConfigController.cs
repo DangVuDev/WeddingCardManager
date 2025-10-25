@@ -45,6 +45,7 @@ namespace WeddingServer.Controllers
                 Venue = request.Venue,
                 Address = request.Address,
                 MapUrl = request.MapUrl,
+                MapViewUrl = request.MapViewUrl,
                 HeroImage = request.HeroImage,
                 MusicUrl = request.MusicUrl,
                 Timeline = request.Timeline?.Select(t => new TimelineEvent

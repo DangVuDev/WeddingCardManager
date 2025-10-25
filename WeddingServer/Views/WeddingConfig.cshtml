@@ -515,7 +515,8 @@
 
                 <div class="form-group">
                     <label>Link Google Maps</label>
-                    <input type="url" id="mapUrl" placeholder="https://maps.google.com/..." onchange="config.mapUrl=this.value; console.log('Updated mapUrl:', this.value); console.log('Current config:', config)" />
+                    <input type="url" id="mapUrl" placeholder="https://maps.goo.gl.com/..." onchange="config.mapUrl=this.value; console.log('Updated mapUrl:', this.value); console.log('Current config:', config)" />
+                    <input type="url" id="mapViewUrl" placeholder="https://maps.google.com/..." onchange="config.mapViewUrl=this.value; console.log('Updated MapViewUrl:', this.value); console.log('Current config:', config)" />
                 </div>
             </div>
 
@@ -629,6 +630,7 @@
                 venue: "",
                 address: "",
                 mapUrl: "",
+                mapViewUrl: "",
                 heroImage: "",
                 musicUrl: "",
                 dressCode: [],
