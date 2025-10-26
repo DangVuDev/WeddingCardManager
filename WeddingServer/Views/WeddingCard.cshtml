@@ -484,8 +484,9 @@
 
         .hero-title {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(5rem, 15vw, 10rem);
+            font-size: clamp(5rem, 10vw, 5rem);
             font-weight: 800;
+            text-align: center;
             background: linear-gradient(135deg, var(--pink-500), var(--pink-600), var(--pink-500));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -619,9 +620,9 @@
         /* ==================== INVITATION HEADER ==================== */
         .invitation-header {
             max-width: 720px;
-            margin: 0 auto 80px;
             padding: 80px 48px;
             text-align: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 245, 250, 0.4) 100%);
             backdrop-filter: blur(var(--blur-lg));
             border-radius: 30px;
             border: 2px solid rgba(255, 255, 255, 0.5);
@@ -1890,7 +1891,8 @@
             margin-right: 28px;
             margin-left: auto;
         }
-
+        
+           
         .timeline-content:nth-child(even) {
             margin-left: 28px;
             margin-right: auto;
@@ -1917,6 +1919,7 @@
                 position: absolute;
                 background-attachment: scroll;
                 /* Đảm bảo ảnh cover đúng */
+                
                 background-size: cover;
                 background-position: center center;
                 width: 100%;
@@ -2367,7 +2370,7 @@
         });
 
         function initWedding() {
-            document.documentElement.style.setProperty('--hero-bg-image', `url("${WEDDING_CONFIG.heroImage}")`);
+            loadHeroImage();
             renderHero();
             renderWeddingTimeInfo();
             renderTimeline();
@@ -2384,10 +2387,12 @@
             hideLoading();
         }
 
-        function loadHeroImage(){
-            const url = WEDDING_CONFIG.heroImage ?? 'https://static.vecteezy.com/system/resources/previews/023/956/948/large_2x/elegant-floral-wedding-invitation-card-free-png.png';
+        function loadHeroImage() {
+            const defaultImage = 'https://static.vecteezy.com/system/resources/previews/023/956/948/large_2x/elegant-floral-wedding-invitation-card-free-png.png';
+            const largeScreenImage = 'https://res.cloudinary.com/dnx8aew1t/image/upload/v1761462981/wedding/396fe0c3-c106-486f-85d7-d4d2c8b7f85b.jpg';
+            const url = window.innerWidth > 769 ? largeScreenImage : (WEDDING_CONFIG.heroImage ?? defaultImage);
             document.documentElement.style.setProperty('--hero-bg-image', `url("${url}")`);
-        }
+        }s
 
                  // Tạo trái tim bay
         function createFloatingHearts() {
@@ -2512,7 +2517,8 @@
 
         // HERO
         function renderHero() {
-            document.getElementById('heroNames').innerHTML =
+
+            document.getElementById('heroNames').innerHTML = window.innerWidth > 769 ? `${WEDDING_CONFIG.groomName} & ${WEDDING_CONFIG.brideName}` :
                 `${WEDDING_CONFIG.groomName}<br>&<br>${WEDDING_CONFIG.brideName}`;
             document.getElementById('guestNameDisplay').textContent = WEDDING_CONFIG.guestName;
             document.getElementById('footerGroom').textContent = WEDDING_CONFIG.groomName;
