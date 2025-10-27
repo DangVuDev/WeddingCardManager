@@ -160,6 +160,7 @@
             justify-content: center;
             transition: opacity 1.5s ease, visibility 1.5s ease;
             overflow: hidden;
+            background: url(https://toigingiuvedep.vn/wp-content/uploads/2022/03/hinh-nen-chu-hy-tren-dien-thoai.jpg) center/cover no-repeat;
         }
 
             .transition-screen.hidden {
@@ -252,7 +253,6 @@
 
         .transition-heart {
             font-size: clamp(60px, 15vw, 100px);
-            margin-bottom: 30px;
             opacity: 0;
             transform: scale(0);
             filter: drop-shadow(0 10px 40px rgba(255, 107, 157, 0.6));
@@ -618,14 +618,19 @@
             }
 
         /* ==================== INVITATION HEADER ==================== */
+
         .invitation-header {
-            max-width: 720px;
             padding: 80px 48px;
             text-align: center;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 245, 250, 0.4) 100%);
             backdrop-filter: blur(var(--blur-lg));
             border-radius: 30px;
             border: 2px solid rgba(255, 255, 255, 0.5);
+            background: url(https://img.freepik.com/premium-vector/cute-frame-with-pink-roses-gold-lines_961875-424784.jpg?w=2000) center/cover no-repeat;
+        }
+
+        #invitation-container{
+            padding: 0 5px;
         }
 
         .invitation-envelope {
@@ -637,7 +642,7 @@
 
         .invite-main {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(30px, 5.5vw, 46px);
+            font-size: clamp(20px, 5.5vw, 46px);
             color: #7a3f7d;
             font-weight: 400;
             margin: 30px 0 24px 0;
@@ -645,7 +650,7 @@
 
         .guest-name {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(56px, 13vw, 96px);
+            font-size: clamp(50px, 10vw, 80px);
             background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -1628,6 +1633,7 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
+            font-family: 'Dancing Script', cursive;
         }
 
             .footer-names span:nth-child(2) {
@@ -2145,6 +2151,29 @@
             border-radius: 12px;
             letter-spacing: 1px;
         }
+
+        .petal {
+            position: fixed; /* Đổi từ absolute sang fixed */
+            font-size: 40px;
+            animation: petalFadeInOut linear infinite;
+            pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            z-index: 9999; /* Thêm z-index cao nhất */
+            top: 0; /* Thêm top: 0 */
+        }
+        @@keyframes petalFadeInOut {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+
+            15%, 85% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+            
+
         
     </style>
 
@@ -2162,7 +2191,7 @@
             <div class="light-ring"></div>
         </div>
         <div class="transition-content">
-            <div class="transition-heart">💖</div>
+            
             <div class="transition-names" id="transitionNames">
                 <b id="transitionGroom">Chú rể</b>
                 <span class="transition-ampersand">&</span>
@@ -2195,8 +2224,8 @@
     </section>
 
     <!-- INVITATION -->
-    <section class="section">
-        <div class="container">
+    <section class="section" id="invitation-section">
+        <div class="container" id="invitation-container">
             <div class="invitation-header">
                 <div class="invitation-envelope">💌</div>
                 <p class="invite-main">Trân trọng kính mời</p>
@@ -2385,6 +2414,7 @@
             setupQRModal();
             startCountdown();
             hideLoading();
+            initFloatingFlowers();
         }
 
         function loadHeroImage() {
@@ -2392,7 +2422,7 @@
             const largeScreenImage = 'https://res.cloudinary.com/dnx8aew1t/image/upload/v1761462981/wedding/396fe0c3-c106-486f-85d7-d4d2c8b7f85b.jpg';
             const url = window.innerWidth > 769 ? largeScreenImage : (WEDDING_CONFIG.heroImage ?? defaultImage);
             document.documentElement.style.setProperty('--hero-bg-image', `url("${url}")`);
-        }s
+        }
 
                  // Tạo trái tim bay
         function createFloatingHearts() {
@@ -2645,7 +2675,7 @@
 
             
         }
-        let currentSlide = 0;
+        var currentSlide = 0;
 
         function openAlbum(index) {
             currentSlide = index;
@@ -2940,6 +2970,43 @@
                 }
             });
         }
-    </script>
+
+
+                function initFloatingFlowers() {
+            const icons = [
+                '🌸', '🌺', '🌼', '🌷', '🌹', '💐',
+                '💕', '💖', '💗', '💝', '❤️', '💞',
+                '💍', '💎', '👰', '🤵', '💒', '🔔',
+                '✨', '⭐', '💫', '🎀', '🦋', '🕊️'
+            ];
+
+            // Tạo hoa mỗi 2 giây (thay vì 500ms)
+            setInterval(() => {
+                createPetal();
+            }, 2000); // ← Đổi từ 500 thành 2000
+
+            function createPetal() {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+
+                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+                petal.textContent = randomIcon;
+
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.top = Math.random() * 100 + 'vh';
+
+                const size = 25 + Math.random() * 25;
+                petal.style.fontSize = size + 'px';
+
+                petal.style.animation = 'petalFadeInOut 3s ease-in-out';
+
+                document.body.appendChild(petal);
+
+                setTimeout(() => {
+                    petal.remove();
+                }, 3000);
+            }
+        }
+                </script>
 </body>
 </html>
