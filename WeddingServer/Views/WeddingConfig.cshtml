@@ -482,6 +482,22 @@
                     <label>Tên cô dâu</label>
                     <input type="text" id="brideName" placeholder="Trần Thị B" onchange="config.brideName=this.value; console.log('Updated brideName:', this.value); console.log('Current config:', config)" />
                 </div>
+                <div class="form-group">
+                    <label>Tên bố chú rể</label>
+                    <input type="text" id="dadOfGroomName" placeholder="Nguyễn Văn A" onchange="config.dadOfGroomName=this.value; console.log('Updated dadOfGroomName:', this.value); console.log('Current config:', config)" />
+                </div>
+                <div class="form-group">
+                    <label>Tên bố cô dâu</label>
+                    <input type="text" id="dadOfBrideName" placeholder="Nguyễn Văn A" onchange="config.dadOfBrideName=this.value; console.log('Updated dadOfBrideName:', this.value); console.log('Current config:', config)" />
+                </div>
+                <div class="form-group">
+                    <label>Tên mẹ chú rể</label>
+                    <input type="text" id="momOfGroomName" placeholder="Trần Thị BA" onchange="config.momOfGroomName=this.value; console.log('Updated momOfGroomName:', this.value); console.log('Current config:', config)" />
+                </div>
+                <div class="form-group">
+                    <label>Tên mẹ cô dâu</label>
+                    <input type="text" id="momOfBrideName" placeholder="Trần Thị BA" onchange="config.momOfBrideName=this.value; console.log('Updated momOfBrideName:', this.value); console.log('Current config:', config)" />
+                </div>
 
                 <div class="form-group">
                     <label>Tên khách mời</label>
@@ -623,6 +639,10 @@
             return {
                 groomName: "",
                 brideName: "",
+                dadOfGroomName: "",
+                dadOfBrideName: "",
+                momOfGroomName: "",
+                momOfBrideName: "",
                 guestName: "",
                 weddingDate: "",
                 weddingDateDisplay: "",
