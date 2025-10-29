@@ -1964,11 +1964,29 @@
 
         .container-invitation {
             max-width: 900px;
-            margin: 50px auto;
             padding: 0 20px;
         }
 
-        
+      
+
+        /* Animation Classes */
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.8s ease-out;
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.8s ease-out;
+        }
+
+            .slide-in-left.active,
+            .slide-in-right.active {
+                opacity: 1;
+                transform: translateX(0);
+            }
 
         .greeting {
             text-align: center;
@@ -2019,7 +2037,7 @@
             align-items: flex-start;
             gap: 40px;
             margin: 50px 0;
-            flex-wrap: nowrap; /* Không cho xuống hàng */
+            flex-wrap: nowrap;
         }
 
         .person {
@@ -2070,17 +2088,30 @@
             line-height: 1.6;
         }
 
-        /* 🔻 Responsive cho điện thoại */
+        .note {
+            text-align: center;
+            font-style: italic;
+            color: #777;
+            margin-top: 40px;
+            border-top: 1px solid rgba(240, 98, 146, 0.3);
+            padding-top: 25px;
+        }
+
+        /* Responsive cho điện thoại */
         @@media (max-width: 600px) {
-            .couple-container
+            .main-card
 
         {
+            padding: 30px 20px;
+        }
+
+        .couple-container {
             gap: 15px;
         }
 
         .photo-frame {
-            width: 150px;
-            height: 150px;
+            width: 155px;
+            height: 155px;
             border-width: 3px;
         }
 
@@ -2096,34 +2127,6 @@
             font-size: 0.85em;
         }
 
-        }
-
-        .heart-divider {
-            font-size: 2em;
-            color: #f06292;
-            animation: heartbeat 1.5s infinite;
-        }
-
-        @@keyframes heartbeat {
-            0%, 100%
-
-        {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.2);
-        }
-
-        }
-
-        .note {
-            text-align: center;
-            font-style: italic;
-            color: #777;
-            margin-top: 40px;
-            border-top: 1px solid rgba(240, 98, 146, 0.3);
-            padding-top: 25px;
         }
 
         /* ==================== RESPONSIVE ==================== */
@@ -2183,8 +2186,8 @@
             }
 
             .photo-frame {
-                width: 120px;
-                height: 120px;
+                width: 155px;
+                height: 155px;
             }
 
             .hero::before {
@@ -2505,6 +2508,315 @@
         }
 
         }
+
+
+
+        <!--////////////////////////////////// -->
+        /* ===== CARD CHÍNH – TRONG SUỐT HOÀN TOÀN ===== */
+        /* ==================== LANTERNS EFFECT ==================== */
+         /* ==================== TIME LOCATION - LUXURY ==================== */
+.time-location-card {
+    position: relative;
+    padding: 60px 50px;
+    border-radius: 32px;
+    overflow: hidden;
+    margin-top: 40px;
+    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+}
+.time-location-grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 50px;
+    align-items: start;
+}
+.info-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+        #info-text-time{
+            margin-bottom: 20px;
+        }
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 20px;
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4f0 100%);
+    border-radius: 18px;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+.info-row:hover {
+    transform: translateX(6px);
+    background: rgba(255, 255, 255, 0.95);
+
+}
+.info-icon-box {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, #ffeef5, #ffdde8);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6em;
+    color: #d81b60;
+    box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+}
+.info-label {
+    font-size: 0.9rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+.info-value {
+    font-size: 1.3rem;
+    color: #2d1b2e;
+    font-weight: 700;
+}
+.info-value strong { color: #d81b60; }
+
+.location-details {
+    background: linear-gradient(135deg, #fff0f5 0%, #ffe4f0 100%);
+    padding: 10px;
+    border-radius: 24px;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+}
+.location-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #d81b60, #f06292);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.location-address {
+    font-size: 1.1rem;
+    color: #5a2d5e;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+.map-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #d81b60, #f06292);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 6px 20px rgba(216, 27, 96, 0.3);
+    transition: all 0.3s ease;
+}
+.map-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 30px rgba(216, 27, 96, 0.4);
+}
+.mini-map {
+    margin-top: 20px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 107, 157, 0.2);
+    height: 280px;
+    box-shadow: 0 8px 24px rgba(255, 107, 157, 0.15);
+}
+.mini-map iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* ==================== LUXURY DATE CARD ==================== */
+.luxury-date-card {
+    position: relative;
+    width: 320px;
+    height: 200px;
+    background: linear-gradient(135deg, #fff0f5 0%, #ffe4f0 100%);
+    border-radius: 36px;
+    overflow: hidden;
+    box-shadow: 
+        0 20px 40px rgba(216, 27, 96, 0.15),
+        0 0 60px rgba(255, 107, 157, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    margin: 0 auto;
+}
+.luxury-date-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 
+        0 30px 60px rgba(216, 27, 96, 0.25),
+        0 0 80px rgba(255, 107, 157, 0.2);
+}
+.date-glow {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 107, 157, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulseGlow 3s ease-in-out infinite;
+    z-index: 1;
+}
+
+.date-content {
+    text-align: center;
+    z-index: 2;
+    padding: 40px 30px;
+}
+.date-day {
+    font-size: 6.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #d81b60, #f06292);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 8px;
+    text-shadow: 0 4px 12px rgba(216, 27, 96, 0.3);
+    position: relative;
+}
+.date-day::after {
+    content: '♥';
+    position: absolute;
+    font-size: 0.4em;
+    top: 10px;
+    right: -20px;
+    color: #ff1744;
+    animation: heartbeat 1.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 6px #ff1744);
+}
+.date-month {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #d81b60;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+.date-year {
+    font-size: 1.4rem;
+    color: #e91e63;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+.date-weekday {
+    font-size: 1.1rem;
+    color: #d81b60;
+    font-weight: 500;
+    text-transform: capitalize;
+    letter-spacing: 1px;
+}
+.floating-hearts {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+.floating-hearts span {
+    position: absolute;
+    font-size: 1.2rem;
+    color: #ff4081;
+    animation: floatHeart 4s ease-in-out infinite;
+    opacity: 0;
+}
+.floating-hearts span:nth-child(1) { left: 20%; top: 30%; animation-delay: 0s; }
+.floating-hearts span:nth-child(2) { left: 70%; top: 40%; animation-delay: 1s; }
+.floating-hearts span:nth-child(3) { left: 10%; top: 60%; animation-delay: 2s; }
+.floating-hearts span:nth-child(4) { left: 80%; top: 70%; animation-delay: 0.5s; }
+.floating-hearts span:nth-child(5) { left: 50%; top: 20%; animation-delay: 1.5s; }
+.heart-trail::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #ff1744, #ff4081);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    animation: heartBurst 2s ease-out infinite;
+}
+
+/* ==================== LANTERNS (SVG) ==================== */
+.lanterns-container {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+.lantern {
+    position: absolute;
+    opacity: 0;
+    animation: floatLantern linear infinite;
+}
+.lantern svg {
+    width: 36px;
+    height: 50px;
+    filter: drop-shadow(0 0 12px currentColor);
+    animation: pulseGlow 2s ease-in-out infinite alternate;
+}
+
+/* Animations */
+@@keyframes pulseGlow { 0% { filter: brightness(1); } 100% { filter: brightness(1.4); } }
+@@keyframes rotateRing { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+@@keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.4); } }
+@@keyframes floatHeart { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-300px) rotate(360deg); opacity: 0; } }
+@@keyframes heartBurst { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(0); opacity: 0; } }
+@@keyframes floatLantern {
+    0% { opacity: 0; transform: translateY(100vh) scale(0.6); }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% { opacity: 0; transform: translateY(-150px) scale(1); }
+}
+
+/* Scroll Animation */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s cubic-bezier(0.34, 0.68, 0.25, 1);
+}
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive */
+@@media (max-width: 992px) {
+    .time-location-grid { grid-template-columns: 1fr; gap: 40px; }
+    .luxury-date-card { max-width: 300px; margin: 0 auto; }
+}
+@@media (max-width: 768px) {
+    .time-location-card { padding: 40px 30px; }
+    .date-day { font-size: 5.5rem; }
+    .mini-map { height: 220px; }
+}
+@@media (max-width: 480px) {
+    .time-location-card { padding: 30px 20px; }
+    .info-row { padding: 16px 20px; gap: 14px; }
+    .info-icon-box { width: 48px; height: 48px; font-size: 1.4em; }
+    .luxury-date-card { width: 90%; height: 280px; }
+}
+}
     </style>
 
 
@@ -2559,81 +2871,129 @@
 
     <div class="container-invitation">
         <div class="main-card">
-            <div class="greeting">
-                <div class="ornament">❀ ✿ ❀</div>
+            <div class="greeting slide-in-left">
                 <h2>Trân Trọng Kính Mời</h2>
                 <div class="ornament">✿ ❀ ✿</div>
             </div>
 
-            <div class="recipient">
+            <div class="recipient slide-in-right">
                 <p class="recipient-name" contenteditable="true" id="guestNameDisplay">Quý Khách</p>
             </div>
 
-            <p class="invitation-text">
-                Được sự chấp thuận và chứng kiến của gia đình hai bên,<br>
-                chúng tôi xin trân trọng kính mời quý khách đến dự<br>
-                <strong>TIỆC CƯỚI</strong><br>
-                của chúng tôi
+            <p class="invitation-text slide-in-left">
+                Nhờ ơn trên phù hộ và sự chứng giám của hai họ,
+                chúng tôi thành kính thỉnh mời quý khách quang lâm<br>
+                <strong>ĐẠI LỄ VU QUY</strong><br>
+                của đôi uyên ương
             </p>
 
             <div class="couple-container">
-                <div class="person person-groom">
+                <div class="person person-groom slide-in-left">
                     <div class="photo-frame">
-                        <img src="https://res.cloudinary.com/dnx8aew1t/image/upload/v1761668487/upload/fae30d92-9573-4581-a5c5-2de88d1ed441.png" alt="Chú rể">
+                        <img src="https://res.cloudinary.com/dnx8aew1t/image/upload/v1761736777/upload/302c3a62-4606-4fd2-89c1-a43b3d5f7d46.png" alt="Chú rể">
                     </div>
                     <p class="person-role">Nhà trai</p>
-                    <h3 class="person-name">@Model.GroomName</h3>
+                    <h3 class="person-name">Nguyễn Văn A</h3>
                     <div class="person-family">
-                        <p>Ông: @Model.DadOfGroomName</p>
-                        <p>Bà: @Model.MomOfGroomName</p>
+                        <p>Ông: Nguyễn Văn B</p>
+                        <p>Bà: Trần Thị C</p>
                     </div>
                 </div>
 
-
-                <div class="person person-bride">
+                <div class="person person-bride slide-in-right">
                     <div class="photo-frame">
-                        <img src="https://res.cloudinary.com/dnx8aew1t/image/upload/v1761668365/upload/c305110d-7c12-4813-bfaf-5ac49dc70f62.png" alt="Cô dâu">
+                        <img src="https://res.cloudinary.com/dnx8aew1t/image/upload/v1761736808/upload/42680d8d-59f1-43a3-94f3-1a8d19d23380.png" alt="Cô dâu">
                     </div>
                     <p class="person-role">Nhà gái</p>
-                    <h3 class="person-name">@Model.BrideName</h3>
+                    <h3 class="person-name">Lê Thị D</h3>
                     <div class="person-family">
-                        <p>Ông: @Model.DadOfBrideName</p>
-                        <p>Bà: @Model.MomOfBrideName</p>
+                        <p>Ông: Lê Văn E</p>
+                        <p>Bà: Phạm Thị F</p>
                     </div>
                 </div>
             </div>
 
-            <div class="note">
+            <div class="note slide-in-left">
                 Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi!<br>
                 Rất mong được đón tiếp!
             </div>
-
-
         </div>
     </div>
 
-
-
-    <!-- TIME INFO -->
-    <section class="section">
+    <!-- TIME & LOCATION - LUXURY VERSION -->
+    <section class="section" id="timeLocationSection">
         <div class="container">
-            <h2 class="section-title">Thời Gian</h2>
-            <div class="wedding-info">
-                <div class="info-title">Ngày & Giờ Tổ Chức</div>
-                <div class="info-content" id="weddingTimeInfo">
-                    <!-- Nội dung sẽ được render bởi JavaScript -->
+            <h2 class="section-title">Thời Gian & Địa Điểm</h2>
+
+            <!-- LANTERN DECORATION (FLOATING SVG) -->
+            <div class="lanterns-container" id="lanternsContainer"></div>
+
+            <!-- MAIN CARD -->
+            <div class="time-location-card glass-card" id="timeLocationCard">
+                <div class="time-location-grid">
+
+                    <!-- LUXURY DATE CARD -->
+                    <div class="luxury-date-card animate-on-scroll">
+                        <div class="date-glow"></div>
+
+                        <div class="date-content">
+                            <div class="date-day" id="luxuryDay"></div>
+                            <div class="date-month" id="luxuryMonth"></div>
+                            <div class="date-year" id="luxuryYear"></div>
+                            <div class="date-weekday" id="luxuryWeekday"></div>
+
+                            <div class="heart-trail"></div>
+                        </div>
+
+                        <div class="floating-hearts">
+                            <span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span>
+                        </div>
+                    </div>
+
+                    <!-- Info Columns -->
+                    <div class="info-columns">
+                        <div class="info-column animate-on-scroll" style="animation-delay: 0.2s;">
+                            <div class="info-row" id="info-text-time">
+                                <div class="info-icon-box">
+                                    <i class="far fa-clock"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-label">Thời gian</div>
+                                    <div class="info-value" id="infoTime"></div>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-icon-box">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="info-text">
+                                    <div class="info-label">Địa điểm</div>
+                                    <div class="info-value" id="infoVenue"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Location Details -->
+                        <div class="location-details animate-on-scroll" style="animation-delay: 0.4s;">
+                            <h3 class="location-title">
+                                <i class="fas fa-heart"></i> Địa chỉ chi tiết
+                            </h3>
+                            <p class="location-address" id="infoAddress"></p>
+                            <div class="location-actions">
+                                <a href="#" target="_blank" class="map-btn" id="mapBtn">
+                                    <i class="fas fa-directions"></i> Chỉ đường Google Maps
+                                </a>
+                            </div>
+                            <div class="mini-map" id="miniMapContainer">
+                                <iframe id="mapIframe" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- LOCATION -->
-    <section class="section">
-        <div class="container">
-            <h2 class="section-title">📍 Địa Điểm</h2>
-            <div id="locationWrapper"></div>
-        </div>
-    </section>
+    
 
     <!-- COUNTDOWN -->
     <section class="section">
@@ -2650,6 +3010,8 @@
             <div class="timeline-wrapper" id="timelineWrapper"></div>
         </div>
     </section>
+
+    
 
     <!-- STORIES -->
     <section class="section">
@@ -2769,7 +3131,49 @@
     <script>
         
         let isMusicPlaying = false;
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.2,
+                rootMargin: '0px 0px -50px 0px'
+            };
 
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe tất cả elements có animation
+            document.querySelectorAll('.slide-in-left, .slide-in-right').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        function initScrollAnimation() {
+                const trigger = document.querySelector('#timeLocationWrapper');
+        if (!trigger) return;
+
+        const elements = trigger.querySelectorAll('.calendar-box, .info-section, .location-section');
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        elements.forEach((el, i) => {
+                            setTimeout(() => {
+                                el.classList.add('animate');
+                            }, i * 300); // 0ms, 300ms, 600ms
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.3 }
+        );
+
+        observer.observe(trigger);
+        }
         // INIT APP
         document.addEventListener('DOMContentLoaded', function() {
             console.log('✅ Wedding App Initialized');
@@ -2777,13 +3181,13 @@
         });
 
         function initWedding() {
+            
             loadHeroImage();
             renderHero();
-            renderWeddingTimeInfo();
+            renderWeddingTimeAddressInfo();
             renderTimeline();
             renderStories();
             renderGallery();
-            renderLocation();
             renderContacts();
             setupWishesForm();
             setupScrollReveal();
@@ -2793,6 +3197,8 @@
             startCountdown();
             hideLoading();
             initFloatingFlowers();
+            initScrollAnimations();
+            
         }
 
         function loadHeroImage() {
@@ -2934,25 +3340,92 @@
             document.getElementById('footerDate').textContent = WEDDING_CONFIG.weddingDateDisplay;
         }
 
-        function renderWeddingTimeInfo() {
 
-            const weddingTimeInfo = document.getElementById('weddingTimeInfo');
+                        // ==================== LUXURY LANTERNS (SVG) ====================
+        function initLanterns() {
+            const container = document.getElementById('lanternsContainer');
+            if (!container) return;
 
-            if (weddingTimeInfo) {
-                weddingTimeInfo.innerHTML = `
-                    <div class="info-item">
-                        <span class="icon">📅</span>
-                        <span class="text">${WEDDING_CONFIG.weddingDateDisplay}</span>
-                    </div>
-                    <div class="info-divider"></div>
-                    <div class="info-item">
-                        <span class="icon">⏰</span>
-                        <span class="text">${WEDDING_CONFIG.weddingTime}</span>
-                    </div>
-                `;
+            const lanternSVGs = [
+                `<svg viewBox="0 0 100 140" style="width:36px;height:50px;">
+                    <path d="M50 20 C35 20, 25 35, 25 50 C25 75, 40 95, 50 120 C60 95, 75 75, 75 50 C75 35, 65 20, 50 20 Z" fill="#e91e63" stroke="#c2185b" stroke-width="2"/>
+                    <path d="M50 10 L50 20" stroke="#ff1744" stroke-width="3"/>
+                    <circle cx="50" cy="50" r="8" fill="#fff" opacity="0.6"/>
+                </svg>`,
+                `<svg viewBox="0 0 100 140" style="width:40px;height:55px;">
+                    <path d="M50 20 Q30 40, 30 60 Q30 90, 50 120 Q70 90, 70 60 Q70 40, 50 20 Z" fill="#ff4081" stroke="#f50057" stroke-width="2"/>
+                    <path d="M50 8 L50 20" stroke="#ff80ab" stroke-width="3"/>
+                    <circle cx="50" cy="60" r="10" fill="#fff" opacity="0.7"/>
+                </svg>`,
+                `<svg viewBox="0 0 100 140" style="width:38px;height:52px;">
+                    <path d="M50 18 C32 18, 20 38, 20 58 C20 85, 38 108, 50 130 C62 108, 80 85, 80 58 C80 38, 68 18, 50 18 Z" fill="#ffd700" stroke="#ffb300" stroke-width="2"/>
+                    <path d="M50 10 L50 18" stroke="#ffca28" stroke-width="3"/>
+                    <circle cx="50" cy="58" r="9" fill="#fff" opacity="0.8"/>
+                </svg>`
+            ];
+
+            for (let i = 0; i < 7; i++) {
+                setTimeout(() => createLantern(lanternSVGs, container), i * 2500);
             }
+            setInterval(() => createLantern(lanternSVGs, container), 5500);
         }
 
+        function createLantern(svgs, container) {
+            const lantern = document.createElement('div');
+            lantern.className = 'lantern';
+            lantern.innerHTML = svgs[Math.floor(Math.random() * svgs.length)];
+            lantern.style.left = Math.random() * 100 + '%';
+            lantern.style.animationDuration = (12 + Math.random() * 8) + 's';
+            container.appendChild(lantern);
+            setTimeout(() => lantern.remove(), 20000);
+        }
+
+        // ==================== SCROLL ANIMATION ====================
+        function initTimeLocationAnimation() {
+            const card = document.getElementById('timeLocationCard');
+            if (!card) return;
+
+            const elements = card.querySelectorAll('.animate-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        elements.forEach((el, i) => {
+                            setTimeout(() => el.classList.add('visible'), i * 200);
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            observer.observe(card);
+        }
+
+        // ==================== RENDER WEDDING INFO ====================
+        function renderWeddingTimeAddressInfo() {
+            const date = new Date(WEDDING_CONFIG.weddingDate);
+            const day = date.getDate();
+            const month = date.toLocaleDateString('vi-VN', { month: 'long' }).toUpperCase();
+            const year = date.getFullYear();
+            const weekday = date.toLocaleDateString('vi-VN', { weekday: 'long' });
+
+            document.getElementById('luxuryDay').textContent = day;
+            document.getElementById('luxuryMonth').textContent = month;
+            document.getElementById('luxuryYear').textContent = year;
+            document.getElementById('luxuryWeekday').textContent = weekday;
+            document.getElementById('infoTime').textContent = WEDDING_CONFIG.weddingTime;
+            document.getElementById('infoVenue').innerHTML = `<strong>${WEDDING_CONFIG.venue}</strong>`;
+            document.getElementById('infoAddress').textContent = WEDDING_CONFIG.address;
+            document.getElementById('mapBtn').href = WEDDING_CONFIG.mapUrl;
+
+            const mapEmbed = WEDDING_CONFIG.mapViewUrl
+                ? WEDDING_CONFIG.mapViewUrl.replace('maps.google.com', 'www.google.com/maps/embed')
+                : '';
+            document.getElementById('mapIframe').src = mapEmbed;
+
+            initLanterns();
+            initTimeLocationAnimation();
+        }
+        
+        
         // COUNTDOWN
         function startCountdown() {
             const container = document.getElementById('countdownContainer');
