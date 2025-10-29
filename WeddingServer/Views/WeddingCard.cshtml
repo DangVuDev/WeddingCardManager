@@ -1102,235 +1102,243 @@
 
 
        */
-        /* ==================== STORIES - SIÊU MƯỢT + ẢNH TO ==================== */
-        #storiesSection {
-            padding: 100px 0;
-        }
-
-        .story-master-card {
-            background: #ffd1dc;
-            border-radius: 36px;
-            padding: 40px 28px;
-            max-width: 460px;
-            margin: 0 auto;
-            box-shadow: 0 16px 48px rgba(255, 107, 157, 0.25);
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-            will-change: transform;
+        /* ==================== STORIES - VUỐT MƯỢT VÒNG TRÒN ==================== */
+#storiesSection { padding: 100px 0; }
+.story-master-card {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 36px;
+    padding: 40px 28px 50px;
+    max-width: 480px;
+    margin: 0 auto;
+    box-shadow: 0 16px 48px rgba(255, 107, 157, 0.25);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
             border: 2px solid rgba(255, 255, 255, 0.4);
-            background: rgba(255, 255, 255, 0.3);
-        }
+}
 
-        /* ẢNH - TỐI ƯU CHO MOBILE */
-        .story-images {
-            position: relative;
-            height: 240px;
-            margin-bottom: 48px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            will-change: transform;
-            perspective: 1000px;
-        }
+/* CONTAINER ẢNH - VUỐT MƯỢT */
+.story-images {
+    position: relative;
+    height: 300px;
+    margin-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    perspective: 1200px;
+    touch-action: pan-y;
+}
 
-        .story-img {
-            position: absolute;
-            width: 130px;
-            height: 190px;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(255, 107, 157, 0.25);
-            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-            transform-style: preserve-3d;
-            border: 3px solid #fff;
-        }
+.story-carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    will-change: transform;
+}
 
-            .story-img img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                display: block;
-                border-radius: 24px;
-                will-change: transform;
-                pointer-events: none;
-            }
+/* ẢNH - TO HƠN VÀ SÁT ĐÁY */
+.story-img {
+    position: absolute;
+    width: 160px;
+    height: 240px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(255, 107, 157, 0.25);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    border: 3px solid #fff;
+    bottom: 0;
+}
 
-            /* CENTER - TO RÕ RỆT */
-            .story-img.center {
-                transform: scale(1.35) translateZ(20px);
-                z-index: 10;
-                width: 140px;
-                height: 200px;
-                box-shadow: 0 16px 40px rgba(255, 107, 157, 0.45);
-                border: 4px solid #fff;
-            }
+.story-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 24px;
+    pointer-events: none;
+}
 
-            /* LEFT & RIGHT - 3/4 CHIỀU CAO VÀ NGHIÊNG 20 ĐỘ */
-            .story-img.left {
-                width: 105px;
-                height: 150px;
-                transform: translateX(-75px) rotateZ(-20deg);
-                opacity: 0.75;
-                z-index: 5;
-            }
+/* CENTER - TO NHẤT VÀ SÁT ĐÁY */
+.story-img.center {
+    transform: scale(1.15) translateZ(20px);
+    z-index: 10;
+    width: 180px;
+    height: 270px;
+    box-shadow: 0 16px 40px rgba(255, 107, 157, 0.45);
+    border: 4px solid #fff;
+}
 
-            .story-img.right {
-                width: 105px;
-                height: 150px;
-                transform: translateX(75px) rotateZ(20deg);
-                opacity: 0.75;
-                z-index: 5;
-            }
+/* LEFT & RIGHT - 3/4 CHIỀU CAO, NGHIÊNG 20 ĐỘ, SÁT ĐÁY */
+.story-img.left {
+    width: 135px;
+    height: 200px;
+    transform: translateX(-115px) rotateZ(-20deg);
+    opacity: 0.75;
+    z-index: 5;
+}
 
-        /* HOA TULIP */
-        .story-tulip {
-            position: absolute;
-            left: -24px;
-            bottom: -24px;
-            font-size: 42px;
-            z-index: 4;
-            filter: drop-shadow(0 3px 10px rgba(255, 107, 157, 0.35));
-            transform: rotate(-15deg);
-        }
+.story-img.right {
+    width: 135px;
+    height: 200px;
+    transform: translateX(115px) rotateZ(20deg);
+    opacity: 0.75;
+    z-index: 5;
+}
 
-        /* NỘI DUNG */
-        .story-content {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.7s cubic-bezier(0.34, 0.68, 0.25, 1);
-            will-change: opacity, transform;
-        }
+/* NÚT ĐIỀU HƯỚNG HAI BÊN */
+.story-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: ;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.3s ease;
+    font-size: 24px;
+}
 
-            .story-content.visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
 
-        .story-title {
-            font-size: 28px;
-            font-weight: 800;
-            color: #e91e63;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
+.story-nav:active {
+    transform: translateY(-50%) scale(0.95);
+}
 
-            .story-title::before {
-                content: '💕';
-                font-size: 32px;
-                animation: pulse 2s infinite;
-            }
-        @@keyframes pulse {
-            0%, 100%
+.story-nav.prev { left: 10px; }
+.story-nav.next { right: 10px; }
 
-        {
-            transform: scale(1);
-        }
+/* DOTS INDICATOR BÊN DƯỚI */
+.story-dots {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
 
-        50% {
-            transform: scale(1.15);
-        }
+.story-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffb3c6;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
 
-        }
+.story-dot.active {
+    background: #e91e63;
+    width: 14px;
+    height: 14px;
+    border-color: #ffb3c6;
+}
 
-        .story-desc {
-            font-size: 17px;
-            color: #7c2d5a;
-            line-height: 1.8;
-            padding: 0 12px;
-        }
+.story-dot:hover {
+    background: #ff8ba7;
+    transform: scale(1.2);
+}
 
-        /* ẨN ẢNH THỪA */
-        .story-img.left:empty,
-        .story-img.right:empty {
-            display: none;
-        }
+/* HOA TULIP */
+.story-tulip {
+    position: absolute;
+    left: -24px;
+    bottom: -24px;
+    font-size: 42px;
+    z-index: 4;
+    filter: drop-shadow(0 3px 10px rgba(255, 107, 157, 0.35));
+    transform: rotate(-15deg);
+}
 
-        .empty {
-            text-align: center;
-            padding: 80px 20px;
-            color: #e91e63;
-            font-size: 18px;
-            font-weight: 600;
-        }
+/* NỘI DUNG */
+.story-content {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    will-change: opacity, transform;
+}
 
-        /* RESPONSIVE - TỐI ƯU DẦN */
-        @@media (min-width: 480px) {
-            .story-master-card
+.story-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 
-        {
-            max-width: 500px;
-            padding: 48px 36px;
-        }
+.story-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #e91e63;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
 
-        .story-images {
-            height: 260px;
-        }
+.story-title::before {
+    content: '💕';
+    font-size: 32px;
+    animation: pulse 2s infinite;
+}
 
-        .story-img {
-            width: 145px;
-            height: 210px;
-        }
+@@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
 
-            .story-img.center {
-                width: 155px;
-                height: 220px;
-                transform: scale(1.4) translateZ(25px);
-            }
+.story-desc {
+    font-size: 17px;
+    color: #7c2d5a;
+    line-height: 1.8;
+    padding: 0 12px;
+}
 
-            .story-img.left {
-                width: 116px;
-                height: 165px;
-                transform: translateX(-85px) rotateZ(-20deg);
-            }
+/* ẨN ẢNH THỪA */
+.story-img:empty { display: none; }
+.empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: #e91e63;
+    font-size: 18px;
+    font-weight: 600;
+}
 
-            .story-img.right {
-                width: 116px;
-                height: 165px;
-                transform: translateX(85px) rotateZ(20deg);
-            }
+/* RESPONSIVE */
+@@media (max-width: 479px) {
+    .story-nav { 
+        width: 40px; 
+        height: 40px; 
+        font-size: 20px;
+    }
+    .story-nav.prev { left: 5px; }
+    .story-nav.next { right: 5px; }
+    .story-img.left { transform: translateX(-100px) rotateZ(-20deg); }
+    .story-img.right { transform: translateX(100px) rotateZ(20deg); }
+}
 
-        }
-        @@media (min-width: 768px) {
-            .story-master-card
+@@media (min-width: 480px) {
+    .story-master-card { max-width: 520px; padding: 48px 36px 60px; }
+    .story-images { height: 320px; }
+    .story-img { width: 170px; height: 255px; }
+    .story-img.center { width: 190px; height: 285px; }
+    .story-img.left { width: 145px; height: 215px; transform: translateX(-125px) rotateZ(-20deg); }
+    .story-img.right { width: 145px; height: 215px; transform: translateX(125px) rotateZ(20deg); }
+}
 
-        {
-            max-width: 540px;
-        }
-
-        .story-images {
-            height: 280px;
-        }
-
-        .story-img {
-            width: 160px;
-            height: 230px;
-        }
-
-            .story-img.center {
-                width: 170px;
-                height: 240px;
-                transform: scale(1.45) translateZ(30px);
-            }
-
-            .story-img.left {
-                width: 128px;
-                height: 180px;
-                transform: translateX(-95px) rotateZ(-20deg);
-            }
-
-            .story-img.right {
-                width: 128px;
-                height: 180px;
-                transform: translateX(95px) rotateZ(20deg);
-            }
-
-        }
+@@media (min-width: 768px) {
+    .story-master-card { max-width: 580px; }
+    .story-images { height: 340px; }
+    .story-img { width: 180px; height: 270px; }
+    .story-img.center { width: 200px; height: 300px; }
+    .story-img.left { width: 155px; height: 230px; transform: translateX(-140px) rotateZ(-20deg); }
+    .story-img.right { width: 155px; height: 230px; transform: translateX(140px) rotateZ(20deg); }
+}
         /* ==================== GALLERY - LUXURY SCROLL ANIMATION ==================== */
 .gallery-grid {
     display: grid;
@@ -3768,8 +3776,13 @@
             observer.observe(document.getElementById('timelineSection'));
         }
         // STORIES
-               var storyIndex = 0;
+        var storyIndex = 0;
         var storyAuto;
+        var isDragging = false;
+        var startX = 0;
+        var currentTranslate = 0;
+        var prevTranslate = 0;
+        var animationID = 0;
 
         function renderStories() {
             const stories = WEDDING_CONFIG.stories || [];
@@ -3781,19 +3794,34 @@
                 return;
             }
 
-            // TẠO CARD CHÍNH
+            // TẠO CARD CHÍNH VỚI NÚT VÀ DOTS
+            const navButtons = stories.length > 1 ? `
+                <div class="story-nav prev" onclick="prevStory()">‹</div>
+                <div class="story-nav next" onclick="nextStory()">›</div>
+            ` : '';
+
+            const dots = stories.length > 1 ? `
+                <div class="story-dots" id="storyDots">
+                    ${stories.map((_, i) => `<div class="story-dot ${i === 0 ? 'active' : ''}" onclick="goToStory(${i})"></div>`).join('')}
+                </div>
+            ` : '';
+
             container.innerHTML = `
-                <div class="story-images" id="storyImages"></div>
+                <div class="story-images" id="storyImages">
+                    <div class="story-carousel" id="storyCarousel"></div>
+                    ${navButtons}
+                </div>
                 <div class="story-tulip">🌷</div>
                 <div class="story-content" id="storyContent">
                     <h3 class="story-title" id="storyTitle">${stories[0].title}</h3>
                     <p class="story-desc" id="storyDesc">${stories[0].desc}</p>
                 </div>
+                ${dots}
             `;
 
             const len = stories.length;
             if (len === 1) {
-                document.getElementById('storyImages').innerHTML = `
+                document.getElementById('storyCarousel').innerHTML = `
                     <div class="story-img center">
                         <img src="${stories[0].image}" loading="lazy">
                     </div>`;
@@ -3802,14 +3830,14 @@
                 updateStoryImages(stories);
                 updateStoryContent(stories[0]);
                 startStoryAuto();
-                setupStorySwipe();
+                setupSmoothSwipe();
             }
         }
 
         // === CẬP NHẬT ẢNH MƯỢT ===
         function updateStoryImages(stories) {
             const len = stories.length;
-            const container = document.getElementById('storyImages');
+            const carousel = document.getElementById('storyCarousel');
             const leftIdx = (storyIndex - 1 + len) % len;
             const rightIdx = (storyIndex + 1) % len;
 
@@ -3822,14 +3850,12 @@
                 `;
             } else if (len === 2) {
                 html = `
-                    <div class="story-img left"><img src="${stories[0].image}" loading="lazy"></div>
-                    <div class="story-img center"><img src="${stories[1].image}" loading="lazy"></div>
+                    <div class="story-img ${storyIndex === 0 ? 'center' : 'left'}"><img src="${stories[0].image}" loading="lazy"></div>
+                    <div class="story-img ${storyIndex === 1 ? 'center' : 'right'}"><img src="${stories[1].image}" loading="lazy"></div>
                 `;
             }
-            container.innerHTML = html;
-
-            // Force reflow để mượt
-            void container.offsetHeight;
+            carousel.innerHTML = html;
+            updateDots();
         }
 
         // === CẬP NHẬT NỘI DUNG ===
@@ -3849,7 +3875,15 @@
             });
         }
 
-        // === CHUYỂN SLIDE MƯỢT ===
+        // === CẬP NHẬT DOTS ===
+        function updateDots() {
+            const dots = document.querySelectorAll('.story-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === storyIndex);
+            });
+        }
+
+        // === CHUYỂN SLIDE ===
         function nextStory() {
             const len = WEDDING_CONFIG.stories.length;
             if (len <= 1) return;
@@ -3870,10 +3904,18 @@
             resetStoryAuto();
         }
 
-        // === TỰ ĐỘNG + VUỐT - TỐI ƯU ===
+        function goToStory(index) {
+            if (index === storyIndex) return;
+            storyIndex = index;
+            updateStoryImages(WEDDING_CONFIG.stories);
+            updateStoryContent(WEDDING_CONFIG.stories[storyIndex]);
+            resetStoryAuto();
+        }
+
+        // === TỰ ĐỘNG ===
         function startStoryAuto() {
             if (WEDDING_CONFIG.stories.length <= 1) return;
-            storyAuto = setInterval(nextStory, 4000); // 4 giây
+            storyAuto = setInterval(nextStory, 4000);
         }
 
         function resetStoryAuto() {
@@ -3881,38 +3923,78 @@
             startStoryAuto();
         }
 
-        function setupStorySwipe() {
-            const card = document.getElementById('storyMasterCard');
-            let startX = 0;
-            let startY = 0;
+        // === VUỐT MƯỢT - THEO CHUYỂN ĐỘNG TAY ===
+        function setupSmoothSwipe() {
+            const carousel = document.getElementById('storyCarousel');
+            const images = document.getElementById('storyImages');
 
-            const start = e => {
-                const touch = e.type === 'mousedown' ? e : e.touches[0];
-                startX = touch.pageX || touch.clientX;
-                startY = touch.pageY || touch.clientY;
+            const getPositionX = (e) => {
+                return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
             };
 
-            const end = e => {
-                if (!startX) return;
-                const touch = e.type === 'mouseup' ? e : e.changedTouches[0];
-                const endX = touch.pageX || touch.clientX;
-                const endY = touch.pageY || touch.clientY;
+            const touchStart = (e) => {
+                if (WEDDING_CONFIG.stories.length <= 1) return;
 
-                const diffX = startX - endX;
-                const diffY = Math.abs(startY - endY);
+                isDragging = true;
+                startX = getPositionX(e);
+                animationID = requestAnimationFrame(animation);
+                carousel.style.transition = 'none';
+                clearInterval(storyAuto);
+            };
 
-                // Chỉ vuốt ngang khi vuốt ngang > vuốt dọc
-                if (Math.abs(diffX) > 40 && Math.abs(diffX) > diffY && WEDDING_CONFIG.stories.length > 1) {
-                    diffX > 0 ? nextStory() : prevStory();
+            const touchMove = (e) => {
+                if (!isDragging) return;
+
+                const currentPosition = getPositionX(e);
+                currentTranslate = prevTranslate + currentPosition - startX;
+
+                // Giới hạn kéo không quá 100px
+                const maxDrag = 100;
+                if (Math.abs(currentTranslate) > maxDrag) {
+                    currentTranslate = currentTranslate > 0 ? maxDrag : -maxDrag;
                 }
-                startX = 0;
-                startY = 0;
             };
 
-            card.addEventListener('mousedown', start);
-            card.addEventListener('mouseup', end);
-            card.addEventListener('touchstart', start, { passive: true });
-            card.addEventListener('touchend', end, { passive: true });
+            const touchEnd = () => {
+                if (!isDragging) return;
+
+                isDragging = false;
+                cancelAnimationFrame(animationID);
+
+                const movedBy = currentTranslate - prevTranslate;
+
+                // Ngưỡng vuốt: 30px
+                if (movedBy < -30) {
+                    nextStory();
+                } else if (movedBy > 30) {
+                    prevStory();
+                }
+
+                // Reset
+                currentTranslate = 0;
+                prevTranslate = 0;
+                carousel.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+                carousel.style.transform = 'translateX(0)';
+
+                startStoryAuto();
+            };
+
+            const animation = () => {
+                if (isDragging) {
+                    carousel.style.transform = `translateX(${currentTranslate}px)`;
+                    requestAnimationFrame(animation);
+                }
+            };
+
+            // Events
+            images.addEventListener('mousedown', touchStart);
+            images.addEventListener('mousemove', touchMove);
+            images.addEventListener('mouseup', touchEnd);
+            images.addEventListener('mouseleave', touchEnd);
+
+            images.addEventListener('touchstart', touchStart, { passive: true });
+            images.addEventListener('touchmove', touchMove, { passive: true });
+            images.addEventListener('touchend', touchEnd);
         }
         // ==================== STORIES SCROLL ANIMATION ====================
         function initStoriesAnimation() {
@@ -4054,7 +4136,7 @@
                     ${contact.phone ? `<a href="tel:${contact.phone}" class="contact-phone">${contact.phone}</a>` : ""}
                     ${contact.qrCodeImageUrl ? `
                         <button class="qr-toggle-btn" data-qr="${contact.qrCodeImageUrl}">
-                            📷 Quét QR mừng cưới
+                           🎁 Mừng cưới
                         </button>
                     ` : ""}
                 </div>
