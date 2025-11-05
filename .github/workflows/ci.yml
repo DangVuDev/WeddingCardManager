@@ -76,6 +76,7 @@ jobs:
             docker rm weddingserver || true
             docker run -d \
               --name weddingserver \
+              -p 8080:8080 \
               --restart unless-stopped \
               -e ASPNETCORE_ENVIRONMENT=Production \
               -e Password="${{ secrets.ADMIN_PASSWORD }}" \
