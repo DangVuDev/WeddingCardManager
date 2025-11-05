@@ -17,7 +17,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      # 🧰 2️⃣ Cài đặt .NET SDK 8.0
+      # 🧰 2️⃣ Cài đặt .NET SDK 8.0 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
